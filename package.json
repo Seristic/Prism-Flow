@@ -1,0 +1,175 @@
+{
+  "name": "prism-flow",
+  "displayName": "Prism Flow",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:json",
+    "onLanguage:jsonc",
+    "onLanguage:javascript",
+    "onLanguage:typescript"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "prismflow.applyHighlights",
+        "title": "PrismFlow: Refresh Highlights"
+      },
+      {
+        "command": "prismflow.clearHighlights",
+        "title": "PrismFlow: Clear Highlights"
+      },
+      {
+        "command": "prismflow.copyBlockPath",
+        "title": "PrismFlow: Copy Block Path"
+      },
+      {
+        "command": "prismflow.navigateToBlock",
+        "title": "PrismFlow: Navigate to Block..."
+      }
+    ],
+    "configuration": {
+      "title": "PrismFlow Configuration",
+      "properties": {
+        "prismflow.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable the PrismFlow extension."
+        },
+        "prismflow.highlightColors": {
+          "type": "array",
+          "default": [
+            "rgba(255, 255, 0, 0.3)",
+            "rgba(0, 255, 255, 0.3)",
+            "rgba(255, 0, 255, 0.3)",
+            "rgba(0, 255, 0, 0.3)",
+            "rgba(255, 165, 0, 0.3)",
+            "rgba(100, 100, 255, 0.3)",
+            "rgba(255, 100, 100, 0.3)"
+          ],
+          "description": "Colors used for block highlighting. Add or remove RGBA/HEX color strings."
+        },
+        "prismflow.highlightOpacity": {
+          "type": "number",
+          "default": 0.3,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Opacity for the highlight background colors (0 = transparent, 1 = opaque)."
+        },
+        "prismflow.labelBackgroundColor": {
+          "type": "string",
+          "default": "rgba(0, 128, 0, 0.7)",
+          "description": "Background color for the block labels (e.g., -- Object (Depth: X))."
+        },
+        "prismflow.showBlockLabels": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show labels (e.g., -- Object (Depth: X)) at the end of highlighted blocks."
+        },
+        "prismflow.labelFormat": {
+          "type": "string",
+          "default": "// {name} (D:{depth})",
+          "description": "Format string for block labels. Use {name} for block name, {depth} for nesting depth, {lines} for line count, and {chars} for character count."
+        },
+        "prismflow.activeHighlightStyle": {
+          "type": "object",
+          "default": {
+            "border": "1px solid rgba(255, 255, 255, 0.8)",
+            "overviewRulerColor": "rgba(255, 255, 255, 0.8)"
+          },
+          "description": "Custom CSS style for the active block highlight (e.g., { 'border': '1px solid red' })."
+        },
+        "prismflow.showOverviewRuler": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show colored markers in the scrollbar's overview ruler indicating block depth."
+        },
+        "prismflow.errorHighlightStyle": {
+          "type": "object",
+          "default": {
+            "backgroundColor": "rgba(255, 0, 0, 0.1)",
+            "textDecoration": "underline wavy red",
+            "overviewRulerColor": "red",
+            "overviewRulerLane": "Full"
+          },
+          "description": "Custom CSS style for highlighting unmatched/malformed braces (e.g., { 'border': '1px solid red' })."
+        },
+        "prismflow.showDepthInStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the current block's nesting depth in the VS Code status bar."
+        },
+        "prismflow.statusBarPriority": {
+          "type": "number",
+          "default": 100,
+          "description": "Sets the priority of the PrismFlow depth indicator in the status bar. Higher numbers move it further to the left."
+        },
+        "prismflow.rootPathName": {
+          "type": "string",
+          "default": "$",
+          "description": "The name used for the root (top-level) block in the generated path. Common values are '$' (JSONPath) or 'root'."
+        },
+        "prismflow.supportedLanguages": {
+          "type": "array",
+          "default": [
+            "json",
+            "javascript",
+            "typescript",
+            "jsonc"
+          ],
+          "description": "List of language IDs (e.g., 'json', 'javascript') where PrismFlow should be active."
+        }
+      }
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "prismflow.applyHighlights",
+          "group": "PrismFlow@1",
+          "when": "editorTextFocus && (editorLangId == json || editorLangId == jsonc || editorLangId == javascript || editorLangId == typescript)"
+        },
+        {
+          "command": "prismflow.clearHighlights",
+          "group": "PrismFlow@1",
+          "when": "editorTextFocus && (editorLangId == json || editorLangId == jsonc || editorLangId == javascript || editorLangId == typescript)"
+        },
+        {
+          "command": "prismflow.copyBlockPath",
+          "group": "PrismFlow@1",
+          "when": "editorTextFocus && (editorLangId == json || editorLangId == jsonc || editorLangId == javascript || editorLangId == typescript)"
+        },
+        {
+          "command": "prismflow.navigateToBlock",
+          "group": "PrismFlow@1",
+          "when": "editorTextFocus && (editorLangId == json || editorLangId == jsonc || editorLangId == javascript || editorLangId == typescript)"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.100.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.31.1",
+    "@typescript-eslint/parser": "^8.31.1",
+    "eslint": "^9.25.1",
+    "typescript": "^5.8.3",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
