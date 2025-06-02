@@ -1,19 +1,22 @@
 {
-  "name": "prism-flow",
-  "displayName": "Prism Flow",
-  "description": "",
-  "version": "0.0.1",
+  "name": "prismflow",
+  "displayName": "PrismFlow",
+  "description": "Visualizes code structure by highlighting nested blocks and providing enhanced navigation for JSON and similar languages.",
+  "version": "0.1.0",
+  "publisher": "YourPublisherName",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/prismflow"
+  },
   "engines": {
-    "vscode": "^1.100.0"
+    "vscode": "^1.88.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Visualization"
   ],
   "activationEvents": [
-    "onLanguage:json",
-    "onLanguage:jsonc",
-    "onLanguage:javascript",
-    "onLanguage:typescript"
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -24,7 +27,7 @@
       },
       {
         "command": "prismflow.clearHighlights",
-        "title": "PrismFlow: Clear Highlights"
+        "title": "PrismFlow: Clear All Highlights"
       },
       {
         "command": "prismflow.copyBlockPath",
@@ -32,17 +35,36 @@
       },
       {
         "command": "prismflow.navigateToBlock",
-        "title": "PrismFlow: Navigate to Block..."
+        "title": "PrismFlow: Navigate to Block"
+      },
+      {
+        "command": "prismflow.likeCurrentLine",
+        "title": "PrismFlow: Like Current Line",
+        "icon": "$(heart)"
+      },
+      {
+        "command": "prismflow.removeLikedLine",
+        "title": "Remove Liked Line",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "prismflow.navigateToLikedLine",
+        "title": "Navigate to Liked Line"
+      },
+      {
+        "command": "prismflow.refreshLikedLines",
+        "title": "PrismFlow: Refresh Liked Lines",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "prismflow.autoAddGitignorePatterns",
+        "title": "PrismFlow: Auto-Add Gitignore Patterns",
+        "icon": "$(git-commit)"
       }
     ],
     "configuration": {
       "title": "PrismFlow Configuration",
       "properties": {
-        "prismflow.enable": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable or disable the PrismFlow extension."
-        },
         "prismflow.highlightColors": {
           "type": "array",
           "default": [
@@ -54,29 +76,7 @@
             "rgba(100, 100, 255, 0.3)",
             "rgba(255, 100, 100, 0.3)"
           ],
-          "description": "Colors used for block highlighting. Add or remove RGBA/HEX color strings."
-        },
-        "prismflow.highlightOpacity": {
-          "type": "number",
-          "default": 0.3,
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Opacity for the highlight background colors (0 = transparent, 1 = opaque)."
-        },
-        "prismflow.labelBackgroundColor": {
-          "type": "string",
-          "default": "rgba(0, 128, 0, 0.7)",
-          "description": "Background color for the block labels (e.g., -- Object (Depth: X))."
-        },
-        "prismflow.showBlockLabels": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show labels (e.g., -- Object (Depth: X)) at the end of highlighted blocks."
-        },
-        "prismflow.labelFormat": {
-          "type": "string",
-          "default": "// {name} (D:{depth})",
-          "description": "Format string for block labels. Use {name} for block name, {depth} for nesting depth, {lines} for line count, and {chars} for character count."
+          "description": "Colors used for depth-based block highlighting."
         },
         "prismflow.activeHighlightStyle": {
           "type": "object",
@@ -84,12 +84,7 @@
             "border": "1px solid rgba(255, 255, 255, 0.8)",
             "overviewRulerColor": "rgba(255, 255, 255, 0.8)"
           },
-          "description": "Custom CSS style for the active block highlight (e.g., { 'border': '1px solid red' })."
-        },
-        "prismflow.showOverviewRuler": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show colored markers in the scrollbar's overview ruler indicating block depth."
+          "description": "Style for the active block highlight."
         },
         "prismflow.errorHighlightStyle": {
           "type": "object",
@@ -99,59 +94,129 @@
             "overviewRulerColor": "red",
             "overviewRulerLane": "Full"
           },
-          "description": "Custom CSS style for highlighting unmatched/malformed braces (e.g., { 'border': '1px solid red' })."
+          "description": "Style for unmatched brace error highlighting."
         },
-        "prismflow.showDepthInStatusBar": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show the current block's nesting depth in the VS Code status bar."
-        },
-        "prismflow.statusBarPriority": {
-          "type": "number",
-          "default": 100,
-          "description": "Sets the priority of the PrismFlow depth indicator in the status bar. Higher numbers move it further to the left."
-        },
-        "prismflow.rootPathName": {
+        "prismflow.labelFormat": {
           "type": "string",
-          "default": "$",
-          "description": "The name used for the root (top-level) block in the generated path. Common values are '$' (JSONPath) or 'root'."
+          "enum": [
+            "none",
+            "depth",
+            "name",
+            "lines",
+            "chars",
+            "depth-name",
+            "depth-lines",
+            "name-lines",
+            "depth-name-lines",
+            "full"
+          ],
+          "default": "full",
+          "description": "Format for inline block labels: none, depth, name, lines, chars, depth-lines, name-lines, depth-name-lines, full (all)."
         },
         "prismflow.supportedLanguages": {
           "type": "array",
           "default": [
             "json",
+            "jsonc",
             "javascript",
             "typescript",
-            "jsonc"
+            "python"
           ],
-          "description": "List of language IDs (e.g., 'json', 'javascript') where PrismFlow should be active."
+          "description": "Languages for which PrismFlow should activate."
+        },
+        "prismflow.statusBarPriority": {
+          "type": "number",
+          "default": 100,
+          "description": "Priority of the status bar item. Higher values mean more to the right."
+        },
+        "prismflow.rootPathName": {
+          "type": "string",
+          "default": "root",
+          "description": "The name to use for the root object/array in block paths."
+        },
+        "prismflow.gitignore.commonPatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "node_modules/",
+            "dist/",
+            "build/",
+            "out/",
+            "coverage/",
+            "yarn-error.log",
+            "npm-debug.log*",
+            ".env",
+            ".vscode/",
+            "*.log",
+            "*.tmp",
+            "*.bak",
+            "temp/",
+            "__pycache__/",
+            "venv/",
+            "target/"
+          ],
+          "description": "Patterns for files/folders that commonly belong in .gitignore but might be untracked."
+        },
+        "prismflow.gitignore.enablePeriodicCheck": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable periodic checking for untracked files that should be ignored."
+        },
+        "prismflow.gitignore.periodicCheckIntervalMinutes": {
+          "type": "number",
+          "default": 60,
+          "minimum": 5,
+          "description": "Interval in minutes for periodic .gitignore checks. Minimum is 5 minutes."
         }
       }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "prismflow-sidebar-container",
+          "title": "PrismFlow",
+          "icon": "resources/prismflow-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "prismflow-sidebar-container": [
+        {
+          "id": "prismflowLikedLines",
+          "name": "Liked Lines"
+        }
+      ]
     },
     "menus": {
       "editor/context": [
         {
-          "command": "prismflow.applyHighlights",
-          "group": "PrismFlow@1",
-          "when": "editorTextFocus && (editorLangId == json || editorLangId == jsonc || editorLangId == javascript || editorLangId == typescript)"
-        },
+          "command": "prismflow.likeCurrentLine",
+          "group": "9_prismflow_commands@1"
+        }
+      ],
+      "view/item/context": [
         {
-          "command": "prismflow.clearHighlights",
-          "group": "PrismFlow@1",
-          "when": "editorTextFocus && (editorLangId == json || editorLangId == jsonc || editorLangId == javascript || editorLangId == typescript)"
-        },
+          "command": "prismflow.removeLikedLine",
+          "when": "viewItem == prismflowLikedLine",
+          "group": "inline"
+        }
+      ],
+      "view/title": [
         {
-          "command": "prismflow.copyBlockPath",
-          "group": "PrismFlow@1",
-          "when": "editorTextFocus && (editorLangId == json || editorLangId == jsonc || editorLangId == javascript || editorLangId == typescript)"
-        },
-        {
-          "command": "prismflow.navigateToBlock",
-          "group": "PrismFlow@1",
-          "when": "editorTextFocus && (editorLangId == json || editorLangId == jsonc || editorLangId == javascript || editorLangId == typescript)"
+          "command": "prismflow.refreshLikedLines",
+          "when": "view == prismflowLikedLines",
+          "group": "navigation"
         }
       ]
-    }
+    },
+    "viewsWelcome": [
+      {
+        "view": "prismflowLikedLines",
+        "contents": "No liked lines yet!\n\n[Like the current line](command:prismflow.likeCurrentLine) to add it here."
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -162,14 +227,17 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.100.0",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "20.x",
-    "@typescript-eslint/eslint-plugin": "^8.31.1",
-    "@typescript-eslint/parser": "^8.31.1",
-    "eslint": "^9.25.1",
-    "typescript": "^5.8.3",
-    "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.5.2"
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^18.19.26",
+    "@types/vscode": "^1.88.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
+    "@vscode/test-cli": "^0.0.8",
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "ignore": "^7.0.5"
   }
 }

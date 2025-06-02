@@ -1,14 +1,20 @@
 # PrismFlow
 
-_Navigate Your Code with Clarity and Flow._
+_Navigate Your Code with Clarity and Flow. Keep your repositories clean effortlessly._
 
 ---
 
 ## ✨ Description
 
-**PrismFlow** is an accessibility-focused VS Code extension designed to revolutionize how you understand and navigate your codebase. In the dynamic world of development, code can quickly become complex and daunting. PrismFlow steps in to illuminate your path.
+**PrismFlow** is an accessibility-focused VS Code extension designed to revolutionize how you understand and navigate your codebase, while ensuring your Git repositories remain clean and focused.
 
-This extension intelligently highlights logical code blocks (like functions, objects, loops, or custom sections) and, crucially, displays concise, contextual information directly in the editor's whitespace. This means you get instant clarity on what a section of code is without needing to scroll or meticulously parse its contents. Experience a more intuitive and inclusive way to explore your code, making complex structures clear and easy to follow.
+In the dynamic world of development, code can quickly become complex and daunting, and untracked files can clutter your workspace. PrismFlow steps in to illuminate your path and streamline your workflow.
+
+This extension intelligently highlights logical code blocks (like functions, objects, loops, or custom sections) and displays concise, contextual information directly in the editor's whitespace for instant clarity.
+
+Beyond navigation, PrismFlow also introduces powerful `.gitignore` automation. It intelligently detects common untracked files (like build outputs, temporary files, or dependency folders) and can automatically add them to your `.gitignore`, keeping your repositories tidy without manual intervention.
+
+Experience a more intuitive and inclusive way to explore your code, making complex structures clear, easy to follow, and your Git management effortless.
 
 ---
 
@@ -16,15 +22,19 @@ This extension intelligently highlights logical code blocks (like functions, obj
 
 - **Intelligent Block Highlighting:** Automatically identifies and visually highlights distinct code blocks for quick recognition.
 - **Contextual Whitespace Labels:** Displays names or summaries of code blocks in the adjacent whitespace, providing glanceable information.
+- **Automated `.gitignore` Management:** Automatically detects untracked files matching configurable common patterns (e.g., `node_modules/`, `dist/`, `.env`).
+- **Configurable Automation Interval:** Set the frequency at which PrismFlow scans for untracked files and updates your `.gitignore` in the background.
+- **User Notifications:** Get discreet notifications when PrismFlow automatically adds new patterns to your `.gitignore`.
 - **Enhanced Readability:** Reduces cognitive load by visually segmenting code and offering immediate context.
 - **Improved Navigation:** Quickly jump to or understand the purpose of different code sections.
 - **Accessibility First:** Designed with a focus on making code more approachable and understandable for everyone.
+- **Reliable Git Integration:** Leverages direct Git commands for accurate detection of untracked files, ensuring robust performance.
 
 ---
 
 ## 💻 Installation
 
-### Via VS Code Marketplace _(Coming Soon!)_
+### Via VS Code Marketplace (Coming Soon!)
 
 Once PrismFlow is published, you'll be able to install it directly from the Visual Studio Code Marketplace:
 
@@ -33,14 +43,14 @@ Once PrismFlow is published, you'll be able to install it directly from the Visu
 3. Search for **PrismFlow**.
 4. Click **Install**.
 
-### From Source _(for Developers)_
+### From Source (for Developers)
 
 To run the development version or contribute:
 
 1. **Clone this repository:**
 
    ```bash
-   git clone https://github.com/your-username/prismflow.git
+   git clone https://github.com/seristic/prismflow.git
    cd prismflow
    ```
 
@@ -62,12 +72,63 @@ To run the development version or contribute:
 
 ## 💡 Usage
 
+### Code Structure Navigation (Primary Feature)
+
 Once activated, PrismFlow automatically analyzes your active editor to identify logical code blocks based on common programming language structures (e.g., `if` statements, `for` loops, function definitions, object literals).
 
 - **Visual Highlights:** You'll see a subtle background highlight applied to these detected blocks.
 - **Whitespace Labels:** Next to the opening line of a highlighted block, a small label containing its inferred name or purpose will appear in the margin, allowing you to quickly scan and understand the code's structure at a glance.
 
-> _Further details on customizable behavior and specific language support will be added here as the extension develops._
+### Automated `.gitignore` Management
+
+PrismFlow can help keep your Git repositories clean by automatically adding patterns for common untracked files to your `.gitignore`.
+
+#### Manual Trigger
+
+You can manually run the automation at any time:
+
+1. Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`).
+2. Search for and select: **PrismFlow: Auto-Add Gitignore Patterns**.
+3. A quick pick menu will appear, allowing you to select which suggested patterns you'd like to add to your `.gitignore` file.
+
+#### Automatic Background Checks
+
+For a truly hands-off experience, PrismFlow can run periodically in the background:
+
+- Based on the `prismflow.gitignore.automationInterval` setting (see [Configuration](#️-configuration) below), the extension will automatically scan your repositories for untracked files.
+- If it finds untracked files matching your configured `commonPatterns`, it will automatically add them to your `.gitignore` file without requiring user confirmation.
+- You will receive a brief information message notification in VS Code letting you know that patterns were automatically added.
+
+---
+
+## ⚙️ Configuration
+
+PrismFlow introduces settings to customize its `.gitignore` automation behavior. You can access these via **File > Preferences > Settings** (or **Code > Preferences > Settings** on macOS) and searching for "PrismFlow Gitignore".
+
+### `prismflow.gitignore.commonPatterns`
+
+- **Type:** Array of Strings
+- **Default:** `[]` (You will need to configure these!)
+- **Description:** A list of patterns that PrismFlow should look for when identifying untracked files to suggest for `.gitignore`. These can be file names, folder names, or standard glob patterns.
+
+**Example:**
+
+```json
+"prismflow.gitignore.commonPatterns": [
+  "node_modules/",
+  "dist/",
+  "build/",
+  ".env",
+  "*.log",
+  "*.tmp"
+]
+```
+
+### `prismflow.gitignore.automationInterval`
+
+- **Type:** Number
+- **Default:** `60` (minutes)
+- **Description:** The interval (in minutes) at which PrismFlow will automatically scan your Git repositories for untracked files and update `.gitignore`. Set to `0` or less to disable automatic updates.
 
 ---
 
@@ -78,11 +139,12 @@ We welcome contributions to PrismFlow! If you have ideas for new features, bug f
 - Open an issue to report bugs or suggest enhancements.
 - Fork the repository and submit a pull request.
 
-Please refer to our `CONTRIBUTING.md` (create this file later) for more details on our contribution guidelines.
+Please refer to our `CONTRIBUTING.md` (to be created) for more details on our contribution guidelines.
 
 ---
 
 ## 📝 License
-This project is licensed under **The SOLACE License (Software Of Liberty And Community Equity)**.
 
-See [LICENSE.md](./LICENSE.md) for the full license text.
+This project is licensed under The SOLACE License (Software Of Liberty And Community Equity).
+
+See [**LICENSE**](LICENSE.md) for the full license text.
