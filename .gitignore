@@ -4,6 +4,7 @@ dist/
 
 # Node modules
 node_modules/
+package-lock
 
 # VS Code test output
 .vscode-test/
@@ -43,7 +44,3 @@ coverage/
 
 # TypeScript build info
 *.tsbuildinfo
-
-
-
-package-lock.json

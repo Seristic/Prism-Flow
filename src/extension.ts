@@ -3,7 +3,8 @@ import * as vscode from "vscode";
 import * as decorationManager from "./decorationManager";
 import * as highlighter from "./highlighter";
 import { DEBOUNCE_DELAY } from "./constants";
-import * as path from "path"; // Keep path import for other uses
+import * as path from "path";
+import * as fs from "fs";
 
 // IMPORTS FOR LIKED LINES FEATURE
 import { LikedLinesProvider } from "./likedLinesProvider";
@@ -23,6 +24,9 @@ let statusBarItem: vscode.StatusBarItem | undefined;
 
 // NEW: Liked Lines Provider instance
 let likedLinesProvider: LikedLinesProvider; // Will be initialized in activate
+
+// NEW: File System Watcher for new file comments
+let fileCreationWatcher: vscode.FileSystemWatcher | undefined;
 
 /**
  * Initializes/reinitializes all decoration types and the status bar item,
@@ -135,8 +139,10 @@ function initializeAndReapplyHighlights(context: vscode.ExtensionContext) {
 
 /**
  * Sets up the periodic .gitignore check based on configuration.
+ * @param context The extension context.
  */
-function setupGitignorePeriodicCheck() {
+function setupGitignorePeriodicCheck(context: vscode.ExtensionContext) {
+  // Added context parameter
   // Clear any existing interval
   if (gitignorePeriodicCheckInterval) {
     clearInterval(gitignorePeriodicCheckInterval);
@@ -156,16 +162,38 @@ function setupGitignorePeriodicCheck() {
     );
     gitignorePeriodicCheckInterval = setInterval(async () => {
       console.log("PrismFlow: Running periodic .gitignore check...");
-      // Run the automation without prompting for confirmation in the background
-      const patternsFound = await runGitignoreAutomation({ autoConfirm: true }); // Pass an option to auto-confirm
-      if (patternsFound && patternsFound.length > 0) {
-        vscode.window.showInformationMessage(
-          `PrismFlow: Found and added new .gitignore patterns: ${patternsFound.join(
-            ", "
-          )}`
+      // Only run if there are active workspace folders
+      if (
+        vscode.workspace.workspaceFolders &&
+        vscode.workspace.workspaceFolders.length > 0
+      ) {
+        // Run the automation without prompting for confirmation in the background
+        const patternsFound = await runGitignoreAutomation({
+          autoConfirm: true,
+        }); // Pass an option to auto-confirm
+        if (patternsFound && patternsFound.length > 0) {
+          vscode.window.showInformationMessage(
+            `PrismFlow: Found and added new .gitignore patterns: ${patternsFound.join(
+              ", "
+            )}`
+          );
+        }
+      } else {
+        console.log(
+          "PrismFlow: Skipping automated .gitignore run, no workspace folders open."
         );
       }
     }, intervalMinutes * 60 * 1000); // Convert minutes to milliseconds
+
+    // Ensure the interval is disposed when the extension deactivates
+    context.subscriptions.push({
+      dispose: () => {
+        if (gitignorePeriodicCheckInterval) {
+          clearInterval(gitignorePeriodicCheckInterval);
+          gitignorePeriodicCheckInterval = undefined;
+        }
+      },
+    });
   } else {
     console.log("PrismFlow: Periodic .gitignore check is disabled.");
   }
@@ -336,7 +364,7 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  // Gitignore Automation Command
+  // Gitignore Automation Command (manual trigger)
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "prismflow.autoAddGitignorePatterns",
@@ -355,7 +383,7 @@ export function activate(context: vscode.ExtensionContext): void {
           likedLinesProvider.refresh();
           // Re-setup periodic check if gitignore config changed
           if (e.affectsConfiguration("prismflow.gitignore")) {
-            setupGitignorePeriodicCheck();
+            setupGitignorePeriodicCheck(context); // Pass context here
           }
         }
       }
@@ -439,7 +467,147 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   // Initial setup of periodic check when extension activates
-  setupGitignorePeriodicCheck();
+  setupGitignorePeriodicCheck(context); // Pass context here
+
+  const fileCreationWatcher = vscode.workspace.createFileSystemWatcher(
+    "**/*",
+    false,
+    true,
+    true
+  );
+  context.subscriptions.push(fileCreationWatcher);
+
+  fileCreationWatcher.onDidCreate(async (uri) => {
+    // Delay so VS Code can fully initialize the new file
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    try {
+      // Skip directories (we only want files)
+      const stats = await fs.promises.stat(uri.fsPath);
+      if (stats.isDirectory()) {
+        return;
+      }
+
+      const document = await vscode.workspace.openTextDocument(uri);
+      const editor = await vscode.window.showTextDocument(document);
+
+      // Determine workspace root path for relative paths
+      const workspaceRoot =
+        vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
+
+      // Relative path from workspace root, fallback to basename
+      const displayPath = workspaceRoot
+        ? path.relative(workspaceRoot, uri.fsPath)
+        : path.basename(uri.fsPath);
+
+      // Your existing line comment map
+      const lineCommentMap: { [key: string]: string } = {
+        typescript: "//",
+        typescriptreact: "//",
+        javascript: "//",
+        javascriptreact: "//",
+        python: "#",
+        html: "<!--",
+        css: "/*",
+        json: "//",
+        markdown: "<!--",
+        csharp: "//",
+        java: "//",
+        cpp: "//",
+        php: "//",
+        ruby: "#",
+        go: "//",
+        rust: "//",
+        shellscript: "#",
+        yaml: "#",
+        xml: "<!--",
+        plaintext: "//",
+      };
+      const lineComment = lineCommentMap[document.languageId];
+
+      if (!lineComment) {
+        console.log(
+          `PrismFlow: No line comment syntax found or unknown languageId for ${document.languageId}`
+        );
+        return;
+      }
+
+      // --- Check if comment already exists in first 3 lines ---
+      const maxLinesToCheck = Math.min(document.lineCount, 3);
+      let commentExists = false;
+
+      // Normalize displayPath slashes to forward slashes for consistency
+      const normalizedDisplayPath = displayPath.replace(/\\/g, "/");
+
+      for (let i = 0; i < maxLinesToCheck; i++) {
+        let lineText = document.lineAt(i).text.trim();
+
+        // Normalize line slashes too
+        const normalizedLineText = lineText.replace(/\\/g, "/");
+
+        if (
+          (lineComment === "<!--" &&
+            normalizedLineText.includes(normalizedDisplayPath)) ||
+          (lineComment === "/*" &&
+            normalizedLineText.includes(normalizedDisplayPath)) ||
+          (lineComment !== "<!--" &&
+            lineComment !== "/*" &&
+            normalizedLineText.startsWith(lineComment) &&
+            normalizedLineText.includes(normalizedDisplayPath))
+        ) {
+          commentExists = true;
+          break;
+        }
+      }
+
+      if (commentExists) {
+        // Comment already exists, skip insertion
+        return;
+      }
+
+      // --- Compose comment text ---
+      let commentText = "";
+      if (lineComment === "<!--") {
+        commentText = `${lineComment} ${displayPath} -->`;
+      } else if (lineComment === "/*") {
+        commentText = `${lineComment} ${displayPath} */`;
+      } else {
+        commentText = `${lineComment} ${displayPath}`;
+      }
+
+      // Determine insertion position, handle shell script shebangs
+      let insertPosition = new vscode.Position(0, 0);
+      let needsExtraNewlineAfterShebang = false;
+
+      if (
+        document.lineCount > 0 &&
+        document.lineAt(0).text.trim().startsWith("#!") &&
+        document.languageId === "shellscript"
+      ) {
+        insertPosition = new vscode.Position(1, 0);
+        if (
+          document.lineCount === 1 ||
+          document.lineAt(1).text.trim().length === 0
+        ) {
+          needsExtraNewlineAfterShebang = true;
+        }
+      }
+
+      // Insert the comment
+      await editor.edit((editBuilder) => {
+        if (needsExtraNewlineAfterShebang) {
+          editBuilder.insert(new vscode.Position(1, 0), "\n");
+        }
+        editBuilder.insert(insertPosition, commentText + "\n");
+      });
+
+      console.log(`PrismFlow: Added header comment to new file: ${uri.fsPath}`);
+    } catch (err: any) {
+      console.error(
+        `PrismFlow: Error processing file ${uri.fsPath}: ${err.message || err}`
+      );
+    }
+  });
 
   // Removed the problematic diagnostic interval for untracked files
   // as the issue was incorrect API usage, not timing.
@@ -451,16 +619,24 @@ export function activate(context: vscode.ExtensionContext): void {
 export function deactivate(): void {
   console.log("PrismFlow extension deactivated.");
   // Dispose all decoration types and status bar item explicitly
-  decorationManager.disposeDecorationTypes(
+  decorationManager.clearAllDecorations(
     regularDecorationTypes,
     activeDecorationType,
-    errorDecorationType,
-    statusBarItem
+    errorDecorationType
   );
+  if (statusBarItem) {
+    statusBarItem.dispose(); // Ensure status bar item is explicitly disposed
+  }
+
   // Clear periodic check interval on deactivation
   if (gitignorePeriodicCheckInterval) {
     clearInterval(gitignorePeriodicCheckInterval);
     gitignorePeriodicCheckInterval = undefined;
+  }
+  // Dispose the file creation watcher
+  if (fileCreationWatcher) {
+    fileCreationWatcher.dispose();
+    fileCreationWatcher = undefined;
   }
   // VS Code automatically disposes items added to context.subscriptions
 }
