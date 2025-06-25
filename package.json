@@ -3,11 +3,12 @@
   "displayName": "PrismFlow",
   "description": "Visualizes code structure by highlighting nested blocks and providing enhanced navigation for JSON and similar languages.",
   "version": "0.1.0",
-  "publisher": "YourPublisherName",
+  "publisher": "Seristicm",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/prismflow"
+    "url": "https://github.com/seristic/prism-flow"
   },
+  "roadmap": "ROADMAP.md",
   "engines": {
     "vscode": "^1.88.0"
   },
@@ -60,6 +61,46 @@
         "command": "prismflow.autoAddGitignorePatterns",
         "title": "PrismFlow: Auto-Add Gitignore Patterns",
         "icon": "$(git-commit)"
+      },
+      {
+        "command": "prismflow.setupDiscordWebhook",
+        "title": "PrismFlow: Setup Discord Webhook Integration",
+        "icon": "$(comment-discussion)"
+      },
+      {
+        "command": "prismflow.manageDiscordWebhooks",
+        "title": "PrismFlow: Manage Discord Webhooks",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "prismflow.updateVersion",
+        "title": "PrismFlow: Update Package Version",
+        "icon": "$(versions)"
+      },
+      {
+        "command": "prismflow.showCurrentVersion",
+        "title": "PrismFlow: Show Current Version",
+        "icon": "$(tag)"
+      },
+      {
+        "command": "prismflow.simulateGithubRelease",
+        "title": "PrismFlow: Simulate GitHub Release",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "prismflow.simulateGithubPush",
+        "title": "PrismFlow: Simulate GitHub Push",
+        "icon": "$(git-commit)"
+      },
+      {
+        "command": "prismflow.setupGitHubWebhook",
+        "title": "PrismFlow: Setup GitHub Webhook",
+        "icon": "$(github)"
+      },
+      {
+        "command": "prismflow.manageGitHubWebhooks",
+        "title": "PrismFlow: Manage GitHub Webhooks",
+        "icon": "$(settings-gear)"
       }
     ],
     "configuration": {
@@ -169,6 +210,31 @@
           "default": 60,
           "minimum": 5,
           "description": "Interval in minutes for periodic .gitignore checks. Minimum is 5 minutes."
+        },
+        "prismflow.discord.enableNotifications": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Discord webhook notifications for version updates and other events."
+        },
+        "prismflow.discord.defaultWebhookName": {
+          "type": "string",
+          "default": "PrismFlow Bot",
+          "description": "The default name to use for the Discord webhook bot."
+        },
+        "prismflow.version.autoUpdateChangelog": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically update CHANGELOG.md when version is updated."
+        },
+        "prismflow.github.setupNotifications": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a notification after GitHub webhook setup is complete."
+        },
+        "prismflow.github.clipboardTimeout": {
+          "type": "number",
+          "default": 60000,
+          "description": "How long to keep GitHub secrets in clipboard (in milliseconds). Default is 1 minute."
         }
       }
     },
@@ -209,6 +275,40 @@
           "when": "view == prismflowLikedLines",
           "group": "navigation"
         }
+      ],
+      "commandPalette": [
+        {
+          "command": "prismflow.setupDiscordWebhook",
+          "group": "PrismFlow"
+        },
+        {
+          "command": "prismflow.manageDiscordWebhooks",
+          "group": "PrismFlow"
+        },
+        {
+          "command": "prismflow.updateVersion",
+          "group": "PrismFlow"
+        },
+        {
+          "command": "prismflow.showCurrentVersion",
+          "group": "PrismFlow"
+        },
+        {
+          "command": "prismflow.simulateGithubRelease",
+          "group": "PrismFlow"
+        },
+        {
+          "command": "prismflow.simulateGithubPush",
+          "group": "PrismFlow"
+        },
+        {
+          "command": "prismflow.setupGitHubWebhook",
+          "group": "PrismFlow"
+        },
+        {
+          "command": "prismflow.manageGitHubWebhooks",
+          "group": "PrismFlow"
+        }
       ]
     },
     "viewsWelcome": [
@@ -229,6 +329,7 @@
   "devDependencies": {
     "@types/mocha": "^10.0.6",
     "@types/node": "^18.19.26",
+    "@types/semver": "^7.7.0",
     "@types/vscode": "^1.100.0",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",
@@ -238,6 +339,9 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "ignore": "^7.0.5"
+    "axios": "^1.10.0",
+    "discord.js": "^14.20.0",
+    "ignore": "^7.0.5",
+    "semver": "^7.7.2"
   }
 }

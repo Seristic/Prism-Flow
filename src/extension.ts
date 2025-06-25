@@ -13,6 +13,13 @@ import { LikedLineData, LikedLineItem } from "./likedLine";
 // IMPORT FOR GITIGNORE AUTOMATION
 import { runGitignoreAutomation } from "./gitignoreManager";
 
+// IMPORTS FOR DISCORD AND VERSION MANAGEMENT
+import * as discordManager from "./discordManager";
+import * as versionManager from "./versionManager";
+import * as githubEventSimulator from "./githubEventSimulator";
+import * as githubSetupManager from "./githubSetupManager";
+import { GitHubWebhookManager } from "./githubWebhookManager";
+
 let selectionChangeTimeout: NodeJS.Timeout | undefined;
 let gitignorePeriodicCheckInterval: NodeJS.Timeout | undefined; // For periodic check
 
@@ -220,6 +227,30 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.window.createTreeView("prismflowLikedLines", {
       treeDataProvider: likedLinesProvider,
     })
+  );
+
+  // Initialize Discord webhooks
+  discordManager.loadWebhooks(context); // Register Discord webhook commands
+  discordManager.registerWebhookCommands(context);
+
+  // Register version management commands
+  versionManager.registerVersionCommands(context);
+
+  // Register GitHub event simulator commands
+  githubEventSimulator.registerGitHubEventSimulator(context);
+
+  // Register GitHub webhook setup commands
+  githubSetupManager.registerGitHubWebhookCommands(context);
+
+  // Register GitHub webhook manager commands
+  const githubWebhookManager = new GitHubWebhookManager(context);
+  context.subscriptions.push(
+    vscode.commands.registerCommand("prismflow.setupGitHubWebhook", () =>
+      githubWebhookManager.setupWebhook()
+    ),
+    vscode.commands.registerCommand("prismflow.manageGitHubWebhooks", () =>
+      githubWebhookManager.manageWebhooks()
+    )
   );
 
   // --- Command Registrations ---
