@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as crypto from "crypto";
-import { Clipboard } from "../src/clipboard"; // We'll create this helper file next
+import { Clipboard } from "./clipboard"; // Import from the same directory
 
 interface GitHubWebhookConfig {
   name: string;

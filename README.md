@@ -2,9 +2,9 @@
 
 _Navigate Your Code with Clarity and Flow. Keep your repositories clean effortlessly._
 
-[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/Seristicm.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristicm.prismflow)
-[![Downloads](https://img.shields.io/visual-studio-marketplace/d/Seristicm.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristicm.prismflow)
-[![Rating](https://img.shields.io/visual-studio-marketplace/r/Seristicm.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristicm.prismflow)
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/Seristic.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)
+[![Downloads](https://img.shields.io/visual-studio-marketplace/d/Seristic.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)
+[![Rating](https://img.shields.io/visual-studio-marketplace/r/Seristic.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)
 [![License](https://img.shields.io/badge/license-SOLACE-orange)](./LICENSE.md)
 
 ## ✨ Description
@@ -13,7 +13,7 @@ _Navigate Your Code with Clarity and Flow. Keep your repositories clean effortle
 
 This extension intelligently highlights logical code blocks, automates .gitignore management, provides Discord and GitHub integrations, and includes version management tools.
 
-![PrismFlow Demo](https://raw.githubusercontent.com/seristic/prism-flow/main/images/demo.gif)
+<!-- ![PrismFlow Demo](https://raw.githubusercontent.com/seristic/prism-flow/main/images/demo.gif) -->
 
 ## 🚀 Key Features
 
@@ -28,10 +28,8 @@ This extension intelligently highlights logical code blocks, automates .gitignor
 
 Visit our [Wiki](https://github.com/seristic/prism-flow/wiki) for detailed documentation:
 
-- [Installation Guide](https://github.com/seristic/prism-flow/wiki/Installation)
-- [Feature Documentation](https://github.com/seristic/prism-flow/wiki/Home#features)
-- [Configuration Options](https://github.com/seristic/prism-flow/wiki/Configuration)
-- [Development Roadmap](https://github.com/seristic/prism-flow/wiki/Roadmap)
+- [Installation Guide](https://github.com/Seristic/Prism-Flow/wiki)
+- [Development Roadmap](https://github.com/Seristic/Prism-Flow/wiki/Development-Roadmap#prismflow-development-roadmap)
 
 ## 💻 Installation
 

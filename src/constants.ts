@@ -1,5 +1,5 @@
 // src/constants.ts
-import * as vscode from 'vscode'; // <-- VS Code API for decoration types
+import * as vscode from "vscode"; // <-- VS Code API for decoration types
 
 /**
  * Delay in milliseconds for debouncing text document changes and selection changes.
@@ -22,21 +22,25 @@ export const BRACKET_PATTERN = /[\{\}\[\]]/g;
  * - { (when at the start of a line, after whitespace, or a comma/newline)
  * - [ (when at the start of a line, after whitespace, or a comma/newline)
  */
-export const OBJECT_OR_ARRAY_START_PATTERN = /(?:\"([A-Za-z_][A-Za-z0-9_]*)\"\s*:\s*|\s*[,\n]\s*|\s*)\{|\[/g;
+export const OBJECT_OR_ARRAY_START_PATTERN =
+  /(?:\"([A-Za-z_][A-Za-z0-9_]*)\"\s*:\s*|\s*[,\n]\s*|\s*|\)\s*=>\s*|\)\s*|\bfunction\s+[A-Za-z_][A-Za-z0-9_]*\s*\([^)]*\)\s*)\{|\[/g;
 
 /**
  * Default background color for labels (e.g., -- Object (Depth: X)).
  * This is the greenish background you see behind block labels.
  */
-export const DEFAULT_LABEL_BG_COLOR = 'rgba(0, 128, 0, 0.7)';
+export const DEFAULT_LABEL_BG_COLOR = "rgba(0, 128, 0, 0.7)";
 
 /**
  * Default format string for block labels.
- * {name} will be replaced by the block's inferred name (e.g., 'Object', 'details').
- * {depth} will be replaced by the block's nesting depth.
- * You can tweak this to change how block labels look in the editor.
+ * This can either be a predefined format name from the enum in package.json,
+ * or a custom format string with placeholders:
+ * - {name}: The block's inferred name (e.g., 'Object', 'details')
+ * - {depth}: The block's nesting depth
+ * - {lines}: The number of lines in the block
+ * - {chars}: The number of characters in the block
  */
-export const DEFAULT_LABEL_FORMAT = '// {name} (D:{depth})';
+export const DEFAULT_LABEL_FORMAT = "depth-name-lines";
 
 /**
  * Default highlight colors used for cycling through nesting levels.
@@ -44,13 +48,13 @@ export const DEFAULT_LABEL_FORMAT = '// {name} (D:{depth})';
  * Each nesting level gets its own color, making it easier to see structure at a glance.
  */
 export const DEFAULT_HIGHLIGHT_COLORS = [
-    "rgba(255, 255, 0, 0.3)", // Yellow
-    "rgba(0, 255, 255, 0.3)", // Cyan
-    "rgba(255, 0, 255, 0.3)", // Magenta
-    "rgba(0, 255, 0, 0.3)",   // Green
-    "rgba(255, 165, 0, 0.3)", // Orange
-    "rgba(100, 100, 255, 0.3)",// Light Blue
-    "rgba(255, 100, 100, 0.3)" // Light Red
+  "rgba(255, 255, 0, 0.3)", // Yellow
+  "rgba(0, 255, 255, 0.3)", // Cyan
+  "rgba(255, 0, 255, 0.3)", // Magenta
+  "rgba(0, 255, 0, 0.3)", // Green
+  "rgba(255, 165, 0, 0.3)", // Orange
+  "rgba(100, 100, 255, 0.3)", // Light Blue
+  "rgba(255, 100, 100, 0.3)", // Light Red
 ];
 
 /**
@@ -72,10 +76,11 @@ export const DEFAULT_HIGHLIGHT_OPACITY = 0.3;
  *
  * @see vscode.DecorationRenderOptions
  */
-export const DEFAULT_ACTIVE_HIGHLIGHT_STYLE: vscode.DecorationRenderOptions = { // <-- Added type annotation
-    border: "1px solid rgba(255, 255, 255, 0.8)", // A subtle white border
-    overviewRulerColor: "rgba(255, 255, 255, 0.8)", // White marker in scrollbar
-    overviewRulerLane: vscode.OverviewRulerLane.Full // Show marker across the lane
+export const DEFAULT_ACTIVE_HIGHLIGHT_STYLE: vscode.DecorationRenderOptions = {
+  // <-- Added type annotation
+  border: "1px solid rgba(255, 255, 255, 0.8)", // A subtle white border
+  overviewRulerColor: "rgba(255, 255, 255, 0.8)", // White marker in scrollbar
+  overviewRulerLane: vscode.OverviewRulerLane.Full, // Show marker across the lane
 };
 
 /**
@@ -89,19 +94,15 @@ export const DEFAULT_SHOW_OVERVIEW_RULER = true;
  * Shows a light red background and a wavy underline to catch your attention.
  */
 export const DEFAULT_ERROR_HIGHLIGHT_STYLE: vscode.DecorationRenderOptions = {
-    backgroundColor: "rgba(255, 0, 0, 0.1)", // Light red background
-    textDecoration: "underline wavy red", // Wavy red underline
-    overviewRulerColor: "red", // Red marker in scrollbar
-    overviewRulerLane: vscode.OverviewRulerLane.Full
+  backgroundColor: "rgba(255, 0, 0, 0.1)", // Light red background
+  textDecoration: "underline wavy red", // Wavy red underline
+  overviewRulerColor: "red", // Red marker in scrollbar
+  overviewRulerLane: vscode.OverviewRulerLane.Full,
 };
 
 export const DEFAULT_SHOW_DEPTH_IN_STATUS_BAR = true;
 
-
-
 export const DEFAULT_STATUS_BAR_PRIORITY = 100;
-
-
 
 export const DEFAULT_ROOT_PATH_NAME = "$";
 
@@ -109,4 +110,9 @@ export const DEFAULT_ROOT_PATH_NAME = "$";
  * Default list of language IDs where PrismFlow should be active.
  * Add or remove language IDs here to control where the extension works.
  */
-export const DEFAULT_SUPPORTED_LANGUAGES = ["json", "javascript", "typescript", "jsonc"];
+export const DEFAULT_SUPPORTED_LANGUAGES = [
+  "json",
+  "javascript",
+  "typescript",
+  "jsonc",
+];

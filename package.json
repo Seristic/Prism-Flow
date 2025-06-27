@@ -3,14 +3,14 @@
   "displayName": "PrismFlow",
   "description": "Visualizes code structure by highlighting nested blocks and providing enhanced navigation for JSON and similar languages.",
   "version": "0.1.0",
-  "publisher": "Seristicm",
+  "publisher": "Seristic",
   "repository": {
     "type": "git",
     "url": "https://github.com/seristic/prism-flow"
   },
   "roadmap": "ROADMAP.md",
   "engines": {
-    "vscode": "^1.88.0"
+    "vscode": "^1.100.0"
   },
   "categories": [
     "Other",
@@ -251,7 +251,8 @@
       "prismflow-sidebar-container": [
         {
           "id": "prismflowLikedLines",
-          "name": "Liked Lines"
+          "name": "Liked Lines",
+          "icon": "$(heart-filled)"
         }
       ]
     },

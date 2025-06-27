@@ -210,7 +210,7 @@ Go to: [https://github.com/${owner}/${repo}/settings/hooks](https://github.com/$
 
 - After adding the webhook, GitHub will send a test ping
 - Check the webhook's recent deliveries to confirm it's working
-- If you see a green checkmark, the setup is successful!
+- If you see a green check-mark, the setup is successful!
 
 ## 4. Testing
 
@@ -479,6 +479,8 @@ export async function manageGitHubWebhooks(
 
 /**
  * Register GitHub webhook setup commands
+ * Note: This function is now a placeholder and doesn't register commands anymore.
+ * All GitHub webhook commands are now registered in extension.ts using the GitHubWebhookManager class.
  */
 export function registerGitHubWebhookCommands(
   context: vscode.ExtensionContext
@@ -486,17 +488,5 @@ export function registerGitHubWebhookCommands(
   // Initialize
   loadGitHubWebhooks(context);
 
-  // Register setup wizard command
-  context.subscriptions.push(
-    vscode.commands.registerCommand("prismflow.setupGitHubWebhook", () => {
-      runGitHubWebhookSetupWizard(context);
-    })
-  );
-
-  // Register manage webhooks command
-  context.subscriptions.push(
-    vscode.commands.registerCommand("prismflow.manageGitHubWebhooks", () => {
-      manageGitHubWebhooks(context);
-    })
-  );
+  // Commands are now registered in extension.ts using GitHubWebhookManager
 }
