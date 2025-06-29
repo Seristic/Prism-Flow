@@ -1,5 +1,5 @@
 // src/decorationManager.ts
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
 /**
  * Clears all decorations from all visible text editors using the provided decoration types.
@@ -9,19 +9,19 @@ import * as vscode from 'vscode';
  * @param errorType The error highlight decoration type.
  */
 export function clearAllDecorations(
-    regularTypes: vscode.TextEditorDecorationType[],
-    activeType: vscode.TextEditorDecorationType | undefined,
-    errorType: vscode.TextEditorDecorationType | undefined
+  regularTypes: vscode.TextEditorDecorationType[],
+  activeType: vscode.TextEditorDecorationType | undefined,
+  errorType: vscode.TextEditorDecorationType | undefined
 ) {
-    vscode.window.visibleTextEditors.forEach(editor => {
-        regularTypes.forEach(type => editor.setDecorations(type, []));
-        if (activeType) {
-            editor.setDecorations(activeType, []);
-        }
-        if (errorType) {
-            editor.setDecorations(errorType, []);
-        }
-    });
+  vscode.window.visibleTextEditors.forEach((editor) => {
+    regularTypes.forEach((type) => editor.setDecorations(type, []));
+    if (activeType) {
+      editor.setDecorations(activeType, []);
+    }
+    if (errorType) {
+      editor.setDecorations(errorType, []);
+    }
+  });
 }
 
 /**
@@ -33,19 +33,19 @@ export function clearAllDecorations(
  * @param statusBarItem The status bar item to dispose.
  */
 export function disposeDecorationTypes(
-    regularTypes: vscode.TextEditorDecorationType[],
-    activeType: vscode.TextEditorDecorationType | undefined,
-    errorType: vscode.TextEditorDecorationType | undefined,
-    statusBarItem: vscode.StatusBarItem | undefined
+  regularTypes: vscode.TextEditorDecorationType[],
+  activeType: vscode.TextEditorDecorationType | undefined,
+  errorType: vscode.TextEditorDecorationType | undefined,
+  statusBarItem: vscode.StatusBarItem | undefined
 ) {
-    regularTypes.forEach(type => type.dispose());
-    if (activeType) {
-        activeType.dispose();
-    }
-    if (errorType) {
-        errorType.dispose();
-    }
-    if (statusBarItem) {
-        statusBarItem.dispose();
-    }
+  regularTypes.forEach((type) => type.dispose());
+  if (activeType) {
+    activeType.dispose();
+  }
+  if (errorType) {
+    errorType.dispose();
+  }
+  if (statusBarItem) {
+    statusBarItem.dispose();
+  }
 }
