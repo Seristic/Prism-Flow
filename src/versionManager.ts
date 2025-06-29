@@ -198,11 +198,16 @@ export async function updateMultiplePackageVersions(
       // Store the first old version and repo URL for notification
       if (results.success === 0) {
         try {
-          const packageJson = JSON.parse(fs.readFileSync(packageInfo.path, "utf8"));
+          const packageJson = JSON.parse(
+            fs.readFileSync(packageInfo.path, "utf8")
+          );
           firstOldVersion = packageJson.version || "unknown";
           repoUrl = packageJson.repository?.url || "";
         } catch (error) {
-          logger.error(`Failed to read ${packageInfo.relativePath} for notification data:`, error);
+          logger.error(
+            `Failed to read ${packageInfo.relativePath} for notification data:`,
+            error
+          );
         }
       }
 
@@ -228,18 +233,28 @@ export async function updateMultiplePackageVersions(
   }
 
   // Send only ONE notification for the entire monorepo update
-  if (results.success > 0 && firstOldVersion && semver.valid(firstOldVersion) && semver.valid(newVersion) && semver.gt(newVersion, firstOldVersion)) {
-    const monorepoDescription = description || 
+  if (
+    results.success > 0 &&
+    firstOldVersion &&
+    semver.valid(firstOldVersion) &&
+    semver.valid(newVersion) &&
+    semver.gt(newVersion, firstOldVersion)
+  ) {
+    const monorepoDescription =
+      description ||
       `Monorepo version updated from ${firstOldVersion} to ${newVersion} (${results.success} packages updated)`;
-    
+
     notifyRelease(
       extensionContext,
       `v${newVersion}`,
       repoUrl,
-      monorepoDescription
+      monorepoDescription,
+      true // Use singleWebhookOnly=true to prevent spam in monorepo updates
     );
-    
-    logger.log(`Sent single Discord notification for monorepo update: ${newVersion}`);
+
+    logger.log(
+      `Sent single Discord notification for monorepo update: ${newVersion}`
+    );
   }
 
   return results;

@@ -89,6 +89,7 @@ When updating multiple packages in monorepo mode:
 - **No Spam**: Prevents multiple notifications that would otherwise flood your Discord channel
 
 Example notification message:
+
 ```
 Monorepo version updated from 1.0.0 to 1.1.0 (3 packages updated)
 ```

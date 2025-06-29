@@ -1,5 +1,16 @@
 # Change Log
 
+## [1.2.2] - 2025-06-29
+
+### 🐛 Hotfix - Discord Webhook Selection
+
+#### Fixed
+
+- **🎯 Webhook Targeting**: Fixed missing `singleWebhookOnly` parameter in monorepo Discord notifications
+  - Ensures monorepo updates only notify the primary webhook as intended
+  - Prevents notifications from still being sent to all configured webhooks
+  - Completes the Discord spam prevention feature introduced in v1.2.1
+
 ## [1.2.1] - 2025-06-29
 
 ### 🐛 Patch Update - Discord Notification Fix
@@ -7,7 +18,8 @@
 #### Fixed
 
 - **📢 Discord Spam Prevention**: Fixed issue where monorepo updates sent multiple Discord notifications
-  - Now sends only ONE consolidated notification for entire monorepo update
+  - Now sends only ONE consolidated notification for entire monorepo update using `singleWebhookOnly=true`
+  - Notification sent only to the primary/first webhook to prevent spam across multiple channels
   - Notification includes count of packages updated (e.g., "3 packages updated")
   - Prevents Discord channel flooding when updating multiple packages
   - Uses root package.json repository URL for notification consistency
