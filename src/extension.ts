@@ -19,6 +19,8 @@ import * as versionManager from "./versionManager";
 import * as githubEventSimulator from "./githubEventSimulator";
 import * as githubSetupManager from "./githubSetupManager";
 import { GitHubWebhookManager } from "./githubWebhookManager";
+import { GitHubReleaseManager } from "./githubReleaseManager";
+import { DashboardManager } from "./dashboardManager";
 
 let selectionChangeTimeout: NodeJS.Timeout | undefined;
 let gitignorePeriodicCheckInterval: NodeJS.Timeout | undefined; // For periodic check
@@ -250,6 +252,22 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.commands.registerCommand("prismflow.manageGitHubWebhooks", () =>
       githubWebhookManager.manageWebhooks()
+    )
+  );
+
+  // Register GitHub Release Manager
+  const githubReleaseManager = new GitHubReleaseManager(context);
+  context.subscriptions.push(
+    vscode.commands.registerCommand("prismflow.showGitHubReleaseManager", () =>
+      githubReleaseManager.showReleaseManager()
+    )
+  );
+
+  // Register Dashboard Manager
+  const dashboardManager = new DashboardManager(context);
+  context.subscriptions.push(
+    vscode.commands.registerCommand("prismflow.showDashboard", () =>
+      dashboardManager.showDashboard()
     )
   );
 

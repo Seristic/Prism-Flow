@@ -43,7 +43,7 @@ export function registerGitHubEventSimulator(
           })) || "New version released!";
 
         // Notify via Discord
-        notifyRelease(releaseName, releaseUrl, description);
+        notifyRelease(context, releaseName, releaseUrl, description);
 
         vscode.window.showInformationMessage(
           `Simulated GitHub release event for ${releaseName}`
@@ -85,7 +85,7 @@ export function registerGitHubEventSimulator(
           })) || "https://github.com/user/prismflow";
 
         // Notify via Discord
-        notifyPush(commitMessage, author, repoUrl);
+        notifyPush(context, commitMessage, author, repoUrl);
 
         vscode.window.showInformationMessage(
           `Simulated GitHub push event with message: ${commitMessage}`

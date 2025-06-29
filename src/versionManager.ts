@@ -29,6 +29,7 @@ export function getCurrentVersion(packageJsonPath: string): string | null {
  * Update the package version
  */
 export async function updatePackageVersion(
+  extensionContext: vscode.ExtensionContext,
   packageJsonPath: string,
   newVersion: string,
   description: string = ""
@@ -64,6 +65,7 @@ export async function updatePackageVersion(
       semver.gt(newVersion, oldVersion)
     ) {
       notifyRelease(
+        extensionContext,
         `v${newVersion}`,
         repoUrl,
         description || `Version updated from ${oldVersion} to ${newVersion}`
@@ -127,7 +129,9 @@ async function updateChangelog(
 /**
  * Run interactive version update wizard
  */
-export async function runVersionUpdateWizard(): Promise<void> {
+export async function runVersionUpdateWizard(
+  context: vscode.ExtensionContext
+): Promise<void> {
   // Find the package.json
   let packageJsonPath = "";
 
@@ -268,6 +272,7 @@ export async function runVersionUpdateWizard(): Promise<void> {
 
   // Perform the update
   const success = await updatePackageVersion(
+    context,
     packageJsonPath,
     newVersion,
     description
@@ -293,7 +298,7 @@ export function registerVersionCommands(
   // Register the update version command
   context.subscriptions.push(
     vscode.commands.registerCommand("prismflow.updateVersion", () => {
-      runVersionUpdateWizard();
+      runVersionUpdateWizard(context);
     })
   );
 

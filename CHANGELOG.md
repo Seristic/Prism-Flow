@@ -1,8 +1,50 @@
 # Change Log
 
-## [Unreleased]
+## [1.0.0] - 2025-06-28
 
-### Added
+### 🎉 Major Release - Dashboard Integration
+
+#### Added
+
+- **🔮 PrismFlow Dashboard**: Complete unified webview interface for all extension features
+
+  - Centralized command access with organized categories
+  - Modern VS Code-themed UI with icons and responsive design
+  - Real-time status feedback and loading states
+  - Persistent webview that retains context when hidden
+
+- **🚀 GitHub Release Manager**: Full-featured release creation interface
+
+  - Complete replacement for GitHub's web interface
+  - Smart form auto-completion with version suggestions
+  - Auto-changelog generation from git commits
+  - Support for drafts, pre-releases, and release notes
+  - GitHub CLI integration with git fallback
+  - Branch/commit targeting and validation
+
+- **⚙️ Enhanced Webview Architecture**:
+  - Persistent webviews for uninterrupted workflows
+  - Message-based communication between webviews and extension
+  - Comprehensive error handling and user feedback
+  - Professional UI components matching VS Code design
+
+#### Improved
+
+- **📦 Command Organization**: All commands now accessible through the dashboard
+- **🎯 User Experience**: Streamlined workflows with visual feedback
+- **🔧 Extension Architecture**: Modular webview system for better maintainability
+- **📚 Documentation**: Updated with new dashboard features
+
+#### Technical
+
+- Migrated from `preview: true` to stable release
+- Enhanced TypeScript interfaces for webview communication
+- Improved error handling across all components
+- Added comprehensive validation for release creation
+
+## [0.1.4] - Previous Releases
+
+### Features from Previous Versions
 
 - Added GitHub webhook setup assistant
   - Generate secure random webhook secrets

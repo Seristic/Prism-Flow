@@ -107,6 +107,7 @@ export async function sendTestMessage(
   repoUrl: string | undefined
 ): Promise<boolean> {
   try {
+    console.log(`Attempting to send test message to: ${url}`);
     const webhook = new WebhookClient({ url });
 
     const embed = createDefaultEmbed(
@@ -126,22 +127,37 @@ export async function sendTestMessage(
       embeds: [embed],
     });
 
+    console.log("Test message sent successfully");
     return true;
   } catch (error) {
     console.error("Error sending test message:", error);
+    vscode.window.showErrorMessage(
+      `Failed to send test message: ${
+        error instanceof Error ? error.message : error
+      }`
+    );
     return false;
   }
 }
 
 // Send a notification about a new release
 export async function notifyRelease(
+  context: vscode.ExtensionContext,
   releaseName: string,
   releaseUrl: string,
   description: string
 ): Promise<void> {
-  const releaseWebhooks = webhooks.filter((hook) =>
+  const currentWebhooks = await loadWebhooks(context);
+  const releaseWebhooks = currentWebhooks.filter((hook) =>
     hook.events.includes("releases")
   );
+
+  if (releaseWebhooks.length === 0) {
+    vscode.window.showWarningMessage(
+      "No Discord webhooks configured for release events. Use 'PrismFlow: Setup Discord Webhook Integration' to configure one."
+    );
+    return;
+  }
 
   for (const hook of releaseWebhooks) {
     try {
@@ -158,25 +174,39 @@ export async function notifyRelease(
         { name: "Release Date", value: new Date().toLocaleString() }
       );
 
-      webhook.send({
+      await webhook.send({
         username: "PrismFlow Bot",
         embeds: [embed],
       });
+
+      console.log(`Successfully sent release notification to ${hook.name}`);
     } catch (error) {
       console.error(`Error notifying release to webhook ${hook.name}:`, error);
+      vscode.window.showErrorMessage(
+        `Failed to send Discord notification to ${hook.name}: ${error}`
+      );
     }
   }
 }
 
 // Send a notification about a new commit/push
 export async function notifyPush(
+  context: vscode.ExtensionContext,
   commitMessage: string,
   author: string,
   repoUrl: string
 ): Promise<void> {
-  const pushWebhooks = webhooks.filter((hook) =>
+  const currentWebhooks = await loadWebhooks(context);
+  const pushWebhooks = currentWebhooks.filter((hook) =>
     hook.events.includes("pushes")
   );
+
+  if (pushWebhooks.length === 0) {
+    vscode.window.showWarningMessage(
+      "No Discord webhooks configured for push events. Use 'PrismFlow: Setup Discord Webhook Integration' to configure one."
+    );
+    return;
+  }
 
   for (const hook of pushWebhooks) {
     try {
@@ -193,12 +223,17 @@ export async function notifyPush(
         { name: "Repository", value: repoUrl }
       );
 
-      webhook.send({
+      await webhook.send({
         username: "PrismFlow Bot",
         embeds: [embed],
       });
+
+      console.log(`Successfully sent push notification to ${hook.name}`);
     } catch (error) {
       console.error(`Error notifying push to webhook ${hook.name}:`, error);
+      vscode.window.showErrorMessage(
+        `Failed to send Discord notification to ${hook.name}: ${error}`
+      );
     }
   }
 }

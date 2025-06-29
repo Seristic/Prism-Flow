@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as crypto from "crypto";
 import { Clipboard } from "./clipboard"; // Import from the same directory
+import { showGitHubWebhookSetupWebview } from "./webviews/githubWebhookSetupWebview";
 
 interface GitHubWebhookConfig {
   name: string;
@@ -22,7 +23,7 @@ export class GitHubWebhookManager {
   }
 
   /**
-   * Sets up a new GitHub webhook with configuration wizard
+   * Sets up a new GitHub webhook with webview configuration
    */
   public async setupWebhook(): Promise<void> {
     const repoUrl = await this.getRepositoryUrl();
@@ -30,21 +31,111 @@ export class GitHubWebhookManager {
       return;
     }
 
-    // Generate a secure webhook secret key
-    const secret = this.generateSecureSecret();
+    // Show the webview for webhook setup
+    showGitHubWebhookSetupWebview((data, panel) => {
+      this.handleWebhookSubmission(data, panel, repoUrl);
+    }, repoUrl);
+  }
 
-    // Get webhook name
-    const name = await vscode.window.showInputBox({
-      prompt: "Enter a name for this webhook configuration",
-      placeHolder: "e.g., Production Discord",
-      validateInput: (value) => (value ? null : "Name is required"),
-    });
+  /**
+   * Handles webhook form submission from webview
+   */
+  private async handleWebhookSubmission(
+    data: { url: string; secret: string },
+    panel: vscode.WebviewPanel,
+    repoUrl: string
+  ): Promise<void> {
+    try {
+      // Validate the webhook URL
+      if (!data.url || !this.isValidUrl(data.url)) {
+        panel.webview.postMessage({
+          command: "webhookResult",
+          message: "Please enter a valid webhook URL.",
+          ok: false,
+        });
+        return;
+      }
 
-    if (!name) {
-      return;
+      // Generate secret if not provided
+      const secret = data.secret || this.generateSecureSecret();
+
+      // Get webhook name
+      const name = await vscode.window.showInputBox({
+        prompt: "Enter a name for this webhook configuration",
+        placeHolder: "e.g., 'production-webhook'",
+        value: `webhook-${Date.now()}`,
+      });
+
+      if (!name) {
+        panel.webview.postMessage({
+          command: "webhookResult",
+          message: "Webhook setup cancelled - no name provided.",
+          ok: false,
+        });
+        return;
+      }
+
+      // Get events to listen for
+      const events = await this.selectWebhookEvents();
+      if (!events || events.length === 0) {
+        panel.webview.postMessage({
+          command: "webhookResult",
+          message: "Webhook setup cancelled - no events selected.",
+          ok: false,
+        });
+        return;
+      }
+
+      // Create and save webhook config
+      const config: GitHubWebhookConfig = {
+        name,
+        url: data.url,
+        secret,
+        events,
+        created: new Date().toISOString(),
+      };
+
+      await this.saveWebhookConfig(config);
+
+      // Send success message to webview
+      panel.webview.postMessage({
+        command: "webhookResult",
+        message: `Webhook "${name}" configured successfully!`,
+        ok: true,
+      });
+
+      // Show setup instructions
+      await this.showSetupInstructions(repoUrl, config);
+
+      // Close the panel after a delay
+      setTimeout(() => {
+        panel.dispose();
+      }, 3000);
+    } catch (error: any) {
+      panel.webview.postMessage({
+        command: "webhookResult",
+        message: `Error setting up webhook: ${error.message}`,
+        ok: false,
+      });
     }
+  }
 
-    // Choose which GitHub events to listen for
+  /**
+   * Helper method to validate URL
+   */
+  private isValidUrl(url: string): boolean {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Helper method to select webhook events
+   */
+  private async selectWebhookEvents(): Promise<string[] | undefined> {
     const eventOptions: vscode.QuickPickItem[] = [
       {
         label: "push",
@@ -79,48 +170,10 @@ export class GitHubWebhookManager {
     });
 
     if (!selectedEvents || selectedEvents.length === 0) {
-      vscode.window.showWarningMessage(
-        "No events selected. Webhook setup canceled."
-      );
-      return;
+      return undefined;
     }
 
-    const events = selectedEvents.map((item) => item.label);
-
-    // Get the webhook URL (Discord webhook or custom endpoint)
-    const webhookUrl = await vscode.window.showInputBox({
-      prompt: "Enter the webhook URL (Discord webhook or custom endpoint)",
-      placeHolder: "https://discord.com/api/webhooks/...",
-      validateInput: (value) => {
-        try {
-          new URL(value);
-          return null;
-        } catch {
-          return "Please enter a valid URL";
-        }
-      },
-    });
-
-    if (!webhookUrl) {
-      return;
-    }
-
-    // Save the configuration
-    const config: GitHubWebhookConfig = {
-      name,
-      url: webhookUrl,
-      secret,
-      events,
-      created: new Date().toISOString(),
-    };
-
-    await this.saveWebhookConfig(config);
-
-    // Copy the secret to the clipboard
-    await this.clipboard.copy(secret);
-
-    // Show setup instructions
-    await this.showSetupInstructions(repoUrl, config);
+    return selectedEvents.map((item) => item.label);
   }
 
   /**

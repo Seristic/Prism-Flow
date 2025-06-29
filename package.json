@@ -2,8 +2,9 @@
   "name": "prismflow",
   "displayName": "PrismFlow",
   "description": "Visualizes code structure by highlighting nested blocks and providing enhanced navigation for JSON and similar languages.",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "publisher": "Seristic",
+  "preview": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/seristic/prism-flow"
@@ -22,6 +23,11 @@
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "prismflow.showDashboard",
+        "title": "PrismFlow: Show Dashboard",
+        "icon": "$(dashboard)"
+      },
       {
         "command": "prismflow.applyHighlights",
         "title": "PrismFlow: Refresh Highlights"
@@ -101,6 +107,11 @@
         "command": "prismflow.manageGitHubWebhooks",
         "title": "PrismFlow: Manage GitHub Webhooks",
         "icon": "$(settings-gear)"
+      },
+      {
+        "command": "prismflow.showGitHubReleaseManager",
+        "title": "PrismFlow: GitHub Release Manager",
+        "icon": "$(rocket)"
       }
     ],
     "configuration": {
@@ -243,7 +254,7 @@
         {
           "id": "prismflow-sidebar-container",
           "title": "PrismFlow",
-          "icon": "resources/prismflow-icon.svg"
+          "icon": "$(symbol-structure)"
         }
       ]
     },
@@ -272,12 +283,21 @@
       ],
       "view/title": [
         {
+          "command": "prismflow.showDashboard",
+          "when": "view == prismflowLikedLines",
+          "group": "navigation"
+        },
+        {
           "command": "prismflow.refreshLikedLines",
           "when": "view == prismflowLikedLines",
           "group": "navigation"
         }
       ],
       "commandPalette": [
+        {
+          "command": "prismflow.showDashboard",
+          "group": "PrismFlow"
+        },
         {
           "command": "prismflow.setupDiscordWebhook",
           "group": "PrismFlow"
@@ -308,6 +328,10 @@
         },
         {
           "command": "prismflow.manageGitHubWebhooks",
+          "group": "PrismFlow"
+        },
+        {
+          "command": "prismflow.showGitHubReleaseManager",
           "group": "PrismFlow"
         }
       ]
