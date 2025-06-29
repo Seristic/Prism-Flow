@@ -10,6 +10,7 @@ import {
   DEFAULT_STATUS_BAR_PRIORITY,
   DEFAULT_ROOT_PATH_NAME,
 } from "./constants";
+import { logger } from "./extension";
 
 // Module-level variables to manage highlight state across calls
 interface HighlightedBlock {
@@ -76,6 +77,8 @@ export function applyPrismFlowDecorations(
   regularDecorationTypes: vscode.TextEditorDecorationType[],
   errorDecorationType: vscode.TextEditorDecorationType
 ): void {
+  logger.log("applyPrismFlowDecorations called");
+
   const config = vscode.workspace.getConfiguration("prismflow");
   const isEnabled: boolean = config.get("enable", true);
   const labelBgColor: string = config.get(
@@ -104,8 +107,15 @@ export function applyPrismFlowDecorations(
   const editor = vscode.window.activeTextEditor;
   currentActiveBlockEditor = editor;
 
+  logger.log(
+    `Active editor: ${
+      editor ? `exists (${editor.document.languageId})` : "none"
+    }`
+  );
+
   // Clear any existing regular and error decorations from the editor
   if (editor) {
+    logger.log("Clearing existing decorations");
     regularDecorationTypes.forEach((type) => editor.setDecorations(type, []));
     editor.setDecorations(errorDecorationType, []);
   }
@@ -144,16 +154,24 @@ export function applyPrismFlowDecorations(
     let statusMessage: string;
     if (!editor) {
       statusMessage = "PrismFlow: No active editor.";
+      logger.log("Highlighting stopped: No active editor");
     } else if (!isEnabled) {
       statusMessage = "PrismFlow: Disabled by settings.";
+      logger.log("Highlighting stopped: Extension disabled");
     } else {
       statusMessage = `PrismFlow: Not applicable for '${editor.document.languageId}' language.`;
+      logger.log(
+        `Highlighting stopped: Unsupported language '${editor.document.languageId}'`
+      );
     }
     vscode.window.setStatusBarMessage(statusMessage, 3000);
     allHighlightedBlocks = []; // Clear stored blocks if not enabled
     currentErrorDecorations = []; // Clear stored error decorations
     return;
   }
+
+  logger.log(`Processing document: ${editor.document.fileName}`);
+  logger.log(`Document language: ${editor.document.languageId}`);
 
   const document = editor.document;
   const text = document.getText();
@@ -710,106 +728,37 @@ export async function copyPathForActiveBlock(
     block.range.isEqual(currentActiveBlockDecorationRange!)
   );
 
-  if (activeBlock) {
-    await vscode.env.clipboard.writeText(activeBlock.fullPath);
-    vscode.window.setStatusBarMessage(
-      `PrismFlow: Path copied: ${activeBlock.fullPath}`,
-      3000
-    );
-  } else {
+  if (!activeBlock) {
     vscode.window.showInformationMessage(
-      "PrismFlow: No active block found to copy path."
+      "PrismFlow: No active block to copy path from."
     );
+    return;
   }
-}
 
-/**
- * Prepares Quick Pick items for navigation based on highlighted blocks.
- * @returns An array of QuickPickItem, sorted by their position in the document.
- */
-export function getQuickPickItems(): vscode.QuickPickItem[] {
-  // Sort blocks by their starting line number for a logical order in the Quick Pick
-  const sortedBlocks = [...allHighlightedBlocks].sort(
-    (a, b) => a.range.start.line - b.range.start.line
+  await vscode.env.clipboard.writeText(activeBlock.fullPath);
+  vscode.window.showInformationMessage(
+    `PrismFlow: Copied path "${activeBlock.fullPath}" to clipboard.`
   );
-
-  return sortedBlocks.map((block) => ({
-    label: block.fullPath,
-    description: `(Depth: ${block.depth}, Lines: ${block.lineCount}, Chars: ${
-      block.charCount
-    }, Line: ${block.range.start.line + 1})`, // NEW: Add line/char count to description
-  }));
 }
 
 /**
- * Navigates the editor to the specified block path.
- * @param editor The active text editor.
- * @param path The fullPath of the block to navigate to.
+ * Returns quick pick items for navigation based on highlighted blocks.
+ */
+export function getQuickPickItems(): string[] {
+  return allHighlightedBlocks.map((block) => block.fullPath);
+}
+
+/**
+ * Navigates to a block by its path.
  */
 export function navigateToBlockByPath(
   editor: vscode.TextEditor,
   path: string
 ): void {
-  const blockToNavigate = allHighlightedBlocks.find(
-    (block) => block.fullPath === path
-  );
-
-  if (blockToNavigate) {
-    const targetPosition = blockToNavigate.range.start;
-    const newSelection = new vscode.Selection(targetPosition, targetPosition);
-    editor.selection = newSelection;
-
-    // Reveal the range in the editor, centering it if possible
-    editor.revealRange(
-      blockToNavigate.range,
-      vscode.TextEditorRevealType.InCenterIfOutsideViewport
-    );
-  } else {
-    vscode.window.showWarningMessage(
-      `PrismFlow: Block with path '${path}' not found.`
-    );
-  }
-}
-
-/**
- * Clears only the active block highlight. Useful when switching editors or deactivating.
- * @param activeDecorationType The TextEditorDecorationType for the active block highlight.
- */
-export function clearActiveBlockHighlight(
-  activeDecorationType: vscode.TextEditorDecorationType
-): void {
-  if (currentActiveBlockEditor && currentActiveBlockDecorationRange) {
-    currentActiveBlockEditor.setDecorations(activeDecorationType, []);
-  }
-  currentActiveBlockDecorationRange = undefined;
-  currentActiveBlockEditor = undefined;
-  // Also clear status bar item when active highlight is cleared
-  if (statusBarItem) {
-    statusBarItem.hide();
-    statusBarItem.text = "";
-  }
-}
-
-/**
- * Clears error decorations specifically.
- * @param errorDecorationType The TextEditorDecorationType for error highlighting.
- */
-export function clearErrorDecorations(
-  errorDecorationType: vscode.TextEditorDecorationType
-): void {
-  if (currentActiveBlockEditor) {
-    currentActiveBlockEditor.setDecorations(errorDecorationType, []);
-  }
-  currentErrorDecorations = [];
-}
-
-/**
- * Disposes the status bar item when the extension deactivates.
- */
-export function disposeStatusBarItem(): void {
-  if (statusBarItem) {
-    statusBarItem.dispose();
-    statusBarItem = undefined;
-    currentStatusBarPriority = undefined; // Reset priority tracking
+  const block = allHighlightedBlocks.find((b) => b.fullPath === path);
+  if (block) {
+    const startPosition = block.range.start;
+    editor.selection = new vscode.Selection(startPosition, startPosition);
+    editor.revealRange(block.range, vscode.TextEditorRevealType.InCenter);
   }
 }

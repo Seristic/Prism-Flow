@@ -37,6 +37,42 @@ let likedLinesProvider: LikedLinesProvider; // Will be initialized in activate
 // NEW: File System Watcher for new file comments
 let fileCreationWatcher: vscode.FileSystemWatcher | undefined;
 
+// Dashboard Manager instance
+let dashboardManager: DashboardManager | undefined;
+
+// PrismFlow Output Channel for logging
+let outputChannel: vscode.OutputChannel | undefined;
+
+/**
+ * Logger utility for PrismFlow - writes to dedicated output channel
+ */
+export const logger = {
+  log: (message: string) => {
+    if (outputChannel) {
+      outputChannel.appendLine(
+        `[${new Date().toLocaleTimeString()}] ${message}`
+      );
+    }
+  },
+  error: (message: string, error?: any) => {
+    if (outputChannel) {
+      outputChannel.appendLine(
+        `[${new Date().toLocaleTimeString()}] ERROR: ${message}`
+      );
+      if (error) {
+        outputChannel.appendLine(
+          `[${new Date().toLocaleTimeString()}] ${error.toString()}`
+        );
+      }
+    }
+  },
+  show: () => {
+    if (outputChannel) {
+      outputChannel.show();
+    }
+  },
+};
+
 /**
  * Initializes/reinitializes all decoration types and the status bar item,
  * adds them to context.subscriptions, and reapplies highlights.
@@ -215,6 +251,11 @@ function setupGitignorePeriodicCheck(context: vscode.ExtensionContext) {
 export function activate(context: vscode.ExtensionContext): void {
   console.log("PrismFlow extension activated.");
 
+  // Initialize PrismFlow output channel for dedicated logging
+  outputChannel = vscode.window.createOutputChannel("PrismFlow");
+  context.subscriptions.push(outputChannel);
+  logger.log("PrismFlow extension activated - logging initialized");
+
   // Initialize all decoration types and apply initial highlights
   initializeAndReapplyHighlights(context);
 
@@ -264,27 +305,50 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   // Register Dashboard Manager
-  const dashboardManager = new DashboardManager(context);
+  dashboardManager = new DashboardManager(context);
   context.subscriptions.push(
     vscode.commands.registerCommand("prismflow.showDashboard", () =>
-      dashboardManager.showDashboard()
+      dashboardManager?.showDashboard()
     )
+  );
+
+  // Register Show Logs command
+  context.subscriptions.push(
+    vscode.commands.registerCommand("prismflow.showLogs", () => {
+      logger.show();
+    })
   );
 
   // --- Command Registrations ---
   context.subscriptions.push(
     vscode.commands.registerCommand("prismflow.applyHighlights", () => {
+      logger.log("prismflow.applyHighlights command called");
+      logger.log(
+        `Active editor: ${vscode.window.activeTextEditor ? "exists" : "none"}`
+      );
+      logger.log(`Visible editors: ${vscode.window.visibleTextEditors.length}`);
+
       if (errorDecorationType) {
+        logger.log("Applying PrismFlow decorations...");
         highlighter.applyPrismFlowDecorations(
           regularDecorationTypes,
           errorDecorationType
         );
-        if (activeDecorationType && vscode.window.activeTextEditor) {
-          highlighter.updateActiveBlockHighlight(
-            vscode.window.activeTextEditor,
-            activeDecorationType
+
+        // Apply active block highlighting to all visible editors instead of just active editor
+        if (activeDecorationType) {
+          logger.log(
+            "Applying active block highlighting to visible editors..."
           );
+          vscode.window.visibleTextEditors.forEach((editor) => {
+            highlighter.updateActiveBlockHighlight(
+              editor,
+              activeDecorationType!
+            );
+          });
         }
+      } else {
+        logger.error("Error: errorDecorationType is undefined");
       }
       vscode.window.setStatusBarMessage(
         "PrismFlow: Highlights Refreshed!",
@@ -295,6 +359,9 @@ export function activate(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     vscode.commands.registerCommand("prismflow.clearHighlights", () => {
+      logger.log("prismflow.clearHighlights command called");
+      logger.log(`Visible editors: ${vscode.window.visibleTextEditors.length}`);
+
       decorationManager.clearAllDecorations(
         regularDecorationTypes,
         activeDecorationType,
@@ -354,7 +421,7 @@ export function activate(context: vscode.ExtensionContext): void {
       });
 
       if (selectedItem) {
-        highlighter.navigateToBlockByPath(editor, selectedItem.label);
+        highlighter.navigateToBlockByPath(editor, selectedItem);
       }
     })
   );
@@ -446,21 +513,41 @@ export function activate(context: vscode.ExtensionContext): void {
           clearTimeout(selectionChangeTimeout);
         }
         selectionChangeTimeout = setTimeout(() => {
-          if (
-            vscode.window.activeTextEditor &&
-            event.document === vscode.window.activeTextEditor.document
-          ) {
-            if (errorDecorationType) {
-              highlighter.applyPrismFlowDecorations(
-                regularDecorationTypes,
-                errorDecorationType
-              );
-            }
-            if (activeDecorationType) {
-              highlighter.updateActiveBlockHighlight(
-                vscode.window.activeTextEditor,
-                activeDecorationType
-              );
+          const activeEditor = vscode.window.activeTextEditor;
+          if (activeEditor && event.document === activeEditor.document) {
+            // Check if it's a supported language before applying highlights
+            const config = vscode.workspace.getConfiguration("prismflow");
+            const supportedLanguages: string[] = config.get(
+              "supportedLanguages",
+              [
+                "javascript",
+                "typescript",
+                "json",
+                "jsonc",
+                "python",
+                "java",
+                "c",
+                "cpp",
+                "csharp",
+                "go",
+                "rust",
+                "php",
+              ]
+            );
+
+            if (supportedLanguages.includes(activeEditor.document.languageId)) {
+              if (errorDecorationType) {
+                highlighter.applyPrismFlowDecorations(
+                  regularDecorationTypes,
+                  errorDecorationType
+                );
+              }
+              if (activeDecorationType) {
+                highlighter.updateActiveBlockHighlight(
+                  activeEditor,
+                  activeDecorationType
+                );
+              }
             }
           }
         }, DEBOUNCE_DELAY);
@@ -471,16 +558,46 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor((editor?: vscode.TextEditor) => {
       if (editor) {
-        if (errorDecorationType) {
-          highlighter.applyPrismFlowDecorations(
-            regularDecorationTypes,
-            errorDecorationType
+        // Check if the editor has a supported language before applying highlights
+        const config = vscode.workspace.getConfiguration("prismflow");
+        const supportedLanguages: string[] = config.get("supportedLanguages", [
+          "javascript",
+          "typescript",
+          "json",
+          "jsonc",
+          "python",
+          "java",
+          "c",
+          "cpp",
+          "csharp",
+          "go",
+          "rust",
+          "php",
+        ]);
+
+        if (supportedLanguages.includes(editor.document.languageId)) {
+          logger.log(
+            `Active editor changed to supported language: ${editor.document.languageId}`
+          );
+          if (errorDecorationType) {
+            highlighter.applyPrismFlowDecorations(
+              regularDecorationTypes,
+              errorDecorationType
+            );
+          }
+          if (activeDecorationType) {
+            highlighter.updateActiveBlockHighlight(
+              editor,
+              activeDecorationType
+            );
+          }
+        } else {
+          logger.log(
+            `Active editor changed to unsupported language: ${editor.document.languageId} - skipping highlights`
           );
         }
-        if (activeDecorationType) {
-          highlighter.updateActiveBlockHighlight(editor, activeDecorationType);
-        }
       } else {
+        logger.log("No active editor - clearing decorations");
         decorationManager.clearAllDecorations(
           regularDecorationTypes,
           activeDecorationType,

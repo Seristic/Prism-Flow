@@ -1,20 +1,22 @@
 # PrismFlow
 
-\_N## 🎯 New in Version 1.0.0
+## 🎯 New in Version 1.1.0
 
-### 🔮 **PrismFlow Dashboard**
+### � **Dashboard Reliability Improvements**
 
-- **Centralized Control**: Access all features from a single, beautifully designed interface
-- **Modern UI**: VS Code-themed design with intuitive icons and responsive layout
-- **Real-time Feedback**: Visual status updates and loading states for all operations
-- **Organized Categories**: Features grouped by functionality for easy discovery
+- **Streamlined Interface**: Dashboard now focuses exclusively on reliable global management commands
+- **Command Palette Integration**: All highlighting and liked lines features moved to Command Palette for better reliability
+- **Enhanced Instructions**: Clear, comprehensive guide showing exactly which commands are available where
+- **Eliminated Focus Issues**: No more editor state conflicts or infinite loops with unsupported editors
 
-### 🚀 **GitHub Release Manager**
+### � **PrismFlow Dashboard** (Updated)
 
-- **Complete GitHub Integration**: Create releases without leaving VS Code
-- **Smart Automation**: Auto-generate changelogs and suggest version numbers
-- **Professional Workflow**: Support for drafts, pre-releases, and detailed release notes
-- **CLI & Git Integration**: Works with GitHub CLI or falls back to git commandsCode with Clarity and Flow. Keep your repositories clean effortlessly.\_
+- **Management Commands Only**: Git, Discord, Version, and GitHub management features
+- **Clear User Guidance**: Professional instruction layout for Command Palette features
+- **Consistent Behavior**: All dashboard commands work reliably regardless of editor focus
+- **Simplified Architecture**: Removed complex editor state management for better stability
+
+Code with Clarity and Flow. Keep your repositories clean effortlessly.
 
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/Seristic.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)
 [![Downloads](https://img.shields.io/visual-studio-marketplace/d/Seristic.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)
@@ -59,9 +61,9 @@ This extension features a **unified dashboard interface** that centralizes all f
 ## 🎮 Quick Start
 
 1. **Open the Dashboard**: Use `Ctrl+Shift+P` → "PrismFlow: Show Dashboard"
-2. **Explore Features**: Click any category to access organized functionality
-3. **Create Releases**: Use the GitHub Release Manager for seamless publishing
-4. **Manage Integrations**: Set up Discord and GitHub webhooks with guided wizards
+2. **Global Management**: Use dashboard buttons for Git, Discord, Version, and GitHub management
+3. **Editor Features**: Use `Ctrl+Shift+P` for highlighting, liked lines, and navigation commands
+4. **Follow Instructions**: Dashboard shows exactly which commands are available via Command Palette
 
 ## 📚 Documentation
 

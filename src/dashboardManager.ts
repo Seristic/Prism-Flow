@@ -11,6 +11,7 @@ import * as discordManager from "./discordManager";
 import * as versionManager from "./versionManager";
 import * as githubEventSimulator from "./githubEventSimulator";
 import * as gitignoreManager from "./gitignoreManager";
+import { logger } from "./extension";
 
 export class DashboardManager {
   private context: vscode.ExtensionContext;
@@ -31,14 +32,6 @@ export class DashboardManager {
     }
 
     const callbacks: DashboardCallbacks = {
-      onRefreshHighlights: () =>
-        this.executeCommand("prismflow.applyHighlights"),
-      onClearHighlights: () => this.executeCommand("prismflow.clearHighlights"),
-      onCopyBlockPath: () => this.executeCommand("prismflow.copyBlockPath"),
-      onNavigateToBlock: () => this.executeCommand("prismflow.navigateToBlock"),
-      onLikeCurrentLine: () => this.executeCommand("prismflow.likeCurrentLine"),
-      onRefreshLikedLines: () =>
-        this.executeCommand("prismflow.refreshLikedLines"),
       onAutoAddGitignore: () =>
         this.executeCommand("prismflow.autoAddGitignorePatterns"),
       onSetupDiscordWebhook: () =>
@@ -68,10 +61,14 @@ export class DashboardManager {
   }
 
   private async executeCommand(commandId: string): Promise<void> {
+    logger.log(`Dashboard executing command: ${commandId}`);
     try {
+      // Execute the command directly - highlighting commands are now Command Palette only
+      logger.log(`Executing command: ${commandId}`);
       await vscode.commands.executeCommand(commandId);
       this.showMessage("Command executed successfully!", "success");
     } catch (error) {
+      logger.error(`Error executing command ${commandId}:`, error);
       this.showMessage(`Error executing command: ${error}`, "error");
     }
   }

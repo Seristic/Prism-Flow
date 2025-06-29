@@ -3,12 +3,6 @@
 import * as vscode from "vscode";
 
 export interface DashboardCallbacks {
-  onRefreshHighlights: () => void;
-  onClearHighlights: () => void;
-  onCopyBlockPath: () => void;
-  onNavigateToBlock: () => void;
-  onLikeCurrentLine: () => void;
-  onRefreshLikedLines: () => void;
   onAutoAddGitignore: () => void;
   onSetupDiscordWebhook: () => void;
   onManageDiscordWebhooks: () => void;
@@ -18,7 +12,7 @@ export interface DashboardCallbacks {
   onSimulateGithubPush: () => void;
   onSetupGitHubWebhook: () => void;
   onManageGitHubWebhooks: () => void;
-  onShowGitHubReleaseManager: () => void; // Add new callback
+  onShowGitHubReleaseManager: () => void;
 }
 
 export function showDashboardWebview(callbacks: DashboardCallbacks) {
@@ -36,24 +30,6 @@ export function showDashboardWebview(callbacks: DashboardCallbacks) {
 
   panel.webview.onDidReceiveMessage((message) => {
     switch (message.command) {
-      case "refreshHighlights":
-        callbacks.onRefreshHighlights();
-        break;
-      case "clearHighlights":
-        callbacks.onClearHighlights();
-        break;
-      case "copyBlockPath":
-        callbacks.onCopyBlockPath();
-        break;
-      case "navigateToBlock":
-        callbacks.onNavigateToBlock();
-        break;
-      case "likeCurrentLine":
-        callbacks.onLikeCurrentLine();
-        break;
-      case "refreshLikedLines":
-        callbacks.onRefreshLikedLines();
-        break;
       case "autoAddGitignore":
         callbacks.onAutoAddGitignore();
         break;
@@ -164,6 +140,20 @@ function getDashboardContent(): string {
             .btn-secondary:hover {
                 background: var(--vscode-button-secondaryHoverBackground, #4c5057);
             }
+            .btn:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+            .note {
+                margin-top: 10px;
+                padding: 8px 12px;
+                background: var(--vscode-textBlockQuote-background, #f6f8fa);
+                border: 1px solid var(--vscode-textBlockQuote-border, #dfe2e5);
+                border-radius: 4px;
+                font-size: 12px;
+                color: var(--vscode-descriptionForeground, #666);
+                font-style: italic;
+            }
             .status-bar {
                 position: fixed;
                 bottom: 0;
@@ -183,37 +173,21 @@ function getDashboardContent(): string {
     <body>
         <div class="header">
             <h1>🔮 PrismFlow Dashboard</h1>
-            <p>Centralized control for all PrismFlow features</p>
+            <p>Global management commands and Command Palette instructions</p>
         </div>
 
         <div class="section">
-            <h2><span class="section-icon">✨</span>Code Highlighting</h2>
-            <div class="button-grid">
-                <button class="btn" onclick="executeCommand('refreshHighlights')">
-                    <span class="icon">🔄</span> Refresh Highlights
-                </button>
-                <button class="btn btn-secondary" onclick="executeCommand('clearHighlights')">
-                    <span class="icon">🧹</span> Clear All Highlights
-                </button>
-                <button class="btn" onclick="executeCommand('copyBlockPath')">
-                    <span class="icon">📋</span> Copy Block Path
-                </button>
-                <button class="btn" onclick="executeCommand('navigateToBlock')">
-                    <span class="icon">🧭</span> Navigate to Block
-                </button>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2><span class="section-icon">❤️</span>Liked Lines</h2>
-            <div class="button-grid">
-                <button class="btn" onclick="executeCommand('likeCurrentLine')">
-                    <span class="icon">💖</span> Like Current Line
-                </button>
-                <button class="btn btn-secondary" onclick="executeCommand('refreshLikedLines')">
-                    <span class="icon">🔄</span> Refresh Liked Lines
-                </button>
-            </div>
+            <h2><span class="section-icon">⌨️</span>Command Palette Actions</h2>
+            <p class="note">The following features are available via <strong>Command Palette</strong> (Ctrl+Shift+P):</p>
+            <ul style="margin: 10px 0; padding-left: 20px; color: var(--vscode-editor-foreground);">
+                <li><strong>PrismFlow: Apply Highlights</strong> - Apply syntax highlighting to visible editors</li>
+                <li><strong>PrismFlow: Clear Highlights</strong> - Clear all syntax highlighting</li>
+                <li><strong>PrismFlow: Refresh Liked Lines</strong> - Refresh the liked lines view</li>
+                <li><strong>PrismFlow: Like Current Line</strong> - Like the line at cursor position</li>
+                <li><strong>PrismFlow: Copy Block Path</strong> - Copy path of code block at cursor</li>
+                <li><strong>PrismFlow: Navigate to Block</strong> - Navigate to a specific code block</li>
+            </ul>
+            <p class="note">💡 <strong>Why Command Palette?</strong> These commands require specific editor context or cursor positioning that works best when invoked directly from the Command Palette while focused on your code.</p>
         </div>
 
         <div class="section">

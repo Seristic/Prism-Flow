@@ -2,7 +2,7 @@
   "name": "prismflow",
   "displayName": "PrismFlow",
   "description": "Visualizes code structure by highlighting nested blocks and providing enhanced navigation for JSON and similar languages.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "Seristic",
   "preview": false,
   "repository": {
@@ -27,6 +27,10 @@
         "command": "prismflow.showDashboard",
         "title": "PrismFlow: Show Dashboard",
         "icon": "$(dashboard)"
+      },
+      {
+        "command": "prismflow.showLogs",
+        "title": "PrismFlow: Show Logs"
       },
       {
         "command": "prismflow.applyHighlights",

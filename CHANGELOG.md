@@ -1,5 +1,40 @@
 # Change Log
 
+## [1.1.0] - 2025-06-29
+
+### 🎯 Minor Update - Dashboard Reliability Improvements
+
+#### Changed
+
+- **🔮 Dashboard Streamlining**: Removed all highlighting and liked lines controls from dashboard
+  - Dashboard now focuses exclusively on reliable global management commands
+  - All highlighting and liked lines features moved to Command Palette only
+  - Eliminates editor focus issues and infinite loops with unsupported editors
+  
+- **📋 Enhanced Command Palette Instructions**: Dashboard now displays comprehensive guide
+  - Clear list of all available Command Palette commands with descriptions
+  - Better user guidance on where to find each feature
+  - Professional instruction layout matching VS Code design
+
+#### Fixed
+
+- **🐛 Editor Focus Issues**: Resolved dashboard focus problems with unsupported editors
+  - No more infinite loops when code-runner-output or similar panels are active
+  - Eliminated "Unsupported language" errors from dashboard actions
+  - Removed complex editor state management that caused unreliable behavior
+
+- **⚡ Dashboard Reliability**: All dashboard commands now work consistently
+  - Simplified command execution without editor context dependencies
+  - Clean, predictable behavior for all management functions
+  - Enhanced logging for better debugging and support
+
+#### Technical
+
+- Simplified `dashboardManager.ts` by removing complex editor filtering logic
+- Updated `dashboardWebview.ts` with streamlined UI and clear instructions
+- Removed highlighting-specific callbacks and message handlers
+- Enhanced PrismFlow output channel logging for better debugging
+
 ## [1.0.0] - 2025-06-28
 
 ### 🎉 Major Release - Dashboard Integration
