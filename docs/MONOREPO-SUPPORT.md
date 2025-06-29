@@ -1,3 +1,5 @@
+<!-- docs\MONOREPO-SUPPORT.md -->
+
 # PrismFlow Monorepo Support
 
 ## Overview
@@ -59,7 +61,7 @@ When you run the version update command:
    ```
    Found 4 package.json files:
    • package.json (my-project@1.0.0)
-   • client/package.json (my-client@1.0.0) 
+   • client/package.json (my-client@1.0.0)
    • server/package.json (my-server@1.0.0)
    • shared/package.json (my-shared@1.0.0)
    ```
@@ -75,8 +77,23 @@ When you run the version update command:
 - **Safety**: Clear confirmation before making changes
 - **Flexibility**: Can still update individual packages if needed
 - **Configurable**: Customize which directories to exclude
+- **Single Notification**: Sends only one Discord webhook notification for the entire monorepo update (not one per package)
 
-## Fallback Behavior
+## Discord Integration
+
+When updating multiple packages in monorepo mode:
+
+- **Single Notification**: Only one Discord webhook notification is sent for the entire operation
+- **Consolidated Message**: The notification includes the number of packages updated
+- **Smart Detection**: Uses the root package.json repository URL for the notification
+- **No Spam**: Prevents multiple notifications that would otherwise flood your Discord channel
+
+Example notification message:
+```
+Monorepo version updated from 1.0.0 to 1.1.0 (3 packages updated)
+```
+
+This is much better than receiving 3 separate notifications for the same version update!
 
 - If `enableMonorepoSupport` is `false`, works like the original single-package mode
 - If only one package.json is found, automatically uses single-package mode
@@ -85,6 +102,7 @@ When you run the version update command:
 ## Use Cases
 
 Perfect for:
+
 - **Full-stack projects** with separate client/server packages
 - **Microservices** with shared dependencies
 - **Library projects** with multiple sub-packages
@@ -101,15 +119,18 @@ Perfect for:
 ## Troubleshooting
 
 ### No packages found
+
 - Check that `package.json` files exist in your workspace
 - Verify exclude patterns aren't too broad
 - Ensure workspace folder is properly opened in VS Code
 
 ### Updates fail
+
 - Check file permissions for all package.json files
 - Ensure all package.json files have valid JSON syntax
 - Review the PrismFlow output logs for detailed error messages
 
 ### Performance with large projects
+
 - Add more directories to `monorepoExcludePatterns` to skip unnecessary scanning
 - Consider disabling monorepo support for very large workspaces if not needed

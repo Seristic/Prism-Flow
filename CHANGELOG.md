@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.2.1] - 2025-06-29
+
+### 🐛 Patch Update - Discord Notification Fix
+
+#### Fixed
+
+- **📢 Discord Spam Prevention**: Fixed issue where monorepo updates sent multiple Discord notifications
+  - Now sends only ONE consolidated notification for entire monorepo update
+  - Notification includes count of packages updated (e.g., "3 packages updated")
+  - Prevents Discord channel flooding when updating multiple packages
+  - Uses root package.json repository URL for notification consistency
+
 ## [1.2.0] - 2025-06-29
 
 ### �️ Minor Update - Monorepo Support
