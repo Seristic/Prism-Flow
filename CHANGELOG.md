@@ -1,8 +1,8 @@
 # Change Log
 
-## [1.1.0] - 2025-06-29
+## [1.2.0] - 2025-06-29
 
-### 🎯 Minor Update - Dashboard Reliability & Monorepo Support
+### �️ Minor Update - Monorepo Support
 
 #### Added
 
@@ -11,6 +11,18 @@
   - Configurable exclude patterns for directories to skip
   - Option to update all packages simultaneously to the same version
   - Smart detection with user choice between monorepo and single-file mode
+  - Comprehensive documentation and configuration options
+
+#### Technical
+
+- Enhanced `versionManager.ts` with multi-package detection and update capabilities
+- Added configuration settings for monorepo support and exclude patterns
+- Created `docs/MONOREPO-SUPPORT.md` with detailed usage instructions
+- Maintains full backward compatibility with existing single-package workflows
+
+## [1.1.0] - 2025-06-29
+
+### 🎯 Minor Update - Dashboard Reliability Improvements
 
 #### Changed
 

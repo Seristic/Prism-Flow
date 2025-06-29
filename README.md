@@ -12,7 +12,14 @@
 - **Unified Versioning**: Update all packages to the same version with one command
 - **Flexible Options**: Choose to update all packages or select individual filesw
 
-## 🎯 New in Version 1.1.0
+## 🎯 New in Version 1.2.0
+
+### 🏗️ **Monorepo Support** (New!)
+
+- **Multi-Package Version Management**: Automatically detect and update all package.json files in your workspace
+- **Smart Detection**: Configurable exclude patterns to skip node_modules, dist folders, etc.
+- **Unified Versioning**: Update all packages to the same version with one command
+- **Flexible Options**: Choose to update all packages or select individual files
 
 ### � **Dashboard Reliability Improvements**
 
