@@ -53,3 +53,12 @@ coverage/
 
 # TypeScript build info
 *.tsbuildinfo
+# Temporary and cleanup files
+*-NEW.md
+CLEANUP-*
+cleanup-*.ps1
+final-cleanup.*
+WIKI-SETUP.md
+discord_version_docs.md
+permanent-cleanup.ps1
+prevent-temp-files.ps1
