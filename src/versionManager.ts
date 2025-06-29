@@ -4,12 +4,21 @@ import * as fs from "fs";
 import * as path from "path";
 import * as semver from "semver";
 import { notifyRelease } from "./discordManager";
+import { logger } from "./extension";
 
 // Interface for version data
 interface VersionData {
   version: string;
   description: string;
   date: string;
+}
+
+// Interface for package.json files found in workspace
+interface PackageInfo {
+  path: string;
+  name: string;
+  version: string;
+  relativePath: string;
 }
 
 /**
@@ -23,6 +32,68 @@ export function getCurrentVersion(packageJsonPath: string): string | null {
     console.error("Error reading package.json:", error);
     return null;
   }
+}
+
+/**
+ * Find all package.json files in the workspace
+ */
+export async function findAllPackageJsonFiles(
+  workspaceRoot: string
+): Promise<PackageInfo[]> {
+  const packageFiles: PackageInfo[] = [];
+  const config = vscode.workspace.getConfiguration("prismflow");
+  const excludePatterns = config.get("version.monorepoExcludePatterns", [
+    "node_modules/**",
+    ".git/**", 
+    "dist/**",
+    "build/**",
+    "out/**",
+    ".vscode/**"
+  ]) as string[];
+  
+  // Convert patterns to simple directory names for now (basic implementation)
+  const excludeDirs = excludePatterns
+    .map(pattern => pattern.replace(/[/*]+$/g, ''))
+    .filter(dir => !dir.includes('/'));
+
+  async function searchDirectory(
+    dir: string,
+    basePath: string = ""
+  ): Promise<void> {
+    try {
+      const items = fs.readdirSync(dir, { withFileTypes: true });
+
+      for (const item of items) {
+        const fullPath = path.join(dir, item.name);
+        const relativePath = path.join(basePath, item.name);
+
+        // Skip excluded directories
+        if (
+          item.isDirectory() &&
+          !excludeDirs.includes(item.name)
+        ) {
+          await searchDirectory(fullPath, relativePath);
+        } else if (item.isFile() && item.name === "package.json") {
+          try {
+            const packageJson = JSON.parse(fs.readFileSync(fullPath, "utf8"));
+            packageFiles.push({
+              path: fullPath,
+              name: packageJson.name || "unnamed",
+              version: packageJson.version || "0.0.0",
+              relativePath: relativePath,
+            });
+          } catch (error) {
+            logger.error(`Failed to parse package.json at ${fullPath}:`, error);
+          }
+        }
+      }
+    } catch (error) {
+      logger.error(`Failed to read directory ${dir}:`, error);
+    }
+  }
+
+  await searchDirectory(workspaceRoot);
+  return packageFiles;
 }
 
 /**
@@ -77,6 +148,44 @@ export async function updatePackageVersion(
     console.error("Error updating package.json:", error);
     return false;
   }
+}
+
+/**
+ * Update multiple package.json files with the same version
+ */
+export async function updateMultiplePackageVersions(
+  extensionContext: vscode.ExtensionContext,
+  packageInfos: PackageInfo[],
+  newVersion: string,
+  description: string = ""
+): Promise<{ success: number; failed: string[] }> {
+  const results = { success: 0, failed: [] as string[] };
+
+  for (const packageInfo of packageInfos) {
+    try {
+      const success = await updatePackageVersion(
+        extensionContext,
+        packageInfo.path,
+        newVersion,
+        description
+      );
+
+      if (success) {
+        results.success++;
+        logger.log(
+          `Updated ${packageInfo.relativePath} to version ${newVersion}`
+        );
+      } else {
+        results.failed.push(packageInfo.relativePath);
+        logger.error(`Failed to update ${packageInfo.relativePath}`);
+      }
+    } catch (error) {
+      results.failed.push(packageInfo.relativePath);
+      logger.error(`Error updating ${packageInfo.relativePath}:`, error);
+    }
+  }
+
+  return results;
 }
 
 /**
@@ -266,7 +375,7 @@ export async function runVersionUpdateWizard(
   });
 
   if (confirmUpdate !== "Yes") {
-    vscode.window.showInformationMessage("Version update cancelled.");
+    vscode.window.showInformationMessage("Version update canceled.");
     return;
   }
 
@@ -290,15 +399,196 @@ export async function runVersionUpdateWizard(
 }
 
 /**
+ * Enhanced version update wizard with monorepo support
+ */
+export async function runEnhancedVersionUpdateWizard(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
+    vscode.window.showErrorMessage("No workspace folder is open.");
+    return;
+  }
+
+  const workspaceRoot = vscode.workspace.workspaceFolders[0].uri.fsPath;
+  const config = vscode.workspace.getConfiguration("prismflow");
+  const enableMonorepoSupport = config.get("version.enableMonorepoSupport", false);
+  
+  // Find all package.json files
+  const packageInfos = await findAllPackageJsonFiles(workspaceRoot);
+  
+  if (packageInfos.length === 0) {
+    vscode.window.showErrorMessage("No package.json files found in the workspace.");
+    return;
+  }
+
+  logger.log(`Found ${packageInfos.length} package.json files in workspace`);
+  
+  // If monorepo support is disabled or only one package.json, use single file mode
+  if (!enableMonorepoSupport || packageInfos.length === 1) {
+    await runVersionUpdateWizard(context);
+    return;
+  }
+
+  // Show package.json files found
+  const packageList = packageInfos.map(pkg => 
+    `  • ${pkg.relativePath} (${pkg.name}@${pkg.version})`
+  ).join('\n');
+  
+  const choice = await vscode.window.showInformationMessage(
+    `Found ${packageInfos.length} package.json files:\n\n${packageList}\n\nUpdate all packages to the same version?`,
+    { modal: true },
+    "Update All",
+    "Select Single File",
+    "Cancel"
+  );
+
+  if (!choice || choice === "Cancel") {
+    return;
+  }
+
+  if (choice === "Select Single File") {
+    await runVersionUpdateWizard(context);
+    return;
+  }
+
+  // Get the root package.json version as base
+  const rootPackage = packageInfos.find(pkg => pkg.relativePath === 'package.json');
+  const currentVersion = rootPackage ? rootPackage.version : packageInfos[0].version;
+
+  // Ask which type of update to perform
+  const versionUpdateType = await vscode.window.showQuickPick(
+    [
+      {
+        label: "Major Version Update",
+        description: `Increment first number (x.0.0)`,
+        detail: `Current: ${currentVersion} → New: ${semver.inc(currentVersion, "major")}`,
+      },
+      {
+        label: "Minor Version Update", 
+        description: `Increment second number (0.x.0)`,
+        detail: `Current: ${currentVersion} → New: ${semver.inc(currentVersion, "minor")}`,
+      },
+      {
+        label: "Patch Version Update",
+        description: `Increment third number (0.0.x)`,
+        detail: `Current: ${currentVersion} → New: ${semver.inc(currentVersion, "patch")}`,
+      },
+      {
+        label: "Prerelease Version Update",
+        description: `Add prerelease suffix (0.0.0-alpha.x)`,
+        detail: `Current: ${currentVersion} → New: ${semver.inc(currentVersion, "prerelease")}`,
+      },
+      {
+        label: "Custom Version",
+        description: "Enter a custom version number",
+        detail: "You will be prompted to enter a custom version",
+      },
+    ],
+    {
+      placeHolder: "Select the type of version update to perform",
+    }
+  );
+
+  if (!versionUpdateType) {
+    return;
+  }
+
+  let newVersion = "";
+  
+  if (versionUpdateType.label === "Custom Version") {
+    const customVersion = await vscode.window.showInputBox({
+      prompt: "Enter the new version number",
+      placeHolder: "e.g., 1.2.3",
+      validateInput: (value) => {
+        if (!value || !semver.valid(value)) {
+          return "Please enter a valid semantic version (e.g., 1.2.3)";
+        }
+        return null;
+      },
+    });
+
+    if (!customVersion) {
+      return;
+    }
+
+    newVersion = customVersion;
+  } else {
+    const updateType = versionUpdateType.label.toLowerCase().split(" ")[0] as 
+      | "major" | "minor" | "patch" | "prerelease";
+    newVersion = semver.inc(currentVersion, updateType) || "";
+  }
+
+  if (!newVersion) {
+    vscode.window.showErrorMessage("Invalid version number.");
+    return;
+  }
+
+  // Ask for description
+  const description = await vscode.window.showInputBox({
+    prompt: "Enter a description for this version update (optional)",
+    placeHolder: "e.g., Bug fixes and performance improvements",
+  });
+
+  // Show confirmation
+  const confirmationMessage = `Update all ${packageInfos.length} packages to version ${newVersion}?\n\nPackages to update:\n${packageList}`;
+  
+  const confirmed = await vscode.window.showWarningMessage(
+    confirmationMessage,
+    { modal: true },
+    "Update All",
+    "Cancel"
+  );
+
+  if (confirmed !== "Update All") {
+    return;
+  }
+
+  // Update all packages
+  vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Notification,
+      title: "Updating package versions...",
+      cancellable: false,
+    },
+    async (progress) => {
+      progress.report({ increment: 0, message: "Starting updates..." });
+      
+      const results = await updateMultiplePackageVersions(
+        context,
+        packageInfos,
+        newVersion,
+        description || ""
+      );
+
+      progress.report({ increment: 100, message: "Updates complete!" });
+      
+      if (results.success === packageInfos.length) {
+        vscode.window.showInformationMessage(
+          `✅ Successfully updated all ${results.success} packages to version ${newVersion}!`
+        );
+      } else if (results.success > 0) {
+        vscode.window.showWarningMessage(
+          `⚠️ Updated ${results.success} packages successfully, but ${results.failed.length} failed:\n${results.failed.join(', ')}`
+        );
+      } else {
+        vscode.window.showErrorMessage(
+          `❌ Failed to update any packages. Check the PrismFlow logs for details.`
+        );
+      }
+    }
+  );
+}
+
+/**
  * Register version management commands
  */
 export function registerVersionCommands(
   context: vscode.ExtensionContext
 ): void {
-  // Register the update version command
+  // Register the update version command with enhanced monorepo support
   context.subscriptions.push(
     vscode.commands.registerCommand("prismflow.updateVersion", () => {
-      runVersionUpdateWizard(context);
+      runEnhancedVersionUpdateWizard(context);
     })
   );
 

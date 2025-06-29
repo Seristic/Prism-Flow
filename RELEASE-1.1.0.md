@@ -1,3 +1,5 @@
+<!-- RELEASE-1.1.0.md -->
+
 # PrismFlow v1.1.0 Release Notes
 
 ## 🎯 Dashboard Reliability Improvements
@@ -7,12 +9,14 @@ This minor update focuses on improving the reliability and user experience of th
 ## ✨ What's New
 
 ### Dashboard Streamlining
+
 - **Removed highlighting and liked lines controls** from the dashboard
 - **Command Palette integration** - All editor-specific features now use Command Palette exclusively
 - **Enhanced instructions** - Dashboard now shows comprehensive Command Palette guide
 - **Simplified interface** - Focus on reliable global management commands only
 
 ### Bug Fixes
+
 - **Fixed editor focus issues** that caused infinite loops with unsupported editors
 - **Eliminated "Unsupported language" errors** from dashboard actions
 - **Resolved conflicts** with code-runner-output and similar panels
@@ -28,6 +32,7 @@ This minor update focuses on improving the reliability and user experience of th
 ## 💡 User Experience
 
 ### Dashboard Commands (Buttons)
+
 - Auto-Add Gitignore Patterns
 - Setup Discord Webhook
 - Manage Discord Webhooks
@@ -40,6 +45,7 @@ This minor update focuses on improving the reliability and user experience of th
 - Simulate GitHub Push
 
 ### Command Palette Only (Ctrl+Shift+P)
+
 - **PrismFlow: Apply Highlights** - Apply syntax highlighting
 - **PrismFlow: Clear Highlights** - Clear all highlighting
 - **PrismFlow: Refresh Liked Lines** - Refresh liked lines view

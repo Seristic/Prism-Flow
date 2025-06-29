@@ -2,7 +2,15 @@
 
 ## [1.1.0] - 2025-06-29
 
-### 🎯 Minor Update - Dashboard Reliability Improvements
+### 🎯 Minor Update - Dashboard Reliability & Monorepo Support
+
+#### Added
+
+- **🏗️ Monorepo Support**: Enhanced version management for multi-package projects
+  - Automatically detect and update all package.json files in workspace
+  - Configurable exclude patterns for directories to skip
+  - Option to update all packages simultaneously to the same version
+  - Smart detection with user choice between monorepo and single-file mode
 
 #### Changed
 
@@ -10,7 +18,6 @@
   - Dashboard now focuses exclusively on reliable global management commands
   - All highlighting and liked lines features moved to Command Palette only
   - Eliminates editor focus issues and infinite loops with unsupported editors
-  
 - **📋 Enhanced Command Palette Instructions**: Dashboard now displays comprehensive guide
   - Clear list of all available Command Palette commands with descriptions
   - Better user guidance on where to find each feature
@@ -19,6 +26,7 @@
 #### Fixed
 
 - **🐛 Editor Focus Issues**: Resolved dashboard focus problems with unsupported editors
+
   - No more infinite loops when code-runner-output or similar panels are active
   - Eliminated "Unsupported language" errors from dashboard actions
   - Removed complex editor state management that caused unreliable behavior

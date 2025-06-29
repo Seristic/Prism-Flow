@@ -241,6 +241,26 @@
           "default": true,
           "description": "Automatically update CHANGELOG.md when version is updated."
         },
+        "prismflow.version.enableMonorepoSupport": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable monorepo support to update multiple package.json files simultaneously."
+        },
+        "prismflow.version.monorepoExcludePatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "node_modules/**",
+            ".git/**",
+            "dist/**",
+            "build/**",
+            "out/**",
+            ".vscode/**"
+          ],
+          "description": "Patterns to exclude when searching for package.json files in monorepo mode."
+        },
         "prismflow.github.setupNotifications": {
           "type": "boolean",
           "default": true,

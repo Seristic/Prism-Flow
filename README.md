@@ -1,4 +1,16 @@
-# PrismFlow
+# Pr### 🔧 **Dashboard Reliability Improvements**
+
+- **Streamlined Interface**: Dashboard now focuses exclusively on reliable global management commands
+- **Command Palette Integration**: All highlighting and liked lines features moved to Command Palette for better reliability
+- **Enhanced Instructions**: Clear, comprehensive guide showing exactly which commands are available where
+- **Eliminated Focus Issues**: No more editor state conflicts or infinite loops with unsupported editors
+
+### 🏗️ **Monorepo Support** (New!)
+
+- **Multi-Package Version Management**: Automatically detect and update all package.json files in your workspace
+- **Smart Detection**: Configurable exclude patterns to skip node_modules, dist folders, etc.
+- **Unified Versioning**: Update all packages to the same version with one command
+- **Flexible Options**: Choose to update all packages or select individual filesw
 
 ## 🎯 New in Version 1.1.0
 
@@ -49,14 +61,15 @@ This extension features a **unified dashboard interface** that centralizes all f
 
 ## 🚀 Key Features
 
-- **🔮 Unified Dashboard:** Single interface for all PrismFlow features
+- **🔮 Unified Dashboard:** Simple, reliable management interface for global commands
+- **🏗️ Monorepo Support:** Update multiple package.json files simultaneously
 - **🚀 GitHub Release Manager:** Complete release creation and management
 - **✨ Intelligent Block Highlighting:** Visualize nested code structures
 - **❤️ Liked Lines System:** Bookmark and navigate to important lines
 - **📂 .gitignore Automation:** Keep repositories clean with no effort
 - **💬 Discord Integration:** Get notifications for GitHub events
 - **🐙 GitHub Webhook Setup:** Simple webhook configuration with secure secrets
-- **🏷️ Version Management:** Update versions and maintain changelogs
+- **🏷️ Version Management:** Update versions and maintain changelogs with monorepo support
 
 ## 🎮 Quick Start
 
