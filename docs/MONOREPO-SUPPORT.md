@@ -135,3 +135,22 @@ Perfect for:
 
 - Add more directories to `monorepoExcludePatterns` to skip unnecessary scanning
 - Consider disabling monorepo support for very large workspaces if not needed
+
+## Quality Assurance
+
+PrismFlow follows a comprehensive QA testing process to ensure reliability and security:
+
+- **🛡️ Security Testing**: All releases tested for safe file operations and npm compatibility
+- **📋 QA Checklist**: Every release follows our [mandatory testing checklist](../QA-TESTING-CHECKLIST.md)
+- **🔍 Developer Guide**: See our [Developer QA Guide](DEVELOPER-QA-GUIDE.md) for testing best practices
+- **🚨 Safety First**: Extension is designed to never interfere with package manager operations
+
+### Recent Security Improvements (v1.2.3+)
+
+After resolving malware-like behavior in earlier versions, monorepo support is now:
+- ✅ **Completely safe** - No interference with npm/yarn/pnpm operations
+- ✅ **User-controlled** - All operations require explicit user consent
+- ✅ **Thoroughly tested** - Comprehensive QA process prevents regressions
+- ✅ **Well-documented** - Clear guides and security policies
+
+**If you experience any unusual behavior, please [report it immediately](https://github.com/seristic/prism-flow/issues).**
