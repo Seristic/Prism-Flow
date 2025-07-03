@@ -2,7 +2,7 @@
   "name": "prismflow",
   "displayName": "PrismFlow",
   "description": "Visualizes code structure by highlighting nested blocks and providing enhanced navigation for JSON and similar languages.",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "publisher": "Seristic",
   "preview": false,
   "repository": {

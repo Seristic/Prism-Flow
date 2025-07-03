@@ -1,5 +1,32 @@
 # Change Log
 
+## [1.2.3] - 2025-07-03
+
+### 🚨 CRITICAL FIX - Malware-like Behavior Resolved
+
+#### Fixed
+
+- **🛡️ File Creation Watcher Disabled**: Immediately disabled the file creation watcher that was causing malware-like behavior
+  - **Problem**: Extension was intercepting ALL file creation events (including npm packages)
+  - **Impact**: During `npm install`, the extension would open and modify every created file
+  - **Result**: VS Code treated every npm package file as "unsaved changes" requiring manual save
+  - **Solution**: Completely disabled the file creation watcher until it can be properly filtered
+
+#### Technical Details
+
+- The file watcher was using `"**/*"` pattern which caught ALL file creations
+- Each file creation triggered: `openTextDocument()` → `showTextDocument()` → `editor.edit()`
+- This caused VS Code to open hundreds of files during npm operations
+- Extension was automatically adding header comments to npm package files
+- **This feature is now disabled** and will be reimplemented with proper filtering
+
+#### Impact
+
+- ✅ No more file flooding during npm operations
+- ✅ No more automatic file modifications of npm packages
+- ✅ Normal npm install/update behavior restored
+- ❌ Header comments for new files temporarily disabled (will be restored with proper filtering)
+
 ## [1.2.2] - 2025-06-29
 
 ### 🐛 Hotfix - Discord Webhook Selection

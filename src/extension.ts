@@ -635,145 +635,11 @@ export function activate(context: vscode.ExtensionContext): void {
   // Initial setup of periodic check when extension activates
   setupGitignorePeriodicCheck(context); // Pass context here
 
-  const fileCreationWatcher = vscode.workspace.createFileSystemWatcher(
-    "**/*",
-    false,
-    true,
-    true
-  );
-  context.subscriptions.push(fileCreationWatcher);
-
-  fileCreationWatcher.onDidCreate(async (uri) => {
-    // Delay so VS Code can fully initialize the new file
-    await new Promise((resolve) => setTimeout(resolve, 200));
-
-    try {
-      // Skip directories (we only want files)
-      const stats = await fs.promises.stat(uri.fsPath);
-      if (stats.isDirectory()) {
-        return;
-      }
-
-      const document = await vscode.workspace.openTextDocument(uri);
-      const editor = await vscode.window.showTextDocument(document);
-
-      // Determine workspace root path for relative paths
-      const workspaceRoot =
-        vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
-
-      // Relative path from workspace root, fallback to basename
-      const displayPath = workspaceRoot
-        ? path.relative(workspaceRoot, uri.fsPath)
-        : path.basename(uri.fsPath);
-
-      // Your existing line comment map
-      const lineCommentMap: { [key: string]: string } = {
-        typescript: "//",
-        typescriptreact: "//",
-        javascript: "//",
-        javascriptreact: "//",
-        python: "#",
-        html: "<!--",
-        css: "/*",
-        json: "//",
-        markdown: "<!--",
-        csharp: "//",
-        java: "//",
-        cpp: "//",
-        php: "//",
-        ruby: "#",
-        go: "//",
-        rust: "//",
-        shellscript: "#",
-        yaml: "#",
-        xml: "<!--",
-        plaintext: "//",
-      };
-      const lineComment = lineCommentMap[document.languageId];
-
-      if (!lineComment) {
-        console.log(
-          `PrismFlow: No line comment syntax found or unknown languageId for ${document.languageId}`
-        );
-        return;
-      }
-
-      // --- Check if comment already exists in first 3 lines ---
-      const maxLinesToCheck = Math.min(document.lineCount, 3);
-      let commentExists = false;
-
-      // Normalize displayPath slashes to forward slashes for consistency
-      const normalizedDisplayPath = displayPath.replace(/\\/g, "/");
-
-      for (let i = 0; i < maxLinesToCheck; i++) {
-        let lineText = document.lineAt(i).text.trim();
-
-        // Normalize line slashes too
-        const normalizedLineText = lineText.replace(/\\/g, "/");
-
-        if (
-          (lineComment === "<!--" &&
-            normalizedLineText.includes(normalizedDisplayPath)) ||
-          (lineComment === "/*" &&
-            normalizedLineText.includes(normalizedDisplayPath)) ||
-          (lineComment !== "<!--" &&
-            lineComment !== "/*" &&
-            normalizedLineText.startsWith(lineComment) &&
-            normalizedLineText.includes(normalizedDisplayPath))
-        ) {
-          commentExists = true;
-          break;
-        }
-      }
-
-      if (commentExists) {
-        // Comment already exists, skip insertion
-        return;
-      }
-
-      // --- Compose comment text ---
-      let commentText = "";
-      if (lineComment === "<!--") {
-        commentText = `${lineComment} ${displayPath} -->`;
-      } else if (lineComment === "/*") {
-        commentText = `${lineComment} ${displayPath} */`;
-      } else {
-        commentText = `${lineComment} ${displayPath}`;
-      }
-
-      // Determine insertion position, handle shell script shebangs
-      let insertPosition = new vscode.Position(0, 0);
-      let needsExtraNewlineAfterShebang = false;
-
-      if (
-        document.lineCount > 0 &&
-        document.lineAt(0).text.trim().startsWith("#!") &&
-        document.languageId === "shellscript"
-      ) {
-        insertPosition = new vscode.Position(1, 0);
-        if (
-          document.lineCount === 1 ||
-          document.lineAt(1).text.trim().length === 0
-        ) {
-          needsExtraNewlineAfterShebang = true;
-        }
-      }
-
-      // Insert the comment
-      await editor.edit((editBuilder) => {
-        if (needsExtraNewlineAfterShebang) {
-          editBuilder.insert(new vscode.Position(1, 0), "\n");
-        }
-        editBuilder.insert(insertPosition, commentText + "\n");
-      });
-
-      console.log(`PrismFlow: Added header comment to new file: ${uri.fsPath}`);
-    } catch (err: any) {
-      console.error(
-        `PrismFlow: Error processing file ${uri.fsPath}: ${err.message || err}`
-      );
-    }
-  });
+  // ⚠️ DISABLED: File creation watcher disabled due to malware-like behavior
+  // This was causing issues during npm install and other bulk file operations
+  // The file watcher was opening and modifying every file created by npm, causing
+  // VS Code to treat them as unsaved changes and creating a "malware-like" experience
+  // TODO: Re-implement with proper filtering for user-created files only
 
   // Removed the problematic diagnostic interval for untracked files
   // as the issue was incorrect API usage, not timing.
@@ -799,10 +665,10 @@ export function deactivate(): void {
     clearInterval(gitignorePeriodicCheckInterval);
     gitignorePeriodicCheckInterval = undefined;
   }
-  // Dispose the file creation watcher
-  if (fileCreationWatcher) {
-    fileCreationWatcher.dispose();
-    fileCreationWatcher = undefined;
-  }
+  // Dispose the file creation watcher (disabled)
+  // if (fileCreationWatcher) {
+  //   fileCreationWatcher.dispose();
+  //   fileCreationWatcher = undefined;
+  // }
   // VS Code automatically disposes items added to context.subscriptions
 }

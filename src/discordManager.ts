@@ -161,7 +161,9 @@ export async function notifyRelease(
   }
 
   // If singleWebhookOnly is true, use only the first webhook to prevent spam
-  const webhooksToUse = singleWebhookOnly ? [releaseWebhooks[0]] : releaseWebhooks;
+  const webhooksToUse = singleWebhookOnly
+    ? [releaseWebhooks[0]]
+    : releaseWebhooks;
 
   for (const hook of webhooksToUse) {
     try {
@@ -193,7 +195,13 @@ export async function notifyRelease(
   }
 
   if (singleWebhookOnly && releaseWebhooks.length > 1) {
-    console.log(`Sent notification to primary webhook only (${releaseWebhooks[0].name}) to prevent spam. ${releaseWebhooks.length - 1} other webhook(s) skipped.`);
+    console.log(
+      `Sent notification to primary webhook only (${
+        releaseWebhooks[0].name
+      }) to prevent spam. ${
+        releaseWebhooks.length - 1
+      } other webhook(s) skipped.`
+    );
   }
 }
 
