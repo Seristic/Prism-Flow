@@ -29,7 +29,7 @@
 
 - **🎮 Simulation Commands**: All GitHub event simulation commands properly registered
   - `PrismFlow: Simulate Pull Request Event`
-  - `PrismFlow: Simulate Issue Event`  
+  - `PrismFlow: Simulate Issue Event`
   - `PrismFlow: Simulate Discussion Event`
   - `PrismFlow: Simulate Deployment Event`
 

@@ -21,6 +21,7 @@ import * as githubSetupManager from "./githubSetupManager";
 import { GitHubWebhookManager } from "./githubWebhookManager";
 import { GitHubReleaseManager } from "./githubReleaseManager";
 import { DashboardManager } from "./dashboardManager";
+import { GitWatcher } from "./gitWatcher";
 
 let selectionChangeTimeout: NodeJS.Timeout | undefined;
 let gitignorePeriodicCheckInterval: NodeJS.Timeout | undefined; // For periodic check
@@ -39,6 +40,9 @@ let fileCreationWatcher: vscode.FileSystemWatcher | undefined;
 
 // Dashboard Manager instance
 let dashboardManager: DashboardManager | undefined;
+
+// Git Watcher instance
+let gitWatcher: GitWatcher | undefined;
 
 // PrismFlow Output Channel for logging
 let outputChannel: vscode.OutputChannel | undefined;
@@ -311,7 +315,46 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.commands.registerCommand("prismflow.simulateDeploymentEvent", () =>
       simulateDeploymentEvent(context)
-    )
+    ),
+    vscode.commands.registerCommand("prismflow.testGitWatcher", async () => {
+      if (gitWatcher) {
+        vscode.window.showInformationMessage("🔍 Testing GitWatcher - checking for recent commits...");
+        
+        // Trigger a manual check for commits
+        try {
+          const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+          if (!workspaceFolder) {
+            vscode.window.showErrorMessage("No workspace folder found");
+            return;
+          }
+
+          // Get the latest commit info using git command
+          const cp = require("child_process");
+          cp.exec("git log -1 --pretty=format:'%H|%s|%an'", 
+            { cwd: workspaceFolder.uri.fsPath }, 
+            async (error: any, stdout: string, stderr: string) => {
+              if (error) {
+                vscode.window.showErrorMessage(`Git command failed: ${error.message}`);
+                return;
+              }
+
+              const [hash, message, author] = stdout.split('|');
+              vscode.window.showInformationMessage(
+                `Latest commit: ${hash.substring(0, 7)} by ${author}: ${message.substring(0, 50)}...`
+              );
+
+              // Trigger Discord notification for testing
+              const repoUrl = "https://github.com/test/repo"; // Test URL
+              await discordManager.notifyPush(context, message, author, repoUrl);
+            }
+          );
+        } catch (error) {
+          vscode.window.showErrorMessage(`GitWatcher test failed: ${error}`);
+        }
+      } else {
+        vscode.window.showErrorMessage("GitWatcher is not initialized");
+      }
+    })
   );
 
   // Register GitHub Release Manager
@@ -855,6 +898,14 @@ ${originalContent
   // Initial setup of periodic check when extension activates
   setupGitignorePeriodicCheck(context); // Pass context here
 
+  // Initialize Git Watcher for automatic Discord notifications on external Git pushes
+  gitWatcher = new GitWatcher(context);
+  gitWatcher.startWatching().then(() => {
+    logger.log("GitWatcher initialized and started monitoring Git changes");
+  }).catch((error) => {
+    logger.error("Failed to start GitWatcher: " + error);
+  });
+
   // ⚠️ DISABLED: File creation watcher disabled due to malware-like behavior
   // This was causing issues during npm install and other bulk file operations
   // The file watcher was opening and modifying every file created by npm, causing
@@ -885,6 +936,13 @@ export function deactivate(): void {
     clearInterval(gitignorePeriodicCheckInterval);
     gitignorePeriodicCheckInterval = undefined;
   }
+
+  // Dispose Git Watcher
+  if (gitWatcher) {
+    gitWatcher.dispose();
+    gitWatcher = undefined;
+  }
+
   // Dispose the file creation watcher (disabled)
   // if (fileCreationWatcher) {
   //   fileCreationWatcher.dispose();

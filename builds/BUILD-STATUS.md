@@ -10,19 +10,19 @@ This directory contains all compiled extension packages with their release statu
 
 ## 🗂️ Package Inventory
 
-| Version | File                   | Status            | Release Date | Notes                                                 |
-| ------- | ---------------------- | ----------------- | ------------ | ----------------------------------------------------- |
-| 1.2.8   | `prismflow-1.2.8.vsix` | ✅ **CURRENT**    | 2025-07-04   | Manual Discord integration enhancement & bug fixes   |
+| Version | File                   | Status            | Release Date | Notes                                                  |
+| ------- | ---------------------- | ----------------- | ------------ | ------------------------------------------------------ |
+| 1.2.8   | `prismflow-1.2.8.vsix` | ✅ **CURRENT**    | 2025-07-04   | Manual Discord integration enhancement & bug fixes     |
 | 1.2.7   | `prismflow-1.2.7.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | Enhanced Discord webhook debugging (replaced by 1.2.8) |
-| 1.2.6   | `prismflow-1.2.6.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | Complete Discord integration (replaced by 1.2.7)      |
-| 1.2.5   | `prismflow-1.2.5.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | GitHub CLI integration (replaced by 1.2.6)            |
-| 1.2.4   | `prismflow-1.2.4.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | QA testing tools (replaced by 1.2.6)                  |
-| 1.2.3   | `prismflow-1.2.3.vsix` | ⬆️ **SUPERSEDED** | 2025-07-03   | Security fix release (replaced by 1.2.5)              |
-| 1.2.2   | `prismflow-1.2.2.vsix` | ❌ **REMOVED**    | 2025-06-29   | Pulled due to malware-like behavior                   |
-| 1.2.1   | `prismflow-1.2.1.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Discord notification fix, replaced by 1.2.5           |
-| 1.2.0   | `prismflow-1.2.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Monorepo support initial release                      |
-| 1.1.0   | `prismflow-1.1.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Dashboard reliability improvements                    |
-| 1.0.0   | `prismflow-1.0.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-28   | Major release with dashboard integration              |
+| 1.2.6   | `prismflow-1.2.6.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | Complete Discord integration (replaced by 1.2.7)       |
+| 1.2.5   | `prismflow-1.2.5.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | GitHub CLI integration (replaced by 1.2.6)             |
+| 1.2.4   | `prismflow-1.2.4.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | QA testing tools (replaced by 1.2.6)                   |
+| 1.2.3   | `prismflow-1.2.3.vsix` | ⬆️ **SUPERSEDED** | 2025-07-03   | Security fix release (replaced by 1.2.5)               |
+| 1.2.2   | `prismflow-1.2.2.vsix` | ❌ **REMOVED**    | 2025-06-29   | Pulled due to malware-like behavior                    |
+| 1.2.1   | `prismflow-1.2.1.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Discord notification fix, replaced by 1.2.5            |
+| 1.2.0   | `prismflow-1.2.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Monorepo support initial release                       |
+| 1.1.0   | `prismflow-1.1.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Dashboard reliability improvements                     |
+| 1.0.0   | `prismflow-1.0.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-28   | Major release with dashboard integration               |
 
 ---
 

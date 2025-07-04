@@ -141,6 +141,11 @@
         "command": "prismflow.createCustomQAChecklist",
         "title": "PrismFlow: Create Custom QA Checklist",
         "icon": "$(new-file)"
+      },
+      {
+        "command": "prismflow.testGitWatcher",
+        "title": "PrismFlow: Test Git Watcher",
+        "icon": "$(git-branch)"
       }
     ],
     "configuration": {

@@ -9,7 +9,7 @@
 - ✅ **Pushes**: Commit notifications with author and repository info
 - ✅ **Releases**: Automated and manual release notifications
 - ✅ **Pull Requests**: Support for opened, closed, merged, updated actions
-- ✅ **Issues**: Support for opened, closed, updated, assigned actions  
+- ✅ **Issues**: Support for opened, closed, updated, assigned actions
 - ✅ **Discussions**: Support for created, answered, updated actions
 - ✅ **Deployments**: Support for success, failure, pending, in_progress statuses
 

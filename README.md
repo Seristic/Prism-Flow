@@ -1,11 +1,11 @@
 # PrismFlow
 
-**Visualize### 🆕 **Latest Updates (v1.2.8)**
+**Visualize### 🆕 **Latest Updates (v1.2.8)\*\*
 
 - **📱 Discord Integration**: Complete Discord webhook support for all GitHub event types (pushes, releases, pull requests, issues, discussions, deployments)
 - **🧪 Enhanced Testing**: Comprehensive simulation commands and webhook validation tools
 - **🐛 Bug Fixes**: Resolved compilation issues and improved TypeScript compliance
-- **🔧 Code Quality**: Manual refinements and better function organizationStructure • Manage Monorepos • Automate Workflows**
+- **🔧 Code Quality**: Manual refinements and better function organizationStructure • Manage Monorepos • Automate Workflows\*\*
 
 Code with Clarity and Flow. Keep your repositories clean effortlessly.
 
@@ -84,7 +84,7 @@ PrismFlow provides comprehensive Discord webhook integration for all GitHub even
 - **🚀 Releases**: Automated and manual release notifications with changelog details
 - **🔄 Pull Requests**: Notifications for opened, closed, merged, and updated PRs
 - **🐛 Issues**: Notifications for opened, closed, updated, and assigned issues
-- **💬 Discussions**: Notifications for created, answered, and updated discussions  
+- **💬 Discussions**: Notifications for created, answered, and updated discussions
 - **🚀 Deployments**: Status notifications for success, failure, pending, and in-progress deployments
 
 ### Features
