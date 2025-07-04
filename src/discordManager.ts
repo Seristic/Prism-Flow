@@ -188,8 +188,26 @@ export async function notifyRelease(
       console.log(`Successfully sent release notification to ${hook.name}`);
     } catch (error) {
       console.error(`Error notifying release to webhook ${hook.name}:`, error);
+
+      // Enhanced error reporting
+      let errorMessage = "Unknown error";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+
+        // Check for specific Discord API errors
+        if (error.message.includes("UNKNOWN_WEBHOOK")) {
+          errorMessage = `Webhook not found or invalid. Please check the webhook URL for ${hook.name}`;
+        } else if (error.message.includes("MISSING_PERMISSIONS")) {
+          errorMessage = `Bot lacks permissions to send messages to ${hook.name}`;
+        } else if (error.message.includes("CHANNEL_NOT_FOUND")) {
+          errorMessage = `Channel not found for webhook ${hook.name}`;
+        } else if (error.message.includes("Received one or more errors")) {
+          errorMessage = `Discord API error for ${hook.name}. Webhook URL may be invalid or expired`;
+        }
+      }
+
       vscode.window.showErrorMessage(
-        `Failed to send Discord notification to ${hook.name}: ${error}`
+        `Failed to send Discord notification to ${hook.name}: ${errorMessage}`
       );
     }
   }
@@ -624,4 +642,107 @@ async function execCommand(command: string): Promise<string> {
       }
     );
   });
+}
+
+// Test Discord webhook connectivity
+export async function testWebhook(
+  context: vscode.ExtensionContext,
+  webhookId?: string
+): Promise<void> {
+  const currentWebhooks = await loadWebhooks(context);
+
+  if (currentWebhooks.length === 0) {
+    vscode.window.showWarningMessage(
+      "No Discord webhooks configured. Use 'PrismFlow: Setup Discord Webhook Integration' to configure one."
+    );
+    return;
+  }
+
+  // If specific webhook ID provided, test that one, otherwise test all release webhooks
+  const webhooksToTest = webhookId
+    ? currentWebhooks.filter((hook) => hook.id === webhookId)
+    : currentWebhooks.filter((hook) => hook.events.includes("releases"));
+
+  if (webhooksToTest.length === 0) {
+    vscode.window.showWarningMessage("No release webhooks found to test.");
+    return;
+  }
+
+  for (const hook of webhooksToTest) {
+    try {
+      const webhook = new WebhookClient({ url: hook.url });
+
+      const embed = createDefaultEmbed(
+        "🧪 Webhook Test",
+        "This is a test notification from PrismFlow to verify Discord webhook connectivity.",
+        0x0099ff
+      );
+
+      embed.addFields(
+        { name: "Test Time", value: new Date().toLocaleString() },
+        { name: "Webhook Name", value: hook.name },
+        { name: "Status", value: "✅ Connection Successful" }
+      );
+
+      await webhook.send({
+        username: "PrismFlow Bot",
+        embeds: [embed],
+      });
+
+      vscode.window.showInformationMessage(
+        `✅ Test successful for webhook: ${hook.name}`
+      );
+    } catch (error) {
+      console.error(`Error testing webhook ${hook.name}:`, error);
+
+      let errorMessage = "Unknown error";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+
+        // Check for specific Discord API errors
+        if (error.message.includes("UNKNOWN_WEBHOOK")) {
+          errorMessage = `Webhook not found or invalid. The webhook URL may be expired or deleted.`;
+        } else if (error.message.includes("MISSING_PERMISSIONS")) {
+          errorMessage = `Bot lacks permissions to send messages.`;
+        } else if (error.message.includes("CHANNEL_NOT_FOUND")) {
+          errorMessage = `Channel not found. The channel may have been deleted.`;
+        } else if (error.message.includes("Received one or more errors")) {
+          errorMessage = `Discord API error. Webhook URL may be invalid, expired, or malformed.`;
+        }
+      }
+
+      vscode.window.showErrorMessage(
+        `❌ Test failed for webhook ${hook.name}: ${errorMessage}`
+      );
+    }
+  }
+}
+
+// Validate Discord webhook URL format
+export function validateWebhookUrl(url: string): {
+  valid: boolean;
+  error?: string;
+} {
+  try {
+    // Check if URL is valid
+    const urlObj = new URL(url);
+
+    // Check if it's a Discord webhook URL
+    if (
+      !urlObj.hostname.includes("discord.com") &&
+      !urlObj.hostname.includes("discordapp.com")
+    ) {
+      return { valid: false, error: "URL must be a Discord webhook URL" };
+    }
+
+    // Check URL format
+    const webhookPattern = /\/api\/webhooks\/(\d+)\/([a-zA-Z0-9_-]+)/;
+    if (!webhookPattern.test(urlObj.pathname)) {
+      return { valid: false, error: "Invalid Discord webhook URL format" };
+    }
+
+    return { valid: true };
+  } catch (error) {
+    return { valid: false, error: "Invalid URL format" };
+  }
 }

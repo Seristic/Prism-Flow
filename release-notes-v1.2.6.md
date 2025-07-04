@@ -5,18 +5,21 @@
 ### ✨ What's New in v1.2.6
 
 #### **🖱️ Dashboard Discord Controls**
+
 - **📢 Manual Webhook Button**: New orange "Send Latest Release Webhook" button in GitHub Integration section
 - **🎛️ Instant Access**: One-click Discord notifications directly from the dashboard
 - **⚡ Smart Detection**: Automatically detects your latest release using GitHub CLI or git tags
 - **🔄 Loading States**: Clear visual feedback with "Executing..." states and success/error messages
 
 #### **🔧 Enhanced Discord Automation**
+
 - **🚀 Automatic Notifications**: GitHub Release Manager now triggers Discord webhooks automatically
 - **🛡️ Error Recovery**: Graceful fallbacks when Discord notifications fail (doesn't break releases)
 - **📱 Single Webhook Mode**: Prevents spam by sending to primary webhook only
 - **🔍 Smart Fallbacks**: Multiple detection methods for reliable release identification
 
 #### **⌨️ Command Palette Integration**
+
 - **New Command**: `PrismFlow: Send Latest Release Webhook` available via `Ctrl+Shift+P`
 - **Consistent Experience**: Same functionality accessible from dashboard or keyboard shortcuts
 - **Proper Registration**: Full VS Code integration with proper command structure
@@ -33,12 +36,14 @@
 ### 📋 Dashboard Quick Guide
 
 **Access Discord Features:**
+
 1. **Open PrismFlow Dashboard**: `Ctrl+Shift+P` → "PrismFlow: Show Dashboard"
 2. **Navigate to GitHub Integration section**
 3. **Click "📢 Send Latest Release Webhook"** for manual notifications
 4. **Use other GitHub tools** for automated release creation
 
 **Command Palette Alternative:**
+
 - `Ctrl+Shift+P` → "PrismFlow: Send Latest Release Webhook"
 
 ### 🚀 Installation & Upgrade
@@ -50,12 +55,14 @@
 ### 🔍 Technical Improvements
 
 #### **Code Quality**
+
 - **Zero Compilation Errors**: Clean TypeScript compilation
 - **Enhanced Error Handling**: Comprehensive error recovery and user feedback
 - **Optimized Performance**: Efficient webhook detection and processing
 - **Proper Integration**: Full VS Code extension API compliance
 
 #### **User Experience**
+
 - **Intuitive Controls**: Self-explanatory interface with clear labeling
 - **Consistent Behavior**: Predictable responses across all features
 - **Helpful Feedback**: Clear success/error messages with actionable guidance
@@ -76,4 +83,4 @@
 
 ---
 
-*PrismFlow v1.2.6 represents the completion of our Discord integration vision - combining powerful automation with intuitive manual controls, all built on a foundation of security excellence and comprehensive testing. Thank you for your continued trust as we enhance developer productivity together.*
+_PrismFlow v1.2.6 represents the completion of our Discord integration vision - combining powerful automation with intuitive manual controls, all built on a foundation of security excellence and comprehensive testing. Thank you for your continued trust as we enhance developer productivity together._

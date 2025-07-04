@@ -10,17 +10,18 @@ This directory contains all compiled extension packages with their release statu
 
 ## 🗂️ Package Inventory
 
-| Version | File                   | Status            | Release Date | Notes                                         |
-| ------- | ---------------------- | ----------------- | ------------ | --------------------------------------------- |
-| 1.2.6   | `prismflow-1.2.6.vsix` | ✅ **CURRENT**    | 2025-07-04   | Complete Discord integration with dashboard update |
-| 1.2.5   | `prismflow-1.2.5.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | GitHub CLI integration (replaced by 1.2.6)   |
-| 1.2.4   | `prismflow-1.2.4.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | QA testing tools (replaced by 1.2.6)          |
-| 1.2.3   | `prismflow-1.2.3.vsix` | ⬆️ **SUPERSEDED** | 2025-07-03   | Security fix release (replaced by 1.2.5)      |
-| 1.2.2   | `prismflow-1.2.2.vsix` | ❌ **REMOVED**    | 2025-06-29   | Pulled due to malware-like behavior           |
-| 1.2.1   | `prismflow-1.2.1.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Discord notification fix, replaced by 1.2.5   |
-| 1.2.0   | `prismflow-1.2.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Monorepo support initial release              |
-| 1.1.0   | `prismflow-1.1.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Dashboard reliability improvements            |
-| 1.0.0   | `prismflow-1.0.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-28   | Major release with dashboard integration      |
+| Version | File                   | Status            | Release Date | Notes                                              |
+| ------- | ---------------------- | ----------------- | ------------ | -------------------------------------------------- |
+| 1.2.7   | `prismflow-1.2.7.vsix` | ✅ **CURRENT**    | 2025-07-04   | Enhanced Discord webhook debugging and error handling |
+| 1.2.6   | `prismflow-1.2.6.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | Complete Discord integration (replaced by 1.2.7)  |
+| 1.2.5   | `prismflow-1.2.5.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | GitHub CLI integration (replaced by 1.2.6)         |
+| 1.2.4   | `prismflow-1.2.4.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | QA testing tools (replaced by 1.2.6)               |
+| 1.2.3   | `prismflow-1.2.3.vsix` | ⬆️ **SUPERSEDED** | 2025-07-03   | Security fix release (replaced by 1.2.5)           |
+| 1.2.2   | `prismflow-1.2.2.vsix` | ❌ **REMOVED**    | 2025-06-29   | Pulled due to malware-like behavior                |
+| 1.2.1   | `prismflow-1.2.1.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Discord notification fix, replaced by 1.2.5        |
+| 1.2.0   | `prismflow-1.2.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Monorepo support initial release                   |
+| 1.1.0   | `prismflow-1.1.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Dashboard reliability improvements                 |
+| 1.0.0   | `prismflow-1.0.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-28   | Major release with dashboard integration           |
 
 ---
 
@@ -80,7 +81,8 @@ This directory contains all compiled extension packages with their release statu
 ## 📈 Release Timeline
 
 ```
-2025-07-04  v1.2.6  ✅ Complete Discord integration with dashboard update (PUBLISHED)
+2025-07-04  v1.2.7  ✅ Enhanced Discord webhook debugging and error handling (PUBLISHED)
+2025-07-04  v1.2.6  ⬆️ Complete Discord integration with dashboard update
 2025-07-04  v1.2.5  ⬆️ GitHub integration enhancement + Discord webhook fixes
 2025-07-04  v1.2.4  ⬆️ QA testing tools enhancement
 2025-07-03  v1.2.3  ⬆️ Security fix release
@@ -95,7 +97,53 @@ This directory contains all compiled extension packages with their release statu
 
 ## 🔍 Build Details
 
-### v1.2.6 (Current) ✅ **PUBLISHED**
+### v1.2.7 (Current) ✅ **PUBLISHED**
+
+**Release Type**: Patch Release - Enhanced Discord Webhook Debugging  
+**Size**: ~2.9MB  
+**Build Date**: 2025-07-04  
+**Marketplace Status**: ✅ Published to VS Code Marketplace  
+**Key Changes**:
+
+- ✅ **PUBLISHED**: Successfully uploaded to VS Code Marketplace
+- ✅ **ENHANCED ERROR HANDLING**: Specific Discord API error detection and reporting
+- ✅ **NEW COMMAND**: `PrismFlow: Test Discord Webhook` for debugging connectivity
+- ✅ **WEBHOOK VALIDATION**: URL format validation to catch malformed webhooks
+- ✅ **DETAILED DIAGNOSTICS**: Clear error messages for common Discord webhook issues
+- ✅ **IMPROVED USER EXPERIENCE**: Better guidance when webhooks fail
+- ✅ All previous Discord dashboard integration features from v1.2.6
+
+**Discord Webhook Debugging Features**:
+
+- **Specific Error Detection**: Identifies UNKNOWN_WEBHOOK, MISSING_PERMISSIONS, CHANNEL_NOT_FOUND errors
+- **Test Command**: New `PrismFlow: Test Discord Webhook` command for connectivity testing
+- **URL Validation**: Validates Discord webhook URL format before attempting to send
+- **Enhanced Reporting**: Clear, actionable error messages instead of generic failures
+- **Debugging Tools**: Comprehensive logging and error tracking for webhook issues
+
+**Error Types Detected**:
+
+- `UNKNOWN_WEBHOOK`: Webhook not found or invalid/expired
+- `MISSING_PERMISSIONS`: Bot lacks permissions to send messages
+- `CHANNEL_NOT_FOUND`: Channel was deleted or moved
+- `Received one or more errors`: General Discord API error (usually invalid webhook)
+- `Invalid URL format`: Malformed webhook URL
+
+**User Benefits**:
+
+- **Clear Guidance**: Users now get specific instructions on how to fix webhook issues
+- **Easy Testing**: One-click webhook testing to verify connectivity
+- **Faster Debugging**: Immediate identification of webhook problems
+- **Better Success Rate**: Enhanced validation prevents common configuration errors
+
+**Marketplace Information**:
+
+- **Extension URL**: <https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow>
+- **Publisher**: Seristic
+- **Category**: Visualization
+- **Latest Update**: Enhanced Discord webhook reliability
+
+### v1.2.6 (Superseded) ⬆️
 
 **Release Type**: Patch Release - Complete Discord Dashboard Integration  
 **Size**: ~2.9MB  
