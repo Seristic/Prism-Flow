@@ -98,7 +98,53 @@ This directory contains all compiled extension packages with their release statu
 
 ## 🔍 Build Details
 
-### v1.2.7 (Current) ✅ **PUBLISHED**
+### v1.2.8 (Current) ✅ **PUBLISHED**
+
+**Release Type**: Patch Release - Manual Discord Integration Enhancement & Bug Fixes  
+**Size**: ~2.9MB  
+**Build Date**: 2025-07-04  
+**Marketplace Status**: ✅ Published to VS Code Marketplace  
+**GitHub Release**: ✅ Published to GitHub Releases  
+**Key Changes**:
+
+- ✅ **PUBLISHED**: Successfully uploaded to VS Code Marketplace and GitHub
+- ✅ **ENHANCED DISCORD INTEGRATION**: Complete implementation for all GitHub event types
+- ✅ **BUG FIXES**: Resolved TypeScript compilation errors in event simulation commands
+- ✅ **CODE QUALITY**: Manual code refinements and improved organization
+- ✅ **SIMULATION COMMANDS**: All GitHub event simulation commands properly registered
+- ✅ **COMPREHENSIVE DOCUMENTATION**: Updated README, SECURITY, and Discord documentation
+- ✅ All previous Discord webhook debugging and error handling features from v1.2.7
+
+**Discord Integration Features**:
+
+- **Complete Event Coverage**: All GitHub event types supported (pushes, releases, pull requests, issues, discussions, deployments)
+- **Enhanced Testing**: Comprehensive simulation commands and webhook validation tools
+- **Better Code Organization**: Improved function references and TypeScript compliance
+- **Fixed Compilation Issues**: Resolved event simulation command registration errors
+- **Maintained Features**: All v1.2.7 debugging and error detection capabilities preserved
+
+**Technical Improvements**:
+
+- **Function Organization**: Better separation of concerns in event simulation functions
+- **TypeScript Compliance**: Improved error handling and type safety
+- **Code Maintainability**: Enhanced documentation and code structure
+- **Error Resolution**: Fixed compilation issues with local function references
+
+**User Benefits**:
+
+- **Reliable Discord Notifications**: Complete webhook support for all GitHub events
+- **Easy Testing**: Comprehensive simulation and testing tools
+- **Better Documentation**: Enhanced README with detailed Discord integration guide
+- **Improved Stability**: Bug fixes and code quality improvements
+- **Backward Compatibility**: All existing features preserved and enhanced
+
+**Marketplace Information**:
+
+- **Extension URL**: <https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow>
+- **GitHub Release**: <https://github.com/Seristic/Prism-Flow/releases/tag/v1.2.8>
+- **Publisher**: Seristic
+- **Category**: Visualization
+- **Latest Update**: Manual Discord integration enhancement & bug fixes
 
 **Release Type**: Patch Release - Enhanced Discord Webhook Debugging  
 **Size**: ~2.9MB  
