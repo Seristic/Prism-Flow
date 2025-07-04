@@ -13,7 +13,7 @@ This directory contains all compiled extension packages with their release statu
 | Version | File                   | Status            | Release Date | Notes                                       |
 | ------- | ---------------------- | ----------------- | ------------ | ------------------------------------------- |
 | 1.2.4   | `prismflow-1.2.4.vsix` | ✅ **CURRENT**    | 2025-07-04   | QA testing tools and enhanced security docs |
-| 1.2.3   | `prismflow-1.2.3.vsix` | ⬆️ **SUPERSEDED** | 2025-07-03   | Security fix release (replaced by 1.2.4)   |
+| 1.2.3   | `prismflow-1.2.3.vsix` | ⬆️ **SUPERSEDED** | 2025-07-03   | Security fix release (replaced by 1.2.4)    |
 | 1.2.2   | `prismflow-1.2.2.vsix` | ❌ **REMOVED**    | 2025-06-29   | Pulled due to malware-like behavior         |
 | 1.2.1   | `prismflow-1.2.1.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Discord notification fix, replaced by 1.2.4 |
 | 1.2.0   | `prismflow-1.2.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Monorepo support initial release            |
@@ -95,6 +95,7 @@ This directory contains all compiled extension packages with their release statu
 **Release Type**: QA Tools Enhancement  
 **Size**: ~2.87MB  
 **Key Changes**:
+
 - ✅ Added QA testing tool commands for quick access
 - ✅ Custom QA checklist creation without affecting defaults
 - ✅ Enhanced developer QA guide with customization instructions
@@ -102,11 +103,13 @@ This directory contains all compiled extension packages with their release statu
 - ✅ Better version control handling for custom checklists
 
 **New Commands**:
+
 - `PrismFlow: Open QA Testing Checklist` - Quick access to testing checklist
-- `PrismFlow: Open Developer QA Guide` - Quick access to developer guide  
+- `PrismFlow: Open Developer QA Guide` - Quick access to developer guide
 - `PrismFlow: Create Custom QA Checklist` - Create customizable project-specific checklist
 
 **Quality Improvements**:
+
 - Enhanced QA accessibility for developers
 - Preserved original checklist while enabling customization
 - Better documentation for testing workflows
