@@ -257,16 +257,39 @@ export async function notifyPush(
         { name: "Repository", value: repoUrl }
       );
 
-      await webhook.send({
-        username: "PrismFlow Bot",
-        embeds: [embed],
+      await retryDiscordCall(async () => {
+        await webhook.send({
+          username: "PrismFlow Bot",
+          embeds: [embed],
+        });
       });
 
       console.log(`Successfully sent push notification to ${hook.name}`);
     } catch (error) {
       console.error(`Error notifying push to webhook ${hook.name}:`, error);
+
+      let errorMessage = "Unknown error";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+
+        // Check for specific Discord API errors
+        if (error.message.includes("UNKNOWN_WEBHOOK")) {
+          errorMessage = `Webhook not found or invalid. Please check the webhook URL for ${hook.name}`;
+        } else if (error.message.includes("MISSING_PERMISSIONS")) {
+          errorMessage = `Bot lacks permissions to send messages to ${hook.name}`;
+        } else if (error.message.includes("CHANNEL_NOT_FOUND")) {
+          errorMessage = `Channel not found for webhook ${hook.name}`;
+        } else if (error.message.includes("Received one or more errors")) {
+          errorMessage = `Discord API error for ${hook.name}. Webhook URL may be invalid or expired`;
+        } else if (error.message.includes("rate limit")) {
+          errorMessage = `Discord rate limit exceeded for ${hook.name}. Please wait a moment and try again`;
+        } else if (error.message.includes("timeout")) {
+          errorMessage = `Discord API timeout for ${hook.name}. Please check your internet connection`;
+        }
+      }
+
       vscode.window.showErrorMessage(
-        `Failed to send Discord notification to ${hook.name}: ${error}`
+        `Failed to send Discord notification to ${hook.name}: ${errorMessage}`
       );
     }
   }
@@ -1079,6 +1102,97 @@ export async function testWebhook(
   }
 }
 
+// Advanced Discord webhook connectivity test
+export async function testWebhookConnectivity(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  const currentWebhooks = await loadWebhooks(context);
+
+  if (currentWebhooks.length === 0) {
+    vscode.window.showWarningMessage(
+      "No Discord webhooks configured. Use 'PrismFlow: Setup Discord Webhook Integration' to configure one."
+    );
+    return;
+  }
+
+  vscode.window.showInformationMessage(
+    "🔍 Testing Discord webhook connectivity..."
+  );
+
+  for (const hook of currentWebhooks) {
+    try {
+      console.log(`Testing webhook: ${hook.name} (${hook.url})`);
+
+      // First, test the webhook URL format
+      const validation = validateWebhookUrl(hook.url);
+      if (!validation.valid) {
+        vscode.window.showErrorMessage(
+          `❌ Webhook "${hook.name}" has invalid URL format: ${validation.error}`
+        );
+        continue;
+      }
+
+      // Test with retry mechanism
+      await retryDiscordCall(async () => {
+        const webhook = new WebhookClient({ url: hook.url });
+
+        const embed = createDefaultEmbed(
+          "🔗 Connectivity Test",
+          "Testing Discord webhook connectivity with retry mechanism",
+          0x00ff00
+        );
+
+        embed.addFields(
+          { name: "Test Time", value: new Date().toISOString() },
+          { name: "Webhook Name", value: hook.name },
+          {
+            name: "Status",
+            value: "✅ Connection Successful with Retry Support",
+          }
+        );
+
+        await webhook.send({
+          username: "PrismFlow Bot",
+          embeds: [embed],
+        });
+      });
+
+      vscode.window.showInformationMessage(
+        `✅ Connectivity test successful for webhook: ${hook.name}`
+      );
+    } catch (error) {
+      console.error(
+        `Connectivity test failed for webhook ${hook.name}:`,
+        error
+      );
+
+      let errorMessage = "Unknown error";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+
+        // Provide specific troubleshooting advice
+        if (error.message.includes("UNKNOWN_WEBHOOK")) {
+          errorMessage +=
+            "\n\n🔧 Troubleshooting:\n• The webhook may have been deleted from Discord\n• Check if the Discord channel still exists\n• Recreate the webhook in Discord";
+        } else if (error.message.includes("rate limit")) {
+          errorMessage +=
+            "\n\n🔧 Troubleshooting:\n• Discord is rate limiting your requests\n• Wait a few minutes before trying again\n• Consider reducing notification frequency";
+        } else if (error.message.includes("timeout")) {
+          errorMessage +=
+            "\n\n🔧 Troubleshooting:\n• Check your internet connection\n• Discord servers may be experiencing issues\n• Try again in a few moments";
+        } else if (error.message.includes("network")) {
+          errorMessage +=
+            "\n\n🔧 Troubleshooting:\n• Check your internet connection\n• Verify firewall settings\n• Ensure Discord isn't blocked by your network";
+        }
+      }
+
+      vscode.window.showErrorMessage(
+        `❌ Connectivity test failed for webhook "${hook.name}": ${errorMessage}`
+      );
+    }
+  }
+}
+
 // Validate Discord webhook URL format
 export function validateWebhookUrl(url: string): {
   valid: boolean;
@@ -1106,4 +1220,48 @@ export function validateWebhookUrl(url: string): {
   } catch (error) {
     return { valid: false, error: "Invalid URL format" };
   }
+}
+
+// Helper function to retry Discord API calls with exponential backoff
+async function retryDiscordCall<T>(
+  operation: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelay: number = 1000
+): Promise<T> {
+  let lastError: Error = new Error("Unknown error");
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error as Error;
+
+      // Don't retry for certain errors
+      if (error instanceof Error) {
+        if (
+          error.message.includes("UNKNOWN_WEBHOOK") ||
+          error.message.includes("MISSING_PERMISSIONS") ||
+          error.message.includes("CHANNEL_NOT_FOUND")
+        ) {
+          throw error; // These are permanent errors, don't retry
+        }
+      }
+
+      // If this is the last attempt, throw the error
+      if (attempt === maxRetries) {
+        throw lastError;
+      }
+
+      // Wait with exponential backoff
+      const delay = baseDelay * Math.pow(2, attempt);
+      console.log(
+        `Discord API call failed, retrying in ${delay}ms... (attempt ${
+          attempt + 1
+        }/${maxRetries + 1})`
+      );
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+
+  throw lastError;
 }

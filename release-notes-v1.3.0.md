@@ -15,11 +15,13 @@
 ### ✨ Key Features
 
 #### 📡 **Real-time Monitoring**
+
 - File system watchers monitor `.git/refs/**` and `.git/HEAD`
 - Instant detection of commits, pushes, merges, and branch switches
 - Works regardless of how the Git operation was performed
 
 #### 🔄 **Comprehensive Coverage**
+
 - **GitHub Copilot commits** ✅
 - **Command line pushes** ✅
 - **Terminal Git operations** ✅
@@ -27,11 +29,13 @@
 - **External Git tools** ✅
 
 #### 🏷️ **Intelligent Release Detection**
+
 - Automatically detects version tags (v1.2.3 pattern)
 - Sends release notifications to configured Discord channels
 - No manual intervention required
 
 #### 🛡️ **Robust & Reliable**
+
 - 30-second polling as fallback mechanism
 - Comprehensive error handling and logging
 - Automatic repository URL detection
@@ -40,6 +44,7 @@
 ### 🔧 Technical Implementation
 
 #### GitWatcher Class (`src/gitWatcher.ts`)
+
 ```typescript
 export class GitWatcher {
   // Monitors Git repository changes in real-time
@@ -49,6 +54,7 @@ export class GitWatcher {
 ```
 
 #### Integration Points
+
 - Seamlessly integrates with existing Discord webhook system
 - Respects user webhook configurations and event preferences
 - Proper VS Code extension lifecycle management
@@ -56,11 +62,13 @@ export class GitWatcher {
 ### 🧪 Testing & Validation
 
 #### New Test Command
+
 - **Command**: `PrismFlow: Test Git Watcher`
 - **Purpose**: Manual testing and validation of GitWatcher functionality
 - **Features**: Shows latest commit info and triggers test Discord notification
 
 #### Automated Testing
+
 - Real-time file system monitoring validation
 - Commit detection accuracy testing
 - Discord notification delivery confirmation
@@ -68,28 +76,31 @@ export class GitWatcher {
 ### 🚀 Benefits
 
 #### For Development Teams
+
 - **Complete Visibility**: Never miss a commit or release again
 - **Team Coordination**: All team members stay informed of repository changes
 - **DevOps Integration**: Seamless integration with existing Discord workflows
 
 #### For Solo Developers
+
 - **Cross-Platform Sync**: Git operations from any tool trigger notifications
 - **Release Management**: Automatic release notifications for version tags
 - **Workflow Automation**: Reduced manual Discord notification management
 
 ### 📊 Before vs After
 
-| Scenario | Before v1.3.0 | After v1.3.0 |
-|----------|---------------|--------------|
-| GitHub Copilot commit | ❌ No notification | ✅ Automatic notification |
-| CLI git push | ❌ No notification | ✅ Automatic notification |
-| Terminal operations | ❌ No notification | ✅ Automatic notification |
-| Version tag creation | ❌ No notification | ✅ Automatic release notification |
-| Extension commands | ✅ Manual notification | ✅ Automatic notification |
+| Scenario              | Before v1.3.0          | After v1.3.0                      |
+| --------------------- | ---------------------- | --------------------------------- |
+| GitHub Copilot commit | ❌ No notification     | ✅ Automatic notification         |
+| CLI git push          | ❌ No notification     | ✅ Automatic notification         |
+| Terminal operations   | ❌ No notification     | ✅ Automatic notification         |
+| Version tag creation  | ❌ No notification     | ✅ Automatic release notification |
+| Extension commands    | ✅ Manual notification | ✅ Automatic notification         |
 
 ### 🔄 Maintained Features
 
 All existing PrismFlow features remain fully functional:
+
 - **Code Structure Visualization**: Enhanced block highlighting and navigation
 - **Discord Integration**: Complete webhook support for all GitHub event types
 - **Monorepo Support**: Multi-package version management
@@ -106,6 +117,7 @@ All existing PrismFlow features remain fully functional:
 ### 🔮 What's Next
 
 This release establishes the foundation for advanced repository monitoring features:
+
 - **Branch-specific notifications**
 - **Custom notification rules**
 - **Advanced filtering options**
@@ -114,16 +126,19 @@ This release establishes the foundation for advanced repository monitoring featu
 ### 📝 Technical Notes
 
 #### File System Monitoring
+
 - Watches `.git/refs/**` for branch and tag changes
 - Watches `.git/HEAD` for checkout and merge operations
 - Polling interval: 30 seconds (configurable in future releases)
 
 #### Performance Impact
+
 - Minimal resource usage (file system watchers are highly efficient)
 - No impact on Git operations or VS Code performance
 - Automatic cleanup on extension deactivation
 
 #### Compatibility
+
 - Compatible with all Git workflows and tools
 - Works with local and remote repositories
 - Supports all Discord webhook configurations
@@ -133,11 +148,13 @@ This release establishes the foundation for advanced repository monitoring featu
 ## 🎯 Upgrade Instructions
 
 ### For Existing Users
+
 1. Update PrismFlow to v1.3.0 from VS Code Marketplace
 2. No configuration changes required - GitWatcher activates automatically
 3. Test with `PrismFlow: Test Git Watcher` command
 
 ### For New Users
+
 1. Install PrismFlow v1.3.0 from VS Code Marketplace
 2. Set up Discord webhooks using `PrismFlow: Setup Discord Webhook Integration`
 3. Select "pushes" and "releases" in your webhook event configuration
@@ -152,4 +169,4 @@ This release establishes the foundation for advanced repository monitoring featu
 
 ---
 
-*PrismFlow v1.3.0 - Bringing complete Git operation visibility to your Discord workflows* 🚀
+_PrismFlow v1.3.0 - Bringing complete Git operation visibility to your Discord workflows_ 🚀

@@ -1,10 +1,20 @@
-# Pris### 🆕 **Latest Updates (v1.3.0)**
+# PrismFlow
 
-- **🤖 Automatic Git Detection**: GitWatcher now automatically detects external Git pushes (made via Copilot, CLI, etc.) and sends Discord notifications
-- **📡 Real-time Monitoring**: File system watchers monitor `.git/refs` and `.git/HEAD` for instant change detection
-- **🔄 Background Processing**: 30-second polling ensures no Git operations are missed
+### 
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/Seristic.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)t Updates (v1.3.1)**
+
+- **🛡️ Enhanced Discord Integration**: Robust retry logic with exponential backoff for Discord API calls
+- **� Advanced Connectivity Diagnostics**: New comprehensive webhook testing with detailed troubleshooting
+- **📋 Improved Error Handling**: Specific error messages and troubleshooting guidance for Discord issues
+- **🔄 Automatic Retry**: Smart retry mechanism that avoids permanent failures while handling temporary issues
+- **🧪 Testing Tools**: Enhanced `Test Discord Connectivity` command with real-time validation
+
+### 🤖 **Automatic Git Detection (v1.3.0)**
+
+- **📡 Real-time Monitoring**: Automatically detects external Git pushes (made via Copilot, CLI, etc.) and sends Discord notifications
+- **� Background Processing**: File system watchers monitor `.git/refs` and `.git/HEAD` for instant change detection
 - **🏷️ Release Tag Detection**: Automatically detects version tags and sends release notifications
-- **🧪 Testing Tools**: Added manual GitWatcher test command for validation and debugging
+- **30-second polling ensures no Git operations are missed**
 
 **Visualize Code Structure • Manage Monorepos • Automate Workflows**
 

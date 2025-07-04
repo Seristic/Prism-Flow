@@ -1,5 +1,39 @@
 # Change Log
 
+## [1.3.1] - 2025-01-27
+
+### 🛡️ Patch Release - Enhanced Discord Integration & Error Handling
+
+#### Enhanced
+
+- **🔄 Retry Logic**: Added robust retry mechanism for Discord API calls
+  - Exponential backoff for temporary failures (rate limits, timeouts, network issues)
+  - Smart error detection that avoids retrying permanent failures (invalid webhooks, missing permissions)
+  - Configurable retry attempts with automatic fallback
+
+- **🩺 Advanced Connectivity Diagnostics**: New comprehensive webhook testing command
+  - `PrismFlow: Test Discord Connectivity` command for detailed webhook validation
+  - Enhanced error messages with specific troubleshooting advice
+  - Real-time connectivity status with detailed failure analysis
+
+- **📋 Improved Error Handling**: Enhanced error reporting for Discord notifications
+  - Specific error messages for common Discord API issues
+  - Detailed troubleshooting guidance for webhook problems
+  - Better user feedback for network and permission issues
+
+#### Fixed
+
+- **🔧 Discord Reliability**: Improved reliability of Discord notifications
+  - Automatic retry for transient network failures
+  - Better handling of Discord API rate limits
+  - More stable webhook connections
+
+#### Commands
+
+- **🧪 New Diagnostics**: Enhanced testing capabilities
+  - `PrismFlow: Test Discord Connectivity` - Advanced webhook connectivity testing with retry support
+  - Comprehensive error analysis and troubleshooting guidance
+
 ## [1.3.0] - 2025-07-04
 
 ### 🤖 Major Feature Release - Automatic Git Detection for External Pushes

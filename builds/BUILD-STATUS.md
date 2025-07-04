@@ -12,7 +12,8 @@ This directory contains all compiled extension packages with their release statu
 
 | Version | File                   | Status            | Release Date | Notes                                                  |
 | ------- | ---------------------- | ----------------- | ------------ | ------------------------------------------------------ |
-| 1.3.0   | `prismflow-1.3.0.vsix` | ✅ **CURRENT**    | 2025-07-04   | 🤖 Major GitWatcher feature - automatic Git detection  |
+| 1.3.1   | `prismflow-1.3.1.vsix` | ✅ **CURRENT**    | 2025-01-27   | 🛡️ Enhanced Discord error handling & retry logic      |
+| 1.3.0   | `prismflow-1.3.0.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | 🤖 Major GitWatcher feature - automatic Git detection  |
 | 1.2.8   | `prismflow-1.2.8.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | Manual Discord integration enhancement & bug fixes     |
 | 1.2.7   | `prismflow-1.2.7.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | Enhanced Discord webhook debugging (replaced by 1.2.8) |
 | 1.2.6   | `prismflow-1.2.6.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | Complete Discord integration (replaced by 1.2.7)       |
@@ -118,6 +119,7 @@ This directory contains all compiled extension packages with their release statu
 - ✅ **CROSS-PLATFORM SUPPORT**: Works with GitHub Copilot, CLI, terminal, and all Git tools
 
 **GitWatcher Features**:
+
 - Automatic commit detection and Discord notification
 - Real-time file system monitoring
 - Intelligent release tag recognition

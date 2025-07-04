@@ -2,7 +2,7 @@
   "name": "prismflow",
   "displayName": "PrismFlow",
   "description": "Visualizes code structure by highlighting nested blocks and providing enhanced navigation for JSON and similar languages.",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "publisher": "Seristic",
   "preview": false,
   "repository": {
@@ -121,6 +121,11 @@
         "command": "prismflow.testDiscordWebhook",
         "title": "PrismFlow: Test Discord Webhook",
         "icon": "$(debug-alt)"
+      },
+      {
+        "command": "prismflow.testDiscordConnectivity",
+        "title": "PrismFlow: Test Discord Connectivity",
+        "icon": "$(pulse)"
       },
       {
         "command": "prismflow.showGitHubReleaseManager",
