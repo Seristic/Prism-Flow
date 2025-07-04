@@ -1,6 +1,11 @@
 # PrismFlow
 
-**Visualize Code Structure • Manage Monorepos • Automate Workflows**
+**Visualize### 🆕 **Latest Updates (v1.2.8)**
+
+- **📱 Discord Integration**: Complete Discord webhook support for all GitHub event types (pushes, releases, pull requests, issues, discussions, deployments)
+- **🧪 Enhanced Testing**: Comprehensive simulation commands and webhook validation tools
+- **🐛 Bug Fixes**: Resolved compilation issues and improved TypeScript compliance
+- **🔧 Code Quality**: Manual refinements and better function organizationStructure • Manage Monorepos • Automate Workflows**
 
 Code with Clarity and Flow. Keep your repositories clean effortlessly.
 
@@ -64,10 +69,40 @@ This extension features a **unified dashboard interface** that centralizes all f
 - **✨ Intelligent Block Highlighting:** Visualize nested code structures
 - **❤️ Liked Lines System:** Bookmark and navigate to important lines
 - **📂 .gitignore Automation:** Keep repositories clean with no effort
-- **💬 Discord Integration:** Get notifications for GitHub events with manual trigger option
+- **💬 Discord Integration:** Complete webhook support for all GitHub events (pushes, releases, pull requests, issues, discussions, deployments) with testing and simulation tools
 - **🔍 QA Testing Tools:** Quick access to testing checklist and developer guides
 - **🐙 GitHub Webhook Setup:** Simple webhook configuration with secure secrets
 - **🏷️ Version Management:** Update versions and maintain changelogs with monorepo support
+
+## 📱 Discord Integration
+
+PrismFlow provides comprehensive Discord webhook integration for all GitHub event types:
+
+### Supported GitHub Events
+
+- **📝 Pushes**: Commit notifications with author and repository information
+- **🚀 Releases**: Automated and manual release notifications with changelog details
+- **🔄 Pull Requests**: Notifications for opened, closed, merged, and updated PRs
+- **🐛 Issues**: Notifications for opened, closed, updated, and assigned issues
+- **💬 Discussions**: Notifications for created, answered, and updated discussions  
+- **🚀 Deployments**: Status notifications for success, failure, pending, and in-progress deployments
+
+### Features
+
+- **🔧 Easy Setup**: Use `PrismFlow: Setup Discord Webhook Integration` command
+- **🧪 Testing Tools**: Built-in webhook testing and validation
+- **🎮 Simulation**: Test all event types with simulation commands
+- **🛡️ Error Handling**: Comprehensive error detection and reporting
+- **📊 Multi-webhook Support**: Configure multiple webhooks for different channels
+- **🎨 Rich Embeds**: Beautiful Discord messages with colors and formatting
+
+### Quick Setup
+
+1. Open Command Palette (`Ctrl+Shift+P`)
+2. Run `PrismFlow: Setup Discord Webhook Integration`
+3. Enter your Discord webhook URL
+4. Select which GitHub events to monitor
+5. Test the connection
 
 ## 🎮 Quick Start
 
@@ -88,7 +123,7 @@ Visit our [Wiki](https://github.com/seristic/prism-flow/wiki) for detailed docum
 
 ## 📦 Downloads & Releases
 
-- **Latest Release**: [v1.2.3](builds/prismflow-1.2.3.vsix) - Current stable version
+- **Latest Release**: [v1.2.8](builds/prismflow-1.2.8.vsix) - Current stable version
 - **Build Archive**: See [builds/](builds/) directory for all releases
 - **Build Status**: Check [builds/BUILD-STATUS.md](builds/BUILD-STATUS.md) for detailed version information
 - **VS Code Marketplace**: [Official extension page](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)

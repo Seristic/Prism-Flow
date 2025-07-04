@@ -1,4 +1,32 @@
-# Discord Webhook Fixes - v1.2.5
+# Discord Webhook Integration - v1.2.8
+
+## 🆕 Current Status (v1.2.8)
+
+### Complete GitHub Event Support
+
+**All GitHub Event Types Supported**:
+
+- ✅ **Pushes**: Commit notifications with author and repository info
+- ✅ **Releases**: Automated and manual release notifications
+- ✅ **Pull Requests**: Support for opened, closed, merged, updated actions
+- ✅ **Issues**: Support for opened, closed, updated, assigned actions  
+- ✅ **Discussions**: Support for created, answered, updated actions
+- ✅ **Deployments**: Support for success, failure, pending, in_progress statuses
+
+### Enhanced Testing & Debugging (v1.2.7+)
+
+- **Comprehensive Error Detection**: Specific error messages for different Discord API issues
+- **Webhook Validation**: URL format validation and connectivity testing
+- **Test Commands**: Dedicated test command for webhook connectivity verification
+- **Simulation Commands**: Full simulation support for all event types
+
+### Bug Fixes (v1.2.8)
+
+- **Compilation Issues**: Fixed TypeScript compilation errors in event simulation commands
+- **Function References**: Corrected local function calls for better code organization
+- **Enhanced Organization**: Better separation of concerns and improved maintainability
+
+---
 
 ## Issues Fixed
 

@@ -6,7 +6,8 @@
 
 | Version     | Supported | Status                           |
 | ----------- | --------- | -------------------------------- |
-| 1.2.3+      | ✅ Yes    | Secure                           |
+| 1.2.8       | ✅ Yes    | Current - Enhanced features      |
+| 1.2.3-1.2.7 | ✅ Yes    | Secure                           |
 | 1.2.0-1.2.2 | ❌ No     | Security issue resolved in 1.2.3 |
 | < 1.2.0     | ❌ No     | Upgrade required                 |
 
