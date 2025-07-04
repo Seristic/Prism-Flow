@@ -1,5 +1,44 @@
 # Change Log
 
+## [1.2.5] - 2025-07-04
+
+### 🔧 Patch Release - GitHub CLI Integration Enhancement
+
+#### Enhanced
+
+- **🚀 GitHub Release Automation**: Improved GitHub CLI integration for seamless release management
+  - Enhanced release creation workflow with comprehensive release notes
+  - Automated git tagging and GitHub release publishing
+  - Better asset management for .vsix packages
+  - Streamlined deployment process from development to marketplace
+
+#### Technical
+
+- **📦 Release Pipeline**: Optimized build and release process
+  - Automated version tagging with descriptive commit messages
+  - Enhanced GitHub release notes with security context
+  - Improved asset upload and management
+  - Better integration between VS Code Marketplace and GitHub releases
+
+#### Documentation
+
+- **📋 Process Documentation**: Updated release procedures
+  - Enhanced build status tracking
+  - Improved version management documentation
+  - Better release workflow guidance
+  - Updated deployment best practices
+
+### 🛡️ Continued Security Focus
+
+This patch release maintains our commitment to security and quality:
+
+- **✅ Same Security Standards**: All security improvements from v1.2.3+ maintained
+- **✅ Enhanced QA Tools**: QA testing commands remain fully functional
+- **✅ Comprehensive Testing**: Release tested against full security checklist
+- **✅ Transparent Process**: Continued clear documentation of security context
+
+---
+
 ## [1.2.4] - 2025-07-04
 
 ### ✨ New Features - QA Testing Tools

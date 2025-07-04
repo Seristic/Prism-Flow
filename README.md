@@ -24,12 +24,12 @@ This extension features a **unified dashboard interface** that centralizes all f
 - **🛡️ SAFE**: Current version (1.2.4) includes enhanced QA tools and comprehensive security testing
 - **📋 IMPROVED**: New QA testing process prevents similar issues in future releases
 
-### 🆕 **Latest Updates (v1.2.4)**
+### 🆕 **Latest Updates (v1.2.5)**
 
-- **🔧 QA Testing Tools**: Quick access commands for testing checklist and developer guides
-- **📋 Custom Checklists**: Create project-specific QA checklists without affecting defaults
-- **🛡️ Enhanced Security**: Comprehensive testing process ensures extension safety
-- **👥 Team Collaboration**: Shareable custom testing standards
+- **� GitHub Integration**: Enhanced GitHub CLI integration for streamlined release management
+- **� Release Automation**: Improved build and deployment pipeline with automated tagging
+- **� Process Optimization**: Better asset management and release workflow
+- **� Documentation**: Enhanced release procedures and deployment best practices
 
 ### 🏗️ **Monorepo Support** (v1.2.0+)
 

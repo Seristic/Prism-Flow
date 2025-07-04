@@ -12,10 +12,11 @@ This directory contains all compiled extension packages with their release statu
 
 | Version | File                   | Status            | Release Date | Notes                                       |
 | ------- | ---------------------- | ----------------- | ------------ | ------------------------------------------- |
-| 1.2.4   | `prismflow-1.2.4.vsix` | ✅ **CURRENT**    | 2025-07-04   | QA testing tools and enhanced security docs |
-| 1.2.3   | `prismflow-1.2.3.vsix` | ⬆️ **SUPERSEDED** | 2025-07-03   | Security fix release (replaced by 1.2.4)    |
+| 1.2.5   | `prismflow-1.2.5.vsix` | ✅ **CURRENT**    | 2025-07-04   | GitHub CLI integration and release automation |
+| 1.2.4   | `prismflow-1.2.4.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | QA testing tools (replaced by 1.2.5)       |
+| 1.2.3   | `prismflow-1.2.3.vsix` | ⬆️ **SUPERSEDED** | 2025-07-03   | Security fix release (replaced by 1.2.5)    |
 | 1.2.2   | `prismflow-1.2.2.vsix` | ❌ **REMOVED**    | 2025-06-29   | Pulled due to malware-like behavior         |
-| 1.2.1   | `prismflow-1.2.1.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Discord notification fix, replaced by 1.2.4 |
+| 1.2.1   | `prismflow-1.2.1.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Discord notification fix, replaced by 1.2.5 |
 | 1.2.0   | `prismflow-1.2.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Monorepo support initial release            |
 | 1.1.0   | `prismflow-1.1.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Dashboard reliability improvements          |
 | 1.0.0   | `prismflow-1.0.0.vsix` | ⬆️ **SUPERSEDED** | 2025-06-28   | Major release with dashboard integration    |
@@ -78,7 +79,9 @@ This directory contains all compiled extension packages with their release statu
 ## 📈 Release Timeline
 
 ```
-2025-07-03  v1.2.3  ✅ Security fix release
+2025-07-04  v1.2.5  ✅ GitHub integration enhancement
+2025-07-04  v1.2.4  ⬆️ QA testing tools enhancement
+2025-07-03  v1.2.3  ⬆️ Security fix release
 2025-06-29  v1.2.2  ❌ PULLED - Malware-like behavior
 2025-06-29  v1.2.1  ⬆️ Discord notification fix
 2025-06-29  v1.2.0  ⬆️ Monorepo support added
@@ -90,12 +93,35 @@ This directory contains all compiled extension packages with their release statu
 
 ## 🔍 Build Details
 
-### v1.2.4 (Current) ✅
+### v1.2.5 (Current) ✅
+
+**Release Type**: Patch Release - Process Enhancement  
+**Size**: ~2.87MB  
+**Key Changes**:
+- ✅ Enhanced GitHub CLI integration for streamlined releases
+- ✅ Improved release automation and asset management  
+- ✅ Better git tagging and version control workflows
+- ✅ Optimized deployment pipeline from development to marketplace
+- ✅ Enhanced documentation for release procedures
+
+**Process Improvements**:
+- Automated GitHub release creation with comprehensive notes
+- Better integration between VS Code Marketplace and GitHub
+- Streamlined build and deployment workflow
+- Enhanced asset upload and management
+- Improved version management documentation
+
+**Maintained Features**:
+- All QA testing tools from v1.2.4 remain fully functional
+- Complete security improvements from v1.2.3+ maintained
+- Enhanced testing process continues to prevent security issues
+- Comprehensive documentation and transparency maintained
+
+### v1.2.4 (Superseded) ⬆️
 
 **Release Type**: QA Tools Enhancement  
 **Size**: ~2.87MB  
 **Key Changes**:
-
 - ✅ Added QA testing tool commands for quick access
 - ✅ Custom QA checklist creation without affecting defaults
 - ✅ Enhanced developer QA guide with customization instructions
@@ -103,13 +129,11 @@ This directory contains all compiled extension packages with their release statu
 - ✅ Better version control handling for custom checklists
 
 **New Commands**:
-
 - `PrismFlow: Open QA Testing Checklist` - Quick access to testing checklist
 - `PrismFlow: Open Developer QA Guide` - Quick access to developer guide
 - `PrismFlow: Create Custom QA Checklist` - Create customizable project-specific checklist
 
 **Quality Improvements**:
-
 - Enhanced QA accessibility for developers
 - Preserved original checklist while enabling customization
 - Better documentation for testing workflows
