@@ -148,6 +148,7 @@ PrismFlow follows a comprehensive QA testing process to ensure reliability and s
 ### Recent Security Improvements (v1.2.3+)
 
 After resolving malware-like behavior in earlier versions, monorepo support is now:
+
 - ✅ **Completely safe** - No interference with npm/yarn/pnpm operations
 - ✅ **User-controlled** - All operations require explicit user consent
 - ✅ **Thoroughly tested** - Comprehensive QA process prevents regressions

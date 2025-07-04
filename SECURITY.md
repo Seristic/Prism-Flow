@@ -1,12 +1,14 @@
+<!-- SECURITY.md -->
+
 # Security Policy
 
 ## 🛡️ Supported Versions
 
-| Version | Supported          | Status |
-| ------- | ------------------ | ------ |
-| 1.2.3+  | ✅ Yes             | Secure |
-| 1.2.0-1.2.2 | ❌ No       | Security issue resolved in 1.2.3 |
-| < 1.2.0 | ❌ No             | Upgrade required |
+| Version     | Supported | Status                           |
+| ----------- | --------- | -------------------------------- |
+| 1.2.3+      | ✅ Yes    | Secure                           |
+| 1.2.0-1.2.2 | ❌ No     | Security issue resolved in 1.2.3 |
+| < 1.2.0     | ❌ No     | Upgrade required                 |
 
 ## 🚨 Recent Security Fixes
 
@@ -14,7 +16,8 @@
 
 **Issue**: Extension exhibited malware-like behavior by automatically intercepting and modifying files during npm operations.
 
-**Resolution**: 
+**Resolution**:
+
 - Completely disabled problematic file creation watcher
 - Implemented comprehensive QA testing checklist
 - Enhanced security documentation
@@ -29,24 +32,28 @@
 PrismFlow follows these security principles:
 
 ### 1. **User Consent & Control**
+
 - ✅ All file modifications require explicit user action
 - ✅ No automatic file interception or modification
 - ✅ Clear confirmation dialogs for destructive operations
 - ✅ Users control all extension behavior through settings
 
 ### 2. **Non-Intrusive Operation**
+
 - ✅ Extension does NOT interfere with package managers (npm, yarn, pnpm)
 - ✅ Extension does NOT automatically open or modify files
 - ✅ Extension does NOT block or hijack VS Code operations
 - ✅ Extension operates only when explicitly invoked by user
 
 ### 3. **Data Protection**
+
 - ✅ No telemetry or analytics data collection
 - ✅ Local operation only (except for Discord webhooks if configured)
 - ✅ No unauthorized network requests
 - ✅ Webhook URLs stored locally and encrypted
 
 ### 4. **Code Quality & Testing**
+
 - ✅ Mandatory QA testing before every release
 - ✅ Open source code available for audit
 - ✅ Comprehensive error handling
@@ -67,11 +74,14 @@ Every release must pass our [comprehensive QA checklist](QA-TESTING-CHECKLIST.md
 If you discover a security vulnerability, please:
 
 ### 1. **DO NOT** create a public issue
+
 ### 2. **DO** report it privately via:
-   - Email: [security contact needed]
-   - GitHub Security Advisories: [Use private vulnerability reporting]
+
+- Email: [security contact needed]
+- GitHub Security Advisories: [Use private vulnerability reporting]
 
 ### 3. **Include in your report:**
+
 - Extension version affected
 - VS Code version and OS
 - Detailed description of the vulnerability
@@ -80,6 +90,7 @@ If you discover a security vulnerability, please:
 - Suggested fix (if any)
 
 ### 4. **Response timeline:**
+
 - **24 hours**: Acknowledgment of report
 - **72 hours**: Initial assessment and severity classification
 - **7 days**: Fix development and testing (for high severity)
@@ -90,11 +101,13 @@ If you discover a security vulnerability, please:
 ### Built-in Security Measures
 
 1. **File System Protection**
+
    - No automatic file creation or modification
    - All file operations require explicit user consent
    - No file watching beyond necessary functionality
 
 2. **Network Security**
+
    - Minimal network usage (only for Discord webhooks if enabled)
    - No telemetry or tracking
    - HTTPS-only connections where applicable
@@ -115,18 +128,21 @@ If you discover a security vulnerability, please:
 ## 🛠️ Security Development Practices
 
 ### Code Development
+
 - **Secure by Design**: Security considerations in all feature development
 - **Input Validation**: All user inputs validated and sanitized
 - **Error Handling**: Comprehensive error handling to prevent crashes
 - **Code Review**: All changes reviewed for security implications
 
 ### Testing & QA
+
 - **Security Testing**: Part of mandatory QA checklist
 - **Performance Testing**: Prevent resource exhaustion attacks
 - **Edge Case Testing**: Handle malformed inputs gracefully
 - **Integration Testing**: Verify safe interaction with VS Code APIs
 
 ### Release Process
+
 - **Security Scan**: Automated security scanning of dependencies
 - **Manual Review**: Manual security review of all changes
 - **Staged Rollout**: Careful monitoring of new releases
@@ -140,9 +156,9 @@ If you discover a security vulnerability, please:
 
 ## 📜 Security History
 
-| Date | Version | Issue | Severity | Status |
-|------|---------|-------|----------|--------|
-| 2025-07-03 | 1.2.3 | Malware-like file behavior | High | ✅ Fixed |
+| Date       | Version | Issue                      | Severity | Status   |
+| ---------- | ------- | -------------------------- | -------- | -------- |
+| 2025-07-03 | 1.2.3   | Malware-like file behavior | High     | ✅ Fixed |
 
 ---
 

@@ -18,8 +18,12 @@ package-lock
 # VS Code test output
 .vscode-test/
 
-# VS Code extension package
-*.vsix
+# VS Code extension package (Keep builds in builds/ directory)
+# *.vsix  # Commented out to track build packages
+
+# Build artifacts and temporary packages (but keep official builds)
+*-temp.vsix
+*-test.vsix
 
 # VS Code settings and history
 .vscode/
@@ -62,3 +66,6 @@ WIKI-SETUP.md
 discord_version_docs.md
 permanent-cleanup.ps1
 prevent-temp-files.ps1
+
+# QA Testing - Custom checklists (keep these in version control for team sharing)
+# QA-TESTING-CHECKLIST-CUSTOM.md  # Uncomment to ignore custom checklists if you don't want to share them

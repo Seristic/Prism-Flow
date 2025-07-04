@@ -1,3 +1,5 @@
+<!-- QA-TESTING-CHECKLIST.md -->
+
 # PrismFlow QA Testing Checklist
 
 ## 🚨 MANDATORY PRE-RELEASE TESTING
@@ -11,6 +13,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 ## 1. 🔧 **Core Extension Functionality**
 
 ### Basic Operations
+
 - [ ] Extension activates without errors
 - [ ] All commands appear in Command Palette
 - [ ] Extension settings are accessible and functional
@@ -18,6 +21,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Extension deactivates cleanly
 
 ### Highlighting Features
+
 - [ ] Syntax highlighting works on JSON files
 - [ ] Syntax highlighting works on JavaScript files
 - [ ] Syntax highlighting works on TypeScript files
@@ -26,6 +30,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Block labels display correctly with different format options
 
 ### Status Bar Integration
+
 - [ ] Status bar shows current block information
 - [ ] Status bar updates when cursor moves
 - [ ] Status bar tooltip shows detailed information
@@ -36,6 +41,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 ## 2. 📁 **File Operations & Workspace Behavior**
 
 ### File Creation (CRITICAL - This caused the malware issue)
+
 - [ ] Create new file manually - NO automatic modifications
 - [ ] Create new file via VS Code File Explorer - NO automatic modifications
 - [ ] Create new file via terminal/CLI - NO automatic modifications
@@ -44,6 +50,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Extension does NOT automatically modify created files
 
 ### npm/Package Manager Operations (CRITICAL)
+
 - [ ] Run `npm install` - Extension does NOT interfere
 - [ ] Run `npm update` - Extension does NOT interfere
 - [ ] Run `yarn install` - Extension does NOT interfere
@@ -54,6 +61,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] NO forced save prompts during package operations
 
 ### Workspace Operations
+
 - [ ] Opening workspace folders works normally
 - [ ] Switching between workspaces works normally
 - [ ] File tree operations work normally
@@ -65,12 +73,14 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 ## 3. 🏗️ **Monorepo Support**
 
 ### Configuration
+
 - [ ] `prismflow.version.enableMonorepoSupport` setting works
 - [ ] `prismflow.version.monorepoExcludePatterns` setting works
 - [ ] Settings can be enabled/disabled without restart
 - [ ] Default exclude patterns work correctly
 
 ### Detection & Scanning
+
 - [ ] Correctly finds all package.json files in workspace
 - [ ] Respects exclude patterns (node_modules, .git, etc.)
 - [ ] Handles workspaces with no package.json files
@@ -78,6 +88,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Handles workspaces with multiple package.json files
 
 ### Version Updates
+
 - [ ] Can update all packages to same version
 - [ ] Can select individual packages to update
 - [ ] Version increment options work (major, minor, patch)
@@ -91,6 +102,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 ## 4. 🔔 **Discord Integration**
 
 ### Basic Webhook Setup
+
 - [ ] Discord webhook setup wizard works
 - [ ] Webhook URLs are validated correctly
 - [ ] Webhook secrets are generated securely
@@ -98,6 +110,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Multiple webhooks can be configured
 
 ### Notification Behavior
+
 - [ ] Single package updates send notifications correctly
 - [ ] Monorepo updates send ONLY ONE notification (not per package)
 - [ ] `singleWebhookOnly` parameter works correctly
@@ -106,6 +119,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Failed notifications show appropriate error messages
 
 ### Edge Cases
+
 - [ ] Notifications work with no Discord webhooks configured
 - [ ] Notifications work with invalid webhook URLs
 - [ ] Notifications work with network issues
@@ -116,6 +130,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 ## 5. 📊 **Dashboard & UI**
 
 ### Dashboard Functionality
+
 - [ ] Dashboard opens without errors
 - [ ] All dashboard commands work correctly
 - [ ] Dashboard shows current extension status
@@ -123,12 +138,14 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Dashboard closes cleanly
 
 ### Command Palette Integration
+
 - [ ] All commands appear in Command Palette
 - [ ] Command descriptions are clear and accurate
 - [ ] Commands execute without errors
 - [ ] Commands provide appropriate feedback
 
 ### User Interface
+
 - [ ] Settings UI is accessible and functional
 - [ ] Error messages are clear and helpful
 - [ ] Progress indicators work correctly
@@ -139,6 +156,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 ## 6. 🔄 **Version Management**
 
 ### Single Package Mode
+
 - [ ] Can update single package.json files
 - [ ] Version increments work correctly
 - [ ] Semantic versioning is respected
@@ -146,6 +164,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Discord notifications work correctly
 
 ### Edge Cases
+
 - [ ] Handles invalid package.json files gracefully
 - [ ] Handles missing package.json files gracefully
 - [ ] Handles permission errors gracefully
@@ -157,18 +176,21 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 ## 7. 🧪 **Performance & Stability**
 
 ### Memory Usage
+
 - [ ] Extension doesn't cause memory leaks
 - [ ] Extension doesn't consume excessive memory
 - [ ] Extension cleans up resources properly
 - [ ] Extension handles large files efficiently
 
 ### Performance
+
 - [ ] Extension activates quickly
 - [ ] Highlighting updates respond quickly
 - [ ] File operations don't block UI
 - [ ] Workspace scanning is efficient
 
 ### Error Handling
+
 - [ ] Extension handles errors gracefully
 - [ ] Error messages are helpful and actionable
 - [ ] Extension doesn't crash VS Code
@@ -179,6 +201,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 ## 8. 🔍 **Edge Cases & Scenarios**
 
 ### Unusual Workspaces
+
 - [ ] Works with very large workspaces (1000+ files)
 - [ ] Works with nested workspaces
 - [ ] Works with symlinked files/folders
@@ -186,6 +209,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Works with network drives
 
 ### File Types
+
 - [ ] Works with various JSON file types
 - [ ] Works with JavaScript variants (ES6, JSX, etc.)
 - [ ] Works with TypeScript variants (TSX, etc.)
@@ -193,6 +217,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Handles very large files appropriately
 
 ### Network & Connectivity
+
 - [ ] Works offline
 - [ ] Handles network timeouts gracefully
 - [ ] Handles slow network connections
@@ -203,6 +228,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 ## 9. 📋 **Pre-Release Final Checks**
 
 ### Code Quality
+
 - [ ] TypeScript compilation succeeds with no errors
 - [ ] All linting passes
 - [ ] No console warnings during normal operation
@@ -210,6 +236,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Code follows project conventions
 
 ### Documentation
+
 - [ ] README.md is updated with latest features
 - [ ] CHANGELOG.md includes all changes
 - [ ] Configuration documentation is accurate
@@ -217,6 +244,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Troubleshooting guides are current
 
 ### Package Validation
+
 - [ ] Extension packages successfully with `vsce package`
 - [ ] Package size is reasonable (< 10MB)
 - [ ] All necessary files are included
@@ -228,6 +256,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 ## 10. 🚀 **Release Process**
 
 ### Final Verification
+
 - [ ] Install packaged extension in clean VS Code instance
 - [ ] Test all major features in clean environment
 - [ ] Verify no conflicts with other extensions
@@ -235,6 +264,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 - [ ] Verify extension store metadata
 
 ### Post-Release Monitoring
+
 - [ ] Monitor for error reports
 - [ ] Monitor extension performance metrics
 - [ ] Monitor user feedback
@@ -268,7 +298,7 @@ This checklist was created after v1.2.3 to prevent malware-like behavior and ens
 
 ### Test Results:
 - [ ] All core functionality: PASS/FAIL
-- [ ] File operations: PASS/FAIL  
+- [ ] File operations: PASS/FAIL
 - [ ] npm operations: PASS/FAIL
 - [ ] Monorepo support: PASS/FAIL
 - [ ] Discord integration: PASS/FAIL

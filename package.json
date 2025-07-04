@@ -2,7 +2,7 @@
   "name": "prismflow",
   "displayName": "PrismFlow",
   "description": "Visualizes code structure by highlighting nested blocks and providing enhanced navigation for JSON and similar languages.",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "publisher": "Seristic",
   "preview": false,
   "repository": {
@@ -116,6 +116,21 @@
         "command": "prismflow.showGitHubReleaseManager",
         "title": "PrismFlow: GitHub Release Manager",
         "icon": "$(rocket)"
+      },
+      {
+        "command": "prismflow.openQAChecklist",
+        "title": "PrismFlow: Open QA Testing Checklist",
+        "icon": "$(checklist)"
+      },
+      {
+        "command": "prismflow.openDeveloperGuide",
+        "title": "PrismFlow: Open Developer QA Guide",
+        "icon": "$(book)"
+      },
+      {
+        "command": "prismflow.createCustomQAChecklist",
+        "title": "PrismFlow: Create Custom QA Checklist",
+        "icon": "$(new-file)"
       }
     ],
     "configuration": {
@@ -356,6 +371,18 @@
         },
         {
           "command": "prismflow.showGitHubReleaseManager",
+          "group": "PrismFlow"
+        },
+        {
+          "command": "prismflow.openQAChecklist",
+          "group": "PrismFlow"
+        },
+        {
+          "command": "prismflow.openDeveloperGuide",
+          "group": "PrismFlow"
+        },
+        {
+          "command": "prismflow.createCustomQAChecklist",
           "group": "PrismFlow"
         }
       ]

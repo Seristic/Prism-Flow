@@ -1,5 +1,43 @@
 # Change Log
 
+## [1.2.4] - 2025-07-04
+
+### ✨ New Features - QA Testing Tools
+
+#### Added
+
+- **🔧 Quick Access Commands**: Added VS Code commands for instant access to QA documentation
+  - `PrismFlow: Open QA Testing Checklist` - Opens the comprehensive testing checklist
+  - `PrismFlow: Open Developer QA Guide` - Opens the developer testing guide
+  - `PrismFlow: Create Custom QA Checklist` - Creates a customizable copy for project-specific needs
+
+#### Enhanced
+
+- **📋 QA Documentation**: Improved QA testing workflow with better accessibility
+  - Quick Command Palette access to all QA tools
+  - Custom checklist creation preserves original while allowing customization
+  - Better version control handling for team sharing
+  - Enhanced developer guide with customization instructions
+
+#### Technical
+
+- **🎯 Smart File Handling**: Custom checklist command intelligently handles existing files
+  - Prompts user when custom checklist already exists (Open/Overwrite/Cancel)
+  - Preserves original checklist for extension updates
+  - Adds customization headers and tracking information
+  - Proper error handling and user feedback
+
+### 🛡️ Security Context
+
+This release continues our commitment to quality and security following the resolution of malware-like behavior in v1.2.2:
+
+- **✅ Enhanced QA Process**: New tools make comprehensive testing more accessible
+- **✅ Team Collaboration**: Custom checklists enable team-specific testing standards
+- **✅ Version Safety**: Custom files won't be overwritten by extension updates
+- **✅ Comprehensive Testing**: All features tested against our security checklist
+
+---
+
 ## [1.2.3] - 2025-07-03
 
 ### 🚨 CRITICAL FIX - Malware-like Behavior Resolved

@@ -17,12 +17,19 @@ This extension features a **unified dashboard interface** that centralizes all f
 
 ## 🎯 Latest Updates
 
-### 🚨 **Version 1.2.3 - Critical Security Fix**
+### 🚨 **Security Notice - v1.2.2 Pulled Due to Malware-like Behavior**
 
-- **RESOLVED**: Malware-like behavior where extension interfered with npm operations
-- **FIXED**: Extension no longer intercepts or modifies files during package installations
-- **IMPROVED**: Enhanced QA testing process to prevent similar issues
-- **STATUS**: All core features remain fully functional and safe
+- **⚠️ CRITICAL**: Version 1.2.2 was immediately pulled from VS Code Marketplace due to malware-like file interception
+- **✅ RESOLVED**: Version 1.2.3+ completely fixes the issue with comprehensive security improvements
+- **🛡️ SAFE**: Current version (1.2.4) includes enhanced QA tools and comprehensive security testing
+- **📋 IMPROVED**: New QA testing process prevents similar issues in future releases
+
+### 🆕 **Latest Updates (v1.2.4)**
+
+- **🔧 QA Testing Tools**: Quick access commands for testing checklist and developer guides
+- **📋 Custom Checklists**: Create project-specific QA checklists without affecting defaults
+- **🛡️ Enhanced Security**: Comprehensive testing process ensures extension safety
+- **👥 Team Collaboration**: Shareable custom testing standards
 
 ### 🏗️ **Monorepo Support** (v1.2.0+)
 
@@ -58,6 +65,7 @@ This extension features a **unified dashboard interface** that centralizes all f
 - **❤️ Liked Lines System:** Bookmark and navigate to important lines
 - **📂 .gitignore Automation:** Keep repositories clean with no effort
 - **💬 Discord Integration:** Get notifications for GitHub events
+- **🔍 QA Testing Tools:** Quick access to testing checklist and developer guides
 - **🐙 GitHub Webhook Setup:** Simple webhook configuration with secure secrets
 - **🏷️ Version Management:** Update versions and maintain changelogs with monorepo support
 
@@ -76,6 +84,14 @@ Visit our [Wiki](https://github.com/seristic/prism-flow/wiki) for detailed docum
 - [Development Roadmap](https://github.com/Seristic/Prism-Flow/wiki/Development-Roadmap#prismflow-development-roadmap)
 - [Monorepo Support Guide](docs/MONOREPO-SUPPORT.md)
 - [QA Testing Checklist](QA-TESTING-CHECKLIST.md)
+- [Build History & Status](builds/BUILD-STATUS.md)
+
+## 📦 Downloads & Releases
+
+- **Latest Release**: [v1.2.3](builds/prismflow-1.2.3.vsix) - Current stable version
+- **Build Archive**: See [builds/](builds/) directory for all releases
+- **Build Status**: Check [builds/BUILD-STATUS.md](builds/BUILD-STATUS.md) for detailed version information
+- **VS Code Marketplace**: [Official extension page](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)
 
 ## 🛡️ Security & Quality Assurance
 

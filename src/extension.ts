@@ -319,6 +319,208 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
+  // Register QA Testing Checklist command
+  context.subscriptions.push(
+    vscode.commands.registerCommand("prismflow.openQAChecklist", async () => {
+      const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+      if (!workspaceFolder) {
+        vscode.window.showErrorMessage("No workspace folder found");
+        return;
+      }
+
+      const checklistPath = path.join(
+        workspaceFolder.uri.fsPath,
+        "QA-TESTING-CHECKLIST.md"
+      );
+
+      // Check if file exists
+      if (!fs.existsSync(checklistPath)) {
+        vscode.window.showErrorMessage(
+          "QA Testing Checklist not found at: " + checklistPath
+        );
+        return;
+      }
+
+      try {
+        const document = await vscode.workspace.openTextDocument(checklistPath);
+        await vscode.window.showTextDocument(document);
+        logger.log("QA Testing Checklist opened successfully");
+      } catch (error) {
+        logger.error("Failed to open QA Testing Checklist: " + error);
+        vscode.window.showErrorMessage("Failed to open QA Testing Checklist");
+      }
+    })
+  );
+
+  // Register Developer QA Guide command
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "prismflow.openDeveloperGuide",
+      async () => {
+        const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+        if (!workspaceFolder) {
+          vscode.window.showErrorMessage("No workspace folder found");
+          return;
+        }
+
+        const guidePath = path.join(
+          workspaceFolder.uri.fsPath,
+          "docs",
+          "DEVELOPER-QA-GUIDE.md"
+        );
+
+        // Check if file exists
+        if (!fs.existsSync(guidePath)) {
+          vscode.window.showErrorMessage(
+            "Developer QA Guide not found at: " + guidePath
+          );
+          return;
+        }
+
+        try {
+          const document = await vscode.workspace.openTextDocument(guidePath);
+          await vscode.window.showTextDocument(document);
+          logger.log("Developer QA Guide opened successfully");
+        } catch (error) {
+          logger.error("Failed to open Developer QA Guide: " + error);
+          vscode.window.showErrorMessage("Failed to open Developer QA Guide");
+        }
+      }
+    )
+  );
+
+  // Register Create Custom QA Checklist command
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "prismflow.createCustomQAChecklist",
+      async () => {
+        const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+        if (!workspaceFolder) {
+          vscode.window.showErrorMessage("No workspace folder found");
+          return;
+        }
+
+        const originalPath = path.join(
+          workspaceFolder.uri.fsPath,
+          "QA-TESTING-CHECKLIST.md"
+        );
+        const customPath = path.join(
+          workspaceFolder.uri.fsPath,
+          "QA-TESTING-CHECKLIST-CUSTOM.md"
+        );
+
+        // Check if original file exists
+        if (!fs.existsSync(originalPath)) {
+          vscode.window.showErrorMessage(
+            "Original QA Testing Checklist not found at: " + originalPath
+          );
+          return;
+        }
+
+        // Check if custom file already exists
+        if (fs.existsSync(customPath)) {
+          const choice = await vscode.window.showWarningMessage(
+            "Custom QA Testing Checklist already exists. What would you like to do?",
+            "Open Existing",
+            "Overwrite",
+            "Cancel"
+          );
+
+          if (choice === "Cancel") {
+            return;
+          } else if (choice === "Open Existing") {
+            try {
+              const document = await vscode.workspace.openTextDocument(
+                customPath
+              );
+              await vscode.window.showTextDocument(document);
+              logger.log("Opened existing custom QA Testing Checklist");
+              return;
+            } catch (error) {
+              logger.error(
+                "Failed to open existing custom QA Testing Checklist",
+                error
+              );
+              vscode.window.showErrorMessage(
+                "Failed to open existing custom checklist"
+              );
+              return;
+            }
+          }
+          // If "Overwrite" is selected, continue with the copy operation
+        }
+
+        try {
+          // Read the original file
+          const originalContent = fs.readFileSync(originalPath, "utf8");
+
+          // Create custom content with header
+          const customContent = `<!-- QA-TESTING-CHECKLIST-CUSTOM.md -->
+<!-- This is your customized QA Testing Checklist -->
+<!-- The original checklist is preserved in QA-TESTING-CHECKLIST.md -->
+<!-- Edit this file to add your project-specific testing requirements -->
+
+# PrismFlow QA Testing Checklist (Custom)
+
+## 🎯 **Custom Project Checklist**
+
+**⚠️ This is your customized version of the QA Testing Checklist**
+
+- **Original preserved**: The default checklist remains in \`QA-TESTING-CHECKLIST.md\`
+- **Safe to edit**: Make any changes you need for your project
+- **Version control**: Track this file in your repository
+- **Team sharing**: Share your customizations with your team
+
+---
+
+${originalContent
+  .replace("<!-- QA-TESTING-CHECKLIST.md -->", "")
+  .replace(
+    "# PrismFlow QA Testing Checklist",
+    "# PrismFlow QA Testing Checklist (Base Template)"
+  )}
+
+---
+
+## 📝 **Customization Notes**
+
+### Changes Made:
+- [ ] Added project-specific test cases
+- [ ] Modified test descriptions
+- [ ] Updated environment requirements
+- [ ] Added team processes
+- [ ] Other: _______________
+
+### Last Updated: ${new Date().toISOString().split("T")[0]}
+
+### Customized By: [Your Name]
+
+---
+
+**💡 Tip**: Keep this file in version control to share your testing standards with your team!
+`;
+
+          // Write the custom file
+          fs.writeFileSync(customPath, customContent);
+
+          // Open the new custom file
+          const document = await vscode.workspace.openTextDocument(customPath);
+          await vscode.window.showTextDocument(document);
+
+          logger.log("Created and opened custom QA Testing Checklist");
+          vscode.window.showInformationMessage(
+            "Custom QA Testing Checklist created! You can now safely edit this file without affecting the original."
+          );
+        } catch (error) {
+          logger.error("Failed to create custom QA Testing Checklist", error);
+          vscode.window.showErrorMessage(
+            "Failed to create custom checklist: " + error
+          );
+        }
+      }
+    )
+  );
+
   // --- Command Registrations ---
   context.subscriptions.push(
     vscode.commands.registerCommand("prismflow.applyHighlights", () => {
