@@ -7,11 +7,13 @@
 #### Enhanced
 
 - **🔄 Retry Logic**: Added robust retry mechanism for Discord API calls
+
   - Exponential backoff for temporary failures (rate limits, timeouts, network issues)
   - Smart error detection that avoids retrying permanent failures (invalid webhooks, missing permissions)
   - Configurable retry attempts with automatic fallback
 
 - **🩺 Advanced Connectivity Diagnostics**: New comprehensive webhook testing command
+
   - `PrismFlow: Test Discord Connectivity` command for detailed webhook validation
   - Enhanced error messages with specific troubleshooting advice
   - Real-time connectivity status with detailed failure analysis

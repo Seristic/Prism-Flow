@@ -336,7 +336,7 @@ export function activate(context: vscode.ExtensionContext): void {
           // Get the latest commit info using git command
           const cp = require("child_process");
           cp.exec(
-            "git log -1 --pretty=format:'%H|%s|%an'",
+            "git log -1 --pretty=format:\"%H|%s|%an\"",
             { cwd: workspaceFolder.uri.fsPath },
             async (error: any, stdout: string, stderr: string) => {
               if (error) {

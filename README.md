@@ -1,7 +1,8 @@
 # PrismFlow
 
-### 
-[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/Seristic.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)t Updates (v1.3.1)**
+###
+
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/Seristic.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)t Updates (v1.3.1)\*\*
 
 - **🛡️ Enhanced Discord Integration**: Robust retry logic with exponential backoff for Discord API calls
 - **� Advanced Connectivity Diagnostics**: New comprehensive webhook testing with detailed troubleshooting

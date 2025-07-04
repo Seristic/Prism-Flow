@@ -110,7 +110,7 @@ async function getRepositoryInfo(): Promise<{
 
     // Get last commit
     const lastCommit = await execGitCommand(
-      "git log -1 --format='%h - %s (%an, %ar)'"
+      "git log -1 --format=\"%h - %s (%an, %ar)\""
     );
 
     return {
@@ -165,7 +165,7 @@ async function getGitTags(): Promise<string[]> {
 async function getGitBranches(): Promise<string[]> {
   try {
     const branchesOutput = await execGitCommand(
-      "git branch -r --format='%(refname:short)'"
+      "git branch -r --format=\"%(refname:short)\""
     );
     return branchesOutput
       .trim()
