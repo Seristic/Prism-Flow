@@ -97,12 +97,14 @@ This directory contains all compiled extension packages with their release statu
 
 **Release Type**: Patch Release - GitHub CLI Integration + Discord Webhook Fixes  
 **Size**: ~2.9MB  
+**Build Date**: 2025-07-04  
 **Key Changes**:
 
 - ✅ Enhanced GitHub CLI integration for streamlined releases
 - ✅ **FIXED**: Discord webhook notifications now trigger automatically from GitHub Release Manager
 - ✅ **NEW**: Manual "Send Latest Release Webhook" command and dashboard button
 - ✅ **ENHANCED**: Improved webhook error handling and graceful fallbacks
+- ✅ **DASHBOARD**: Updated dashboard with new Discord webhook button (orange "Send Latest Release Webhook")
 - ✅ **ADDED**: Complete wiki documentation restoration with comprehensive guides
 - ✅ Improved release automation and asset management
 - ✅ Better git tagging and version control workflows
