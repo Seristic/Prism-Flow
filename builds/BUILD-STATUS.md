@@ -12,8 +12,9 @@ This directory contains all compiled extension packages with their release statu
 
 | Version | File                   | Status            | Release Date | Notes                                         |
 | ------- | ---------------------- | ----------------- | ------------ | --------------------------------------------- |
-| 1.2.5   | `prismflow-1.2.5.vsix` | ✅ **CURRENT**    | 2025-07-04   | GitHub CLI integration and release automation |
-| 1.2.4   | `prismflow-1.2.4.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | QA testing tools (replaced by 1.2.5)          |
+| 1.2.6   | `prismflow-1.2.6.vsix` | ✅ **CURRENT**    | 2025-07-04   | Complete Discord integration with dashboard update |
+| 1.2.5   | `prismflow-1.2.5.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | GitHub CLI integration (replaced by 1.2.6)   |
+| 1.2.4   | `prismflow-1.2.4.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | QA testing tools (replaced by 1.2.6)          |
 | 1.2.3   | `prismflow-1.2.3.vsix` | ⬆️ **SUPERSEDED** | 2025-07-03   | Security fix release (replaced by 1.2.5)      |
 | 1.2.2   | `prismflow-1.2.2.vsix` | ❌ **REMOVED**    | 2025-06-29   | Pulled due to malware-like behavior           |
 | 1.2.1   | `prismflow-1.2.1.vsix` | ⬆️ **SUPERSEDED** | 2025-06-29   | Discord notification fix, replaced by 1.2.5   |
@@ -79,7 +80,8 @@ This directory contains all compiled extension packages with their release statu
 ## 📈 Release Timeline
 
 ```
-2025-07-04  v1.2.5  ✅ GitHub integration enhancement + Discord webhook fixes
+2025-07-04  v1.2.6  ✅ Complete Discord integration with dashboard update (PUBLISHED)
+2025-07-04  v1.2.5  ⬆️ GitHub integration enhancement + Discord webhook fixes
 2025-07-04  v1.2.4  ⬆️ QA testing tools enhancement
 2025-07-03  v1.2.3  ⬆️ Security fix release
 2025-06-29  v1.2.2  ❌ PULLED - Malware-like behavior
@@ -93,7 +95,41 @@ This directory contains all compiled extension packages with their release statu
 
 ## 🔍 Build Details
 
-### v1.2.5 (Current) ✅
+### v1.2.6 (Current) ✅ **PUBLISHED**
+
+**Release Type**: Patch Release - Complete Discord Dashboard Integration  
+**Size**: ~2.9MB  
+**Build Date**: 2025-07-04  
+**Marketplace Status**: ✅ Published to VS Code Marketplace  
+**Key Changes**:
+
+- ✅ **PUBLISHED**: Successfully uploaded to VS Code Marketplace
+- ✅ **DASHBOARD**: Fully integrated Discord webhook button in dashboard UI
+- ✅ **COMMAND**: Complete Command Palette integration for manual webhook triggering
+- ✅ **ENHANCED**: Improved visual feedback and error handling in dashboard
+- ✅ **VERIFIED**: All Discord features tested and working correctly
+- ✅ **DOCUMENTATION**: Updated build status and release documentation
+- ✅ All previous Discord webhook fixes and enhancements from v1.2.5
+- ✅ Complete GitHub CLI integration and release automation
+- ✅ Wiki documentation restoration and comprehensive guides
+
+**Dashboard Features**:
+
+- Orange "📢 Send Latest Release Webhook" button in GitHub Integration section
+- Visual feedback with loading states and success/error messages
+- Command Palette access: "PrismFlow: Send Latest Release Webhook"
+- Proper error handling and user notifications
+- Seamless integration with existing dashboard workflow
+
+**Marketplace Information**:
+
+- **Extension URL**: <https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow>
+- **Publisher**: Seristic
+- **Category**: Visualization
+- **Current Installs**: 1+
+- **Rating**: 4.4/5 stars
+
+### v1.2.5 (Superseded) ⬆️
 
 **Release Type**: Patch Release - GitHub CLI Integration + Discord Webhook Fixes  
 **Size**: ~2.9MB  
