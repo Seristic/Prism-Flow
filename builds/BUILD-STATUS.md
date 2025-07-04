@@ -12,7 +12,8 @@ This directory contains all compiled extension packages with their release statu
 
 | Version | File                   | Status            | Release Date | Notes                                                  |
 | ------- | ---------------------- | ----------------- | ------------ | ------------------------------------------------------ |
-| 1.2.8   | `prismflow-1.2.8.vsix` | ✅ **CURRENT**    | 2025-07-04   | Manual Discord integration enhancement & bug fixes     |
+| 1.3.0   | `prismflow-1.3.0.vsix` | ✅ **CURRENT**    | 2025-07-04   | 🤖 Major GitWatcher feature - automatic Git detection  |
+| 1.2.8   | `prismflow-1.2.8.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | Manual Discord integration enhancement & bug fixes     |
 | 1.2.7   | `prismflow-1.2.7.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | Enhanced Discord webhook debugging (replaced by 1.2.8) |
 | 1.2.6   | `prismflow-1.2.6.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | Complete Discord integration (replaced by 1.2.7)       |
 | 1.2.5   | `prismflow-1.2.5.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | GitHub CLI integration (replaced by 1.2.6)             |
@@ -98,12 +99,42 @@ This directory contains all compiled extension packages with their release statu
 
 ## 🔍 Build Details
 
-### v1.2.8 (Current) ✅ **PUBLISHED**
+### v1.3.0 (Current) ✅ **PUBLISHED**
+
+**Release Type**: Major Feature Release - GitWatcher for Automatic Git Detection  
+**Size**: ~2.9MB  
+**Build Date**: 2025-07-04  
+**Marketplace Status**: ✅ Published to VS Code Marketplace  
+**GitHub Release**: ✅ Published to GitHub Releases  
+**Key Changes**:
+
+- ✅ **PUBLISHED**: Successfully uploaded to VS Code Marketplace and GitHub
+- 🤖 **GITWATCHER FEATURE**: Automatic detection of external Git pushes (Copilot, CLI, etc.)
+- 📡 **REAL-TIME MONITORING**: File system watchers for `.git/refs` and `.git/HEAD`
+- 🔄 **BACKGROUND PROCESSING**: 30-second polling ensures no Git operations are missed
+- 🏷️ **RELEASE TAG DETECTION**: Automatically detects version tags and sends notifications
+- 🧪 **TESTING TOOLS**: Added manual GitWatcher test command for validation
+- ✅ **COMPLETE VISIBILITY**: All Git operations now trigger Discord notifications
+- ✅ **CROSS-PLATFORM SUPPORT**: Works with GitHub Copilot, CLI, terminal, and all Git tools
+
+**GitWatcher Features**:
+- Automatic commit detection and Discord notification
+- Real-time file system monitoring
+- Intelligent release tag recognition
+- Repository URL auto-detection
+- Comprehensive error handling and logging
+- Seamless integration with existing Discord webhook system
+
+**Impact**: Resolves the major issue where Discord notifications were only sent for extension-triggered Git operations. Now ALL Git operations trigger notifications automatically.
+
+---
+
+### v1.2.8 ⬆️ **SUPERSEDED**
 
 **Release Type**: Patch Release - Manual Discord Integration Enhancement & Bug Fixes  
 **Size**: ~2.9MB  
 **Build Date**: 2025-07-04  
-**Marketplace Status**: ✅ Published to VS Code Marketplace  
+**Marketplace Status**: ⬆️ Superseded by v1.3.0  
 **GitHub Release**: ✅ Published to GitHub Releases  
 **Key Changes**:
 
