@@ -12,6 +12,14 @@
   - Better asset management for .vsix packages
   - Streamlined deployment process from development to marketplace
 
+#### Fixed
+
+- **💬 Discord Release Notifications**: Fixed missing automatic Discord webhooks for GitHub releases
+  - GitHub Release Manager now automatically sends Discord notifications after successful releases
+  - Added manual "Send Latest Release Webhook" command for retry/backup scenarios
+  - Enhanced webhook error handling to prevent release process interruption
+  - Added dashboard button and Command Palette access for manual webhook triggers
+
 #### Technical
 
 - **📦 Release Pipeline**: Optimized build and release process

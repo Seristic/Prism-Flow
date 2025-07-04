@@ -64,7 +64,7 @@ This extension features a **unified dashboard interface** that centralizes all f
 - **✨ Intelligent Block Highlighting:** Visualize nested code structures
 - **❤️ Liked Lines System:** Bookmark and navigate to important lines
 - **📂 .gitignore Automation:** Keep repositories clean with no effort
-- **💬 Discord Integration:** Get notifications for GitHub events
+- **💬 Discord Integration:** Get notifications for GitHub events with manual trigger option
 - **🔍 QA Testing Tools:** Quick access to testing checklist and developer guides
 - **🐙 GitHub Webhook Setup:** Simple webhook configuration with secure secrets
 - **🏷️ Version Management:** Update versions and maintain changelogs with monorepo support
