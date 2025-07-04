@@ -113,6 +113,11 @@
         "icon": "$(settings-gear)"
       },
       {
+        "command": "prismflow.sendLatestReleaseWebhook",
+        "title": "PrismFlow: Send Latest Release Webhook",
+        "icon": "$(rocket)"
+      },
+      {
         "command": "prismflow.showGitHubReleaseManager",
         "title": "PrismFlow: GitHub Release Manager",
         "icon": "$(rocket)"
@@ -367,6 +372,10 @@
         },
         {
           "command": "prismflow.manageGitHubWebhooks",
+          "group": "PrismFlow"
+        },
+        {
+          "command": "prismflow.sendLatestReleaseWebhook",
           "group": "PrismFlow"
         },
         {

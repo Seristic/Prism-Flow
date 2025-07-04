@@ -293,6 +293,9 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.commands.registerCommand("prismflow.manageGitHubWebhooks", () =>
       githubWebhookManager.manageWebhooks()
+    ),
+    vscode.commands.registerCommand("prismflow.sendLatestReleaseWebhook", () =>
+      discordManager.sendLatestReleaseWebhook(context)
     )
   );
 

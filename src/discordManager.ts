@@ -486,3 +486,142 @@ export function registerWebhookCommands(
     )
   );
 }
+
+// Get the latest GitHub release and send Discord notification
+export async function sendLatestReleaseWebhook(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  try {
+    // Check if we have any release webhooks configured
+    const currentWebhooks = await loadWebhooks(context);
+    const releaseWebhooks = currentWebhooks.filter((hook) =>
+      hook.events.includes("releases")
+    );
+
+    if (releaseWebhooks.length === 0) {
+      vscode.window.showWarningMessage(
+        "No Discord webhooks configured for release events. Use 'PrismFlow: Setup Discord Webhook Integration' to configure one."
+      );
+      return;
+    }
+
+    // Check if we're in a git repository
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+    if (!workspaceFolder) {
+      vscode.window.showErrorMessage(
+        "No workspace folder found. Please open a folder first."
+      );
+      return;
+    }
+
+    // Try to get the latest release using GitHub CLI
+    let releaseName = "";
+    let releaseUrl = "";
+    let releaseDescription = "";
+
+    try {
+      // Use GitHub CLI to get latest release
+      const output = await execCommand("gh release view --json name,url,body");
+      const releaseData = JSON.parse(output);
+      releaseName = releaseData.name || "Latest Release";
+      releaseUrl = releaseData.url || "";
+      releaseDescription = releaseData.body || "Check out the latest release!";
+    } catch (cliError) {
+      // Fallback: try to get from git tags
+      try {
+        const latestTag = await execCommand("git describe --tags --abbrev=0");
+        releaseName = latestTag || "Latest Version";
+
+        // Try to construct GitHub URL from git remote
+        const remoteUrl = await execCommand("git remote get-url origin");
+        const repoMatch = remoteUrl.match(
+          /github\.com[\/:](.+?)\/(.+?)(?:\.git)?$/
+        );
+
+        if (repoMatch) {
+          const [, owner, repo] = repoMatch;
+          releaseUrl = `https://github.com/${owner}/${repo}/releases/tag/${latestTag}`;
+        } else {
+          releaseUrl = "https://github.com/releases";
+        }
+
+        releaseDescription = "Latest version available - check out what's new!";
+      } catch (gitError) {
+        // Manual input as last resort
+        releaseName =
+          (await vscode.window.showInputBox({
+            prompt: "Enter release name/version",
+            placeHolder: "e.g., v1.2.5",
+            ignoreFocusOut: true,
+          })) || "Manual Release";
+
+        releaseUrl =
+          (await vscode.window.showInputBox({
+            prompt: "Enter release URL",
+            placeHolder: "https://github.com/user/repo/releases/tag/v1.2.5",
+            ignoreFocusOut: true,
+          })) || "https://github.com/releases";
+
+        releaseDescription =
+          (await vscode.window.showInputBox({
+            prompt: "Enter release description",
+            placeHolder: "What's new in this release?",
+            ignoreFocusOut: true,
+          })) || "New release available!";
+      }
+    }
+
+    if (!releaseName) {
+      vscode.window.showErrorMessage(
+        "Could not determine release information."
+      );
+      return;
+    }
+
+    // Send the notification
+    await notifyRelease(
+      context,
+      releaseName,
+      releaseUrl,
+      releaseDescription,
+      true // Use single webhook to prevent spam
+    );
+
+    vscode.window.showInformationMessage(
+      `Discord notification sent for release: ${releaseName}`
+    );
+  } catch (error) {
+    console.error("Error sending latest release webhook:", error);
+    vscode.window.showErrorMessage(
+      `Failed to send Discord notification: ${
+        error instanceof Error ? error.message : error
+      }`
+    );
+  }
+}
+
+// Helper function to execute commands
+async function execCommand(command: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+    if (!workspaceFolder) {
+      reject(new Error("No workspace folder"));
+      return;
+    }
+
+    const cp = require("child_process");
+    cp.exec(
+      command,
+      { cwd: workspaceFolder.uri.fsPath },
+      (error: any, stdout: string, stderr: string) => {
+        if (error) {
+          reject(
+            new Error(`Command failed: ${error.message}\nStderr: ${stderr}`)
+          );
+        } else {
+          resolve(stdout.trim());
+        }
+      }
+    );
+  });
+}

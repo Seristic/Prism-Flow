@@ -12,6 +12,7 @@ export interface DashboardCallbacks {
   onSimulateGithubPush: () => void;
   onSetupGitHubWebhook: () => void;
   onManageGitHubWebhooks: () => void;
+  onSendLatestReleaseWebhook: () => void;
   onShowGitHubReleaseManager: () => void;
 }
 
@@ -56,6 +57,9 @@ export function showDashboardWebview(callbacks: DashboardCallbacks) {
         break;
       case "manageGitHubWebhooks":
         callbacks.onManageGitHubWebhooks();
+        break;
+      case "sendLatestReleaseWebhook":
+        callbacks.onSendLatestReleaseWebhook();
         break;
       case "showGitHubReleaseManager":
         callbacks.onShowGitHubReleaseManager();
@@ -234,6 +238,9 @@ function getDashboardContent(): string {
                 </button>
                 <button class="btn btn-secondary" onclick="executeCommand('manageGitHubWebhooks')">
                     <span class="icon">🔧</span> Manage GitHub Webhooks
+                </button>
+                <button class="btn btn-warning" onclick="executeCommand('sendLatestReleaseWebhook')">
+                    <span class="icon">📢</span> Send Latest Release Webhook
                 </button>
                 <button class="btn" onclick="executeCommand('simulateGithubRelease')">
                     <span class="icon">🎯</span> Simulate GitHub Release

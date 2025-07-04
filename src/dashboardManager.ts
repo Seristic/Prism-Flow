@@ -49,6 +49,8 @@ export class DashboardManager {
         this.executeCommand("prismflow.setupGitHubWebhook"),
       onManageGitHubWebhooks: () =>
         this.executeCommand("prismflow.manageGitHubWebhooks"),
+      onSendLatestReleaseWebhook: () =>
+        this.executeCommand("prismflow.sendLatestReleaseWebhook"),
       onShowGitHubReleaseManager: () =>
         this.githubReleaseManager.showReleaseManager(),
     };

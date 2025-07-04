@@ -9,6 +9,7 @@ import {
   showGitHubReleaseWebview,
   GitHubReleaseData,
 } from "./webviews/githubReleaseWebview";
+import { notifyRelease } from "./discordManager";
 
 export class GitHubReleaseManager {
   private context: vscode.ExtensionContext;
@@ -116,6 +117,21 @@ export class GitHubReleaseManager {
         true,
         releaseUrl
       );
+
+      // Send Discord notification for the release
+      try {
+        await notifyRelease(
+          this.context,
+          data.releaseName,
+          releaseUrl,
+          data.description || "A new version has been released!",
+          true // Use single webhook to prevent spam
+        );
+        console.log("Discord notification sent for release:", data.releaseName);
+      } catch (discordError) {
+        console.error("Failed to send Discord notification:", discordError);
+        // Don't fail the release creation if Discord notification fails
+      }
 
       // Show success notification
       vscode.window
