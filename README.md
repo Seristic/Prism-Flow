@@ -1,4 +1,10 @@
-# PrismFlow
+# Pris### 🆕 **Latest Updates (v1.3.0)**
+
+- **🤖 Automatic Git Detection**: GitWatcher now automatically detects external Git pushes (made via Copilot, CLI, etc.) and sends Discord notifications
+- **📡 Real-time Monitoring**: File system watchers monitor `.git/refs` and `.git/HEAD` for instant change detection
+- **🔄 Background Processing**: 30-second polling ensures no Git operations are missed
+- **🏷️ Release Tag Detection**: Automatically detects version tags and sends release notifications
+- **🧪 Testing Tools**: Added manual GitWatcher test command for validation and debugging
 
 **Visualize Code Structure • Manage Monorepos • Automate Workflows**
 

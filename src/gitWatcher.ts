@@ -30,7 +30,7 @@ export class GitWatcher {
     }
 
     const gitDir = path.join(this.workspaceFolder.uri.fsPath, ".git");
-    
+
     // Check if this is a Git repository
     if (!fs.existsSync(gitDir)) {
       console.log("GitWatcher: Not a Git repository");
@@ -39,7 +39,9 @@ export class GitWatcher {
 
     // Get initial commit hash
     this.lastKnownCommit = await this.getCurrentCommitHash();
-    console.log(`GitWatcher: Started watching. Current commit: ${this.lastKnownCommit}`);
+    console.log(
+      `GitWatcher: Started watching. Current commit: ${this.lastKnownCommit}`
+    );
 
     // Watch for changes to Git refs (this detects pushes, pulls, etc.)
     const refsPattern = path.join(gitDir, "refs", "**");
@@ -66,23 +68,23 @@ export class GitWatcher {
     }, 30000);
 
     this.context.subscriptions.push({
-      dispose: () => clearInterval(interval)
+      dispose: () => clearInterval(interval),
     });
   }
 
   private async checkForNewCommits(): Promise<void> {
     try {
       const currentCommit = await this.getCurrentCommitHash();
-      
+
       if (currentCommit && currentCommit !== this.lastKnownCommit) {
         console.log(`GitWatcher: New commit detected: ${currentCommit}`);
-        
+
         // Get commit details
         const commitInfo = await this.getCommitInfo(currentCommit);
         if (commitInfo) {
           await this.handleNewCommit(commitInfo);
         }
-        
+
         this.lastKnownCommit = currentCommit;
       }
     } catch (error) {
@@ -104,17 +106,25 @@ export class GitWatcher {
     }
   }
 
-  private async getCommitInfo(commitHash: string): Promise<GitCommit | undefined> {
+  private async getCommitInfo(
+    commitHash: string
+  ): Promise<GitCommit | undefined> {
     try {
-      const message = await this.execGitCommand(`log -1 --pretty=format:"%s" ${commitHash}`);
-      const author = await this.execGitCommand(`log -1 --pretty=format:"%an" ${commitHash}`);
-      const date = await this.execGitCommand(`log -1 --pretty=format:"%ad" --date=iso ${commitHash}`);
+      const message = await this.execGitCommand(
+        `log -1 --pretty=format:"%s" ${commitHash}`
+      );
+      const author = await this.execGitCommand(
+        `log -1 --pretty=format:"%an" ${commitHash}`
+      );
+      const date = await this.execGitCommand(
+        `log -1 --pretty=format:"%ad" --date=iso ${commitHash}`
+      );
 
       return {
         hash: commitHash,
-        message: message.replace(/"/g, ''),
-        author: author.replace(/"/g, ''),
-        date: date
+        message: message.replace(/"/g, ""),
+        author: author.replace(/"/g, ""),
+        date: date,
       };
     } catch (error) {
       console.error("GitWatcher: Error getting commit info:", error);
@@ -126,14 +136,21 @@ export class GitWatcher {
     try {
       // Get repository URL for Discord notification
       const repoUrl = await this.getRepositoryUrl();
-      
+
       // Check if Discord webhooks are configured for pushes
       const webhooks = await discordManager.loadWebhooks(this.context);
-      const pushWebhooks = webhooks.filter(hook => hook.events.includes("pushes"));
-      
+      const pushWebhooks = webhooks.filter((hook) =>
+        hook.events.includes("pushes")
+      );
+
       if (pushWebhooks.length > 0) {
-        console.log(`GitWatcher: Sending Discord notification for commit: ${commit.hash.substring(0, 7)}`);
-        
+        console.log(
+          `GitWatcher: Sending Discord notification for commit: ${commit.hash.substring(
+            0,
+            7
+          )}`
+        );
+
         await discordManager.notifyPush(
           this.context,
           commit.message,
@@ -143,13 +160,15 @@ export class GitWatcher {
 
         // Show user notification
         vscode.window.showInformationMessage(
-          `📢 Discord notification sent for commit: ${commit.message.substring(0, 50)}...`
+          `📢 Discord notification sent for commit: ${commit.message.substring(
+            0,
+            50
+          )}...`
         );
       }
 
       // Check for release tags
       await this.checkForNewReleaseTag(commit);
-
     } catch (error) {
       console.error("GitWatcher: Error handling new commit:", error);
     }
@@ -159,22 +178,27 @@ export class GitWatcher {
     try {
       // Check if this commit has any tags
       const tags = await this.execGitCommand(`tag --points-at ${commit.hash}`);
-      
+
       if (tags.trim()) {
-        const tagList = tags.trim().split('\n');
-        
+        const tagList = tags.trim().split("\n");
+
         for (const tag of tagList) {
-          if (tag.match(/^v?\d+\.\d+\.\d+/)) { // Looks like a version tag
+          if (tag.match(/^v?\d+\.\d+\.\d+/)) {
+            // Looks like a version tag
             console.log(`GitWatcher: Release tag detected: ${tag}`);
-            
+
             // Check if Discord webhooks are configured for releases
             const webhooks = await discordManager.loadWebhooks(this.context);
-            const releaseWebhooks = webhooks.filter(hook => hook.events.includes("releases"));
-            
+            const releaseWebhooks = webhooks.filter((hook) =>
+              hook.events.includes("releases")
+            );
+
             if (releaseWebhooks.length > 0) {
               const repoUrl = await this.getRepositoryUrl();
-              const releaseUrl = repoUrl ? `${repoUrl}/releases/tag/${tag}` : `https://github.com/releases/tag/${tag}`;
-              
+              const releaseUrl = repoUrl
+                ? `${repoUrl}/releases/tag/${tag}`
+                : `https://github.com/releases/tag/${tag}`;
+
               await discordManager.notifyRelease(
                 this.context,
                 tag,
@@ -198,7 +222,7 @@ export class GitWatcher {
   private async getRepositoryUrl(): Promise<string | undefined> {
     try {
       const remoteUrl = await this.execGitCommand("remote get-url origin");
-      
+
       // Convert SSH to HTTPS format
       let url = remoteUrl.trim();
       if (url.startsWith("git@github.com:")) {
@@ -207,7 +231,7 @@ export class GitWatcher {
       if (url.endsWith(".git")) {
         url = url.slice(0, -4);
       }
-      
+
       return url;
     } catch (error) {
       console.error("GitWatcher: Error getting repository URL:", error);
@@ -228,7 +252,11 @@ export class GitWatcher {
         { cwd: this.workspaceFolder.uri.fsPath },
         (error: any, stdout: string, stderr: string) => {
           if (error) {
-            reject(new Error(`Git command failed: ${error.message}\nStderr: ${stderr}`));
+            reject(
+              new Error(
+                `Git command failed: ${error.message}\nStderr: ${stderr}`
+              )
+            );
           } else {
             resolve(stdout);
           }

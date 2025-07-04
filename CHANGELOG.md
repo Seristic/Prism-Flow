@@ -1,12 +1,13 @@
 # Change Log
 
-## [1.2.9] - 2025-07-04
+## [1.3.0] - 2025-07-04
 
-### 🤖 Major Feature - Automatic Git Detection for External Pushes
+### 🤖 Major Feature Release - Automatic Git Detection for External Pushes
 
 #### New Features
 
 - **🔍 GitWatcher Class**: Automatically monitors Git repository for external changes
+
   - File system watchers for `.git/refs` and `.git/HEAD` directories
   - Real-time detection of commits made outside the extension (Copilot, CLI, etc.)
   - 30-second polling as fallback to ensure no changes are missed

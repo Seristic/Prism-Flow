@@ -318,8 +318,10 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.commands.registerCommand("prismflow.testGitWatcher", async () => {
       if (gitWatcher) {
-        vscode.window.showInformationMessage("🔍 Testing GitWatcher - checking for recent commits...");
-        
+        vscode.window.showInformationMessage(
+          "🔍 Testing GitWatcher - checking for recent commits..."
+        );
+
         // Trigger a manual check for commits
         try {
           const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
@@ -330,22 +332,33 @@ export function activate(context: vscode.ExtensionContext): void {
 
           // Get the latest commit info using git command
           const cp = require("child_process");
-          cp.exec("git log -1 --pretty=format:'%H|%s|%an'", 
-            { cwd: workspaceFolder.uri.fsPath }, 
+          cp.exec(
+            "git log -1 --pretty=format:'%H|%s|%an'",
+            { cwd: workspaceFolder.uri.fsPath },
             async (error: any, stdout: string, stderr: string) => {
               if (error) {
-                vscode.window.showErrorMessage(`Git command failed: ${error.message}`);
+                vscode.window.showErrorMessage(
+                  `Git command failed: ${error.message}`
+                );
                 return;
               }
 
-              const [hash, message, author] = stdout.split('|');
+              const [hash, message, author] = stdout.split("|");
               vscode.window.showInformationMessage(
-                `Latest commit: ${hash.substring(0, 7)} by ${author}: ${message.substring(0, 50)}...`
+                `Latest commit: ${hash.substring(
+                  0,
+                  7
+                )} by ${author}: ${message.substring(0, 50)}...`
               );
 
               // Trigger Discord notification for testing
               const repoUrl = "https://github.com/test/repo"; // Test URL
-              await discordManager.notifyPush(context, message, author, repoUrl);
+              await discordManager.notifyPush(
+                context,
+                message,
+                author,
+                repoUrl
+              );
             }
           );
         } catch (error) {
@@ -900,11 +913,14 @@ ${originalContent
 
   // Initialize Git Watcher for automatic Discord notifications on external Git pushes
   gitWatcher = new GitWatcher(context);
-  gitWatcher.startWatching().then(() => {
-    logger.log("GitWatcher initialized and started monitoring Git changes");
-  }).catch((error) => {
-    logger.error("Failed to start GitWatcher: " + error);
-  });
+  gitWatcher
+    .startWatching()
+    .then(() => {
+      logger.log("GitWatcher initialized and started monitoring Git changes");
+    })
+    .catch((error) => {
+      logger.error("Failed to start GitWatcher: " + error);
+    });
 
   // ⚠️ DISABLED: File creation watcher disabled due to malware-like behavior
   // This was causing issues during npm install and other bulk file operations

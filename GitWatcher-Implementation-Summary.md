@@ -19,6 +19,7 @@ export class GitWatcher {
 ```
 
 **Key Features**:
+
 - File system watchers for real-time Git change detection
 - 30-second polling as fallback mechanism
 - Automatic commit information extraction (hash, message, author)
@@ -28,17 +29,22 @@ export class GitWatcher {
 ### 2. Integration (`src/extension.ts`)
 
 **Activation**:
+
 ```typescript
 // Initialize Git Watcher for automatic Discord notifications on external Git pushes
 gitWatcher = new GitWatcher(context);
-gitWatcher.startWatching().then(() => {
-  logger.log("GitWatcher initialized and started monitoring Git changes");
-}).catch((error) => {
-  logger.error("Failed to start GitWatcher: " + error);
-});
+gitWatcher
+  .startWatching()
+  .then(() => {
+    logger.log("GitWatcher initialized and started monitoring Git changes");
+  })
+  .catch((error) => {
+    logger.error("Failed to start GitWatcher: " + error);
+  });
 ```
 
 **Deactivation**:
+
 ```typescript
 // Dispose Git Watcher
 if (gitWatcher) {
@@ -50,6 +56,7 @@ if (gitWatcher) {
 ### 3. Discord Integration
 
 **Automatic Notifications**:
+
 - Calls `discordManager.notifyPush()` for detected commits
 - Calls `discordManager.notifyRelease()` for detected version tags
 - Only sends notifications if Discord webhooks are configured for the event type
@@ -61,10 +68,12 @@ Added `PrismFlow: Test Git Watcher` command for manual testing and validation.
 ## File System Monitoring
 
 **Watched Paths**:
+
 - `.git/refs/**` - Detects branch updates, new commits, pushes
 - `.git/HEAD` - Detects branch switches, merges, checkouts
 
 **Fallback Mechanism**:
+
 - 30-second interval polling to catch any missed file system events
 
 ## Result
@@ -89,6 +98,7 @@ Added `PrismFlow: Test Git Watcher` command for manual testing and validation.
 ## Testing
 
 The GitWatcher can be tested by:
+
 1. Running the `PrismFlow: Test Git Watcher` command
 2. Making external commits via CLI or Copilot
 3. Creating version tags to test release detection

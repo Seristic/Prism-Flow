@@ -3,6 +3,7 @@
 ## What was implemented:
 
 1. **GitWatcher Class** (`src/gitWatcher.ts`):
+
    - Monitors `.git/refs` directory for changes (detects pushes, pulls, etc.)
    - Monitors `.git/HEAD` file for changes (detects checkouts, merges, etc.)
    - Automatically triggers Discord notifications for external Git pushes
@@ -10,6 +11,7 @@
    - Polls every 30 seconds as a fallback mechanism
 
 2. **Integration with Extension** (`src/extension.ts`):
+
    - GitWatcher is initialized in the `activate()` function
    - Disposed properly in the `deactivate()` function
    - Added test command `prismflow.testGitWatcher` for debugging
@@ -40,6 +42,7 @@ Use the command `PrismFlow: Test Git Watcher` to manually test the functionality
 ## File System Watching:
 
 The GitWatcher monitors these files/directories:
+
 - `.git/refs/**` - Detects branch updates, new commits
 - `.git/HEAD` - Detects branch switches, merges
 - 30-second polling - Fallback for any missed file system events
