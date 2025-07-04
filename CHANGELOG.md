@@ -1,5 +1,88 @@
 # Change Log
 
+## [1.2.8] - 2025-07-04
+
+### 🔧 Patch Release - Manual Discord Integration Enhancement & Bug Fixes
+
+#### Enhanced
+
+- **📱 Discord Event Coverage**: Complete implementation for all GitHub event types in Discord notifications
+  - Enhanced notification functions for pull requests, issues, discussions, and deployments
+  - Improved event simulation commands for comprehensive testing
+  - Better error handling and webhook validation from v1.2.7 maintained
+
+#### Fixed
+
+- **🐛 Compilation Issues**: Resolved TypeScript compilation errors in event simulation commands
+  - Fixed function reference errors in command registration
+  - Corrected local function calls for better code organization
+  - Improved TypeScript compliance and error handling
+
+#### Technical
+
+- **⚡ Code Quality**: Manual code refinements and optimizations
+  - Better separation of concerns in event simulation functions
+  - Enhanced code maintainability and documentation
+  - Improved function organization and TypeScript compliance
+
+#### Commands
+
+- **🎮 Simulation Commands**: All GitHub event simulation commands properly registered
+  - `PrismFlow: Simulate Pull Request Event`
+  - `PrismFlow: Simulate Issue Event`  
+  - `PrismFlow: Simulate Discussion Event`
+  - `PrismFlow: Simulate Deployment Event`
+
+### 🔄 Maintained Features
+
+- **✅ All v1.2.7 Enhancements**: Enhanced Discord webhook debugging and error detection preserved
+- **✅ Security Excellence**: All security improvements continue to be maintained
+- **✅ Dashboard Integration**: Complete dashboard functionality maintained
+- **✅ Testing Tools**: Webhook testing and validation tools remain fully functional
+
+---
+
+## [1.2.7] - 2025-07-04
+
+### 🔧 Patch Release - Enhanced Discord Webhook Debugging & Error Detection
+
+#### Enhanced
+
+- **🔍 Advanced Error Detection**: Comprehensive Discord API error identification and reporting
+  - Specific error detection for UNKNOWN_WEBHOOK, MISSING_PERMISSIONS, CHANNEL_NOT_FOUND
+  - Clear, actionable error messages instead of generic failures
+  - Enhanced debugging tools for webhook connectivity issues
+
+#### Added
+
+- **🧪 New Testing Command**: `PrismFlow: Test Discord Webhook` for debugging connectivity
+  - One-click webhook testing to verify all release webhooks
+  - Immediate feedback with specific error details
+  - Perfect for troubleshooting webhook configuration issues
+
+#### Fixed
+
+- **🛡️ Webhook Validation**: Enhanced URL format validation to prevent common errors
+  - Proactive error prevention for malformed Discord webhook URLs
+  - Better user guidance on valid webhook URL formats
+  - Improved error handling prevents release process interruption
+
+#### Technical
+
+- **📈 User Experience**: Significantly improved Discord webhook reliability
+  - Clear guidance on how to fix webhook issues
+  - Easy testing and debugging capabilities
+  - Faster problem identification and resolution
+  - Enhanced success rate for webhook configurations
+
+### 🔄 Maintained Features
+
+- **✅ All v1.2.6 Features**: Complete dashboard integration and release automation preserved
+- **✅ Security Excellence**: All security improvements from v1.2.3+ maintained
+- **✅ GitHub Integration**: Complete GitHub CLI integration and release automation
+
+---
+
 ## [1.2.5] - 2025-07-04
 
 ### 🔧 Patch Release - GitHub CLI Integration Enhancement

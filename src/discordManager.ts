@@ -272,6 +272,367 @@ export async function notifyPush(
   }
 }
 
+// Send a notification about a new pull request
+export async function notifyPullRequest(
+  context: vscode.ExtensionContext,
+  prTitle: string,
+  prUrl: string,
+  author: string,
+  action: "opened" | "closed" | "merged" | "updated",
+  description?: string
+): Promise<void> {
+  const currentWebhooks = await loadWebhooks(context);
+  const prWebhooks = currentWebhooks.filter((hook) =>
+    hook.events.includes("pull_requests")
+  );
+
+  if (prWebhooks.length === 0) {
+    vscode.window.showWarningMessage(
+      "No Discord webhooks configured for pull request events. Use 'PrismFlow: Setup Discord Webhook Integration' to configure one."
+    );
+    return;
+  }
+
+  const actionColors = {
+    opened: 0x28a745, // Green
+    closed: 0xdc3545, // Red
+    merged: 0x6f42c1, // Purple
+    updated: 0xffc107, // Yellow
+  };
+
+  const actionEmojis = {
+    opened: "🔄",
+    closed: "❌",
+    merged: "🎉",
+    updated: "📝",
+  };
+
+  for (const hook of prWebhooks) {
+    try {
+      const webhook = new WebhookClient({ url: hook.url });
+
+      const embed = createDefaultEmbed(
+        `${actionEmojis[action]} Pull Request ${
+          action.charAt(0).toUpperCase() + action.slice(1)
+        }: ${prTitle}`,
+        description || `Pull request has been ${action}`,
+        actionColors[action]
+      );
+
+      embed.addFields(
+        { name: "Author", value: author },
+        {
+          name: "Action",
+          value: action.charAt(0).toUpperCase() + action.slice(1),
+        },
+        { name: "Pull Request URL", value: prUrl }
+      );
+
+      await webhook.send({
+        username: "PrismFlow Bot",
+        embeds: [embed],
+      });
+
+      console.log(
+        `Successfully sent pull request notification to ${hook.name}`
+      );
+    } catch (error) {
+      console.error(
+        `Error notifying pull request to webhook ${hook.name}:`,
+        error
+      );
+
+      let errorMessage = "Unknown error";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+
+        if (error.message.includes("UNKNOWN_WEBHOOK")) {
+          errorMessage = `Webhook not found or invalid. Please check the webhook URL for ${hook.name}`;
+        } else if (error.message.includes("MISSING_PERMISSIONS")) {
+          errorMessage = `Bot lacks permissions to send messages to ${hook.name}`;
+        } else if (error.message.includes("CHANNEL_NOT_FOUND")) {
+          errorMessage = `Channel not found for webhook ${hook.name}`;
+        } else if (error.message.includes("Received one or more errors")) {
+          errorMessage = `Discord API error for ${hook.name}. Webhook URL may be invalid or expired`;
+        }
+      }
+
+      vscode.window.showErrorMessage(
+        `Failed to send Discord notification to ${hook.name}: ${errorMessage}`
+      );
+    }
+  }
+}
+
+// Send a notification about a new issue
+export async function notifyIssue(
+  context: vscode.ExtensionContext,
+  issueTitle: string,
+  issueUrl: string,
+  author: string,
+  action: "opened" | "closed" | "updated" | "assigned",
+  description?: string
+): Promise<void> {
+  const currentWebhooks = await loadWebhooks(context);
+  const issueWebhooks = currentWebhooks.filter((hook) =>
+    hook.events.includes("issues")
+  );
+
+  if (issueWebhooks.length === 0) {
+    vscode.window.showWarningMessage(
+      "No Discord webhooks configured for issue events. Use 'PrismFlow: Setup Discord Webhook Integration' to configure one."
+    );
+    return;
+  }
+
+  const actionColors = {
+    opened: 0xff6b6b, // Light Red
+    closed: 0x51cf66, // Light Green
+    updated: 0x74c0fc, // Light Blue
+    assigned: 0xffd43b, // Yellow
+  };
+
+  const actionEmojis = {
+    opened: "🐛",
+    closed: "✅",
+    updated: "📝",
+    assigned: "👤",
+  };
+
+  for (const hook of issueWebhooks) {
+    try {
+      const webhook = new WebhookClient({ url: hook.url });
+
+      const embed = createDefaultEmbed(
+        `${actionEmojis[action]} Issue ${
+          action.charAt(0).toUpperCase() + action.slice(1)
+        }: ${issueTitle}`,
+        description || `Issue has been ${action}`,
+        actionColors[action]
+      );
+
+      embed.addFields(
+        { name: "Author", value: author },
+        {
+          name: "Action",
+          value: action.charAt(0).toUpperCase() + action.slice(1),
+        },
+        { name: "Issue URL", value: issueUrl }
+      );
+
+      await webhook.send({
+        username: "PrismFlow Bot",
+        embeds: [embed],
+      });
+
+      console.log(`Successfully sent issue notification to ${hook.name}`);
+    } catch (error) {
+      console.error(`Error notifying issue to webhook ${hook.name}:`, error);
+
+      let errorMessage = "Unknown error";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+
+        if (error.message.includes("UNKNOWN_WEBHOOK")) {
+          errorMessage = `Webhook not found or invalid. Please check the webhook URL for ${hook.name}`;
+        } else if (error.message.includes("MISSING_PERMISSIONS")) {
+          errorMessage = `Bot lacks permissions to send messages to ${hook.name}`;
+        } else if (error.message.includes("CHANNEL_NOT_FOUND")) {
+          errorMessage = `Channel not found for webhook ${hook.name}`;
+        } else if (error.message.includes("Received one or more errors")) {
+          errorMessage = `Discord API error for ${hook.name}. Webhook URL may be invalid or expired`;
+        }
+      }
+
+      vscode.window.showErrorMessage(
+        `Failed to send Discord notification to ${hook.name}: ${errorMessage}`
+      );
+    }
+  }
+}
+
+// Send a notification about a new discussion
+export async function notifyDiscussion(
+  context: vscode.ExtensionContext,
+  discussionTitle: string,
+  discussionUrl: string,
+  author: string,
+  action: "created" | "answered" | "updated",
+  description?: string
+): Promise<void> {
+  const currentWebhooks = await loadWebhooks(context);
+  const discussionWebhooks = currentWebhooks.filter((hook) =>
+    hook.events.includes("discussions")
+  );
+
+  if (discussionWebhooks.length === 0) {
+    vscode.window.showWarningMessage(
+      "No Discord webhooks configured for discussion events. Use 'PrismFlow: Setup Discord Webhook Integration' to configure one."
+    );
+    return;
+  }
+
+  const actionColors = {
+    created: 0x845ef7, // Purple
+    answered: 0x51cf66, // Green
+    updated: 0x339af0, // Blue
+  };
+
+  const actionEmojis = {
+    created: "💬",
+    answered: "✅",
+    updated: "📝",
+  };
+
+  for (const hook of discussionWebhooks) {
+    try {
+      const webhook = new WebhookClient({ url: hook.url });
+
+      const embed = createDefaultEmbed(
+        `${actionEmojis[action]} Discussion ${
+          action.charAt(0).toUpperCase() + action.slice(1)
+        }: ${discussionTitle}`,
+        description || `Discussion has been ${action}`,
+        actionColors[action]
+      );
+
+      embed.addFields(
+        { name: "Author", value: author },
+        {
+          name: "Action",
+          value: action.charAt(0).toUpperCase() + action.slice(1),
+        },
+        { name: "Discussion URL", value: discussionUrl }
+      );
+
+      await webhook.send({
+        username: "PrismFlow Bot",
+        embeds: [embed],
+      });
+
+      console.log(`Successfully sent discussion notification to ${hook.name}`);
+    } catch (error) {
+      console.error(
+        `Error notifying discussion to webhook ${hook.name}:`,
+        error
+      );
+
+      let errorMessage = "Unknown error";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+
+        if (error.message.includes("UNKNOWN_WEBHOOK")) {
+          errorMessage = `Webhook not found or invalid. Please check the webhook URL for ${hook.name}`;
+        } else if (error.message.includes("MISSING_PERMISSIONS")) {
+          errorMessage = `Bot lacks permissions to send messages to ${hook.name}`;
+        } else if (error.message.includes("CHANNEL_NOT_FOUND")) {
+          errorMessage = `Channel not found for webhook ${hook.name}`;
+        } else if (error.message.includes("Received one or more errors")) {
+          errorMessage = `Discord API error for ${hook.name}. Webhook URL may be invalid or expired`;
+        }
+      }
+
+      vscode.window.showErrorMessage(
+        `Failed to send Discord notification to ${hook.name}: ${errorMessage}`
+      );
+    }
+  }
+}
+
+// Send a notification about a deployment
+export async function notifyDeployment(
+  context: vscode.ExtensionContext,
+  deploymentName: string,
+  environment: string,
+  status: "success" | "failure" | "pending" | "in_progress",
+  deploymentUrl?: string,
+  description?: string
+): Promise<void> {
+  const currentWebhooks = await loadWebhooks(context);
+  const deploymentWebhooks = currentWebhooks.filter((hook) =>
+    hook.events.includes("deployments")
+  );
+
+  if (deploymentWebhooks.length === 0) {
+    vscode.window.showWarningMessage(
+      "No Discord webhooks configured for deployment events. Use 'PrismFlow: Setup Discord Webhook Integration' to configure one."
+    );
+    return;
+  }
+
+  const statusColors = {
+    success: 0x28a745, // Green
+    failure: 0xdc3545, // Red
+    pending: 0xffc107, // Yellow
+    in_progress: 0x17a2b8, // Blue
+  };
+
+  const statusEmojis = {
+    success: "✅",
+    failure: "❌",
+    pending: "⏳",
+    in_progress: "🔄",
+  };
+
+  for (const hook of deploymentWebhooks) {
+    try {
+      const webhook = new WebhookClient({ url: hook.url });
+
+      const embed = createDefaultEmbed(
+        `${statusEmojis[status]} Deployment ${
+          status.charAt(0).toUpperCase() + status.slice(1)
+        }: ${deploymentName}`,
+        description || `Deployment to ${environment} is ${status}`,
+        statusColors[status]
+      );
+
+      embed.addFields(
+        { name: "Environment", value: environment },
+        {
+          name: "Status",
+          value: status.charAt(0).toUpperCase() + status.slice(1),
+        },
+        { name: "Deployment Time", value: new Date().toLocaleString() }
+      );
+
+      if (deploymentUrl) {
+        embed.addFields({ name: "Deployment URL", value: deploymentUrl });
+      }
+
+      await webhook.send({
+        username: "PrismFlow Bot",
+        embeds: [embed],
+      });
+
+      console.log(`Successfully sent deployment notification to ${hook.name}`);
+    } catch (error) {
+      console.error(
+        `Error notifying deployment to webhook ${hook.name}:`,
+        error
+      );
+
+      let errorMessage = "Unknown error";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+
+        if (error.message.includes("UNKNOWN_WEBHOOK")) {
+          errorMessage = `Webhook not found or invalid. Please check the webhook URL for ${hook.name}`;
+        } else if (error.message.includes("MISSING_PERMISSIONS")) {
+          errorMessage = `Bot lacks permissions to send messages to ${hook.name}`;
+        } else if (error.message.includes("CHANNEL_NOT_FOUND")) {
+          errorMessage = `Channel not found for webhook ${hook.name}`;
+        } else if (error.message.includes("Received one or more errors")) {
+          errorMessage = `Discord API error for ${hook.name}. Webhook URL may be invalid or expired`;
+        }
+      }
+
+      vscode.window.showErrorMessage(
+        `Failed to send Discord notification to ${hook.name}: ${errorMessage}`
+      );
+    }
+  }
+}
+
 // Run the webhook setup wizard
 export async function runWebhookSetupWizard(
   context: vscode.ExtensionContext

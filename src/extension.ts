@@ -299,6 +299,18 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.commands.registerCommand("prismflow.testDiscordWebhook", () =>
       discordManager.testWebhook(context)
+    ),
+    vscode.commands.registerCommand("prismflow.simulatePullRequestEvent", () =>
+      simulatePullRequestEvent(context)
+    ),
+    vscode.commands.registerCommand("prismflow.simulateIssueEvent", () =>
+      simulateIssueEvent(context)
+    ),
+    vscode.commands.registerCommand("prismflow.simulateDiscussionEvent", () =>
+      simulateDiscussionEvent(context)
+    ),
+    vscode.commands.registerCommand("prismflow.simulateDeploymentEvent", () =>
+      simulateDeploymentEvent(context)
     )
   );
 
@@ -879,4 +891,234 @@ export function deactivate(): void {
   //   fileCreationWatcher = undefined;
   // }
   // VS Code automatically disposes items added to context.subscriptions
+}
+
+// Simulation functions for testing different GitHub events
+async function simulatePullRequestEvent(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  const action = await vscode.window.showQuickPick(
+    ["opened", "closed", "merged", "updated"],
+    { placeHolder: "Select pull request action to simulate" }
+  );
+
+  if (!action) {
+    return;
+  }
+
+  const prTitle = await vscode.window.showInputBox({
+    prompt: "Enter pull request title",
+    placeHolder: "Fix: Update Discord webhook handling",
+  });
+
+  if (!prTitle) {
+    return;
+  }
+
+  const author = await vscode.window.showInputBox({
+    prompt: "Enter author name",
+    placeHolder: "JohnDoe",
+  });
+
+  if (!author) {
+    return;
+  }
+
+  const prUrl = await vscode.window.showInputBox({
+    prompt: "Enter pull request URL",
+    placeHolder: "https://github.com/user/repo/pull/123",
+  });
+
+  if (!prUrl) {
+    return;
+  }
+
+  const description = await vscode.window.showInputBox({
+    prompt: "Enter description (optional)",
+    placeHolder: "This PR fixes Discord webhook error handling...",
+  });
+
+  await discordManager.notifyPullRequest(
+    context,
+    prTitle,
+    prUrl,
+    author,
+    action as "opened" | "closed" | "merged" | "updated",
+    description
+  );
+
+  vscode.window.showInformationMessage(
+    `Simulated pull request ${action} event sent to Discord!`
+  );
+}
+
+async function simulateIssueEvent(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  const action = await vscode.window.showQuickPick(
+    ["opened", "closed", "updated", "assigned"],
+    { placeHolder: "Select issue action to simulate" }
+  );
+
+  if (!action) {
+    return;
+  }
+
+  const issueTitle = await vscode.window.showInputBox({
+    prompt: "Enter issue title",
+    placeHolder: "Bug: Discord webhook not working",
+  });
+
+  if (!issueTitle) {
+    return;
+  }
+
+  const author = await vscode.window.showInputBox({
+    prompt: "Enter author name",
+    placeHolder: "JaneDoe",
+  });
+
+  if (!author) {
+    return;
+  }
+
+  const issueUrl = await vscode.window.showInputBox({
+    prompt: "Enter issue URL",
+    placeHolder: "https://github.com/user/repo/issues/45",
+  });
+
+  if (!issueUrl) {
+    return;
+  }
+
+  const description = await vscode.window.showInputBox({
+    prompt: "Enter description (optional)",
+    placeHolder: "The Discord webhook is returning errors when...",
+  });
+
+  await discordManager.notifyIssue(
+    context,
+    issueTitle,
+    issueUrl,
+    author,
+    action as "opened" | "closed" | "updated" | "assigned",
+    description
+  );
+
+  vscode.window.showInformationMessage(
+    `Simulated issue ${action} event sent to Discord!`
+  );
+}
+
+async function simulateDiscussionEvent(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  const action = await vscode.window.showQuickPick(
+    ["created", "answered", "updated"],
+    { placeHolder: "Select discussion action to simulate" }
+  );
+
+  if (!action) {
+    return;
+  }
+
+  const discussionTitle = await vscode.window.showInputBox({
+    prompt: "Enter discussion title",
+    placeHolder: "How to set up Discord webhooks?",
+  });
+
+  if (!discussionTitle) {
+    return;
+  }
+
+  const author = await vscode.window.showInputBox({
+    prompt: "Enter author name",
+    placeHolder: "CommunityMember",
+  });
+
+  if (!author) {
+    return;
+  }
+
+  const discussionUrl = await vscode.window.showInputBox({
+    prompt: "Enter discussion URL",
+    placeHolder: "https://github.com/user/repo/discussions/12",
+  });
+
+  if (!discussionUrl) {
+    return;
+  }
+
+  const description = await vscode.window.showInputBox({
+    prompt: "Enter description (optional)",
+    placeHolder: "I am trying to configure Discord webhooks and...",
+  });
+
+  await discordManager.notifyDiscussion(
+    context,
+    discussionTitle,
+    discussionUrl,
+    author,
+    action as "created" | "answered" | "updated",
+    description
+  );
+
+  vscode.window.showInformationMessage(
+    `Simulated discussion ${action} event sent to Discord!`
+  );
+}
+
+async function simulateDeploymentEvent(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  const status = await vscode.window.showQuickPick(
+    ["success", "failure", "pending", "in_progress"],
+    { placeHolder: "Select deployment status to simulate" }
+  );
+
+  if (!status) {
+    return;
+  }
+
+  const deploymentName = await vscode.window.showInputBox({
+    prompt: "Enter deployment name",
+    placeHolder: "PrismFlow v1.2.7",
+  });
+
+  if (!deploymentName) {
+    return;
+  }
+
+  const environment = await vscode.window.showInputBox({
+    prompt: "Enter environment",
+    placeHolder: "production",
+  });
+
+  if (!environment) {
+    return;
+  }
+
+  const deploymentUrl = await vscode.window.showInputBox({
+    prompt: "Enter deployment URL (optional)",
+    placeHolder: "https://myapp.example.com",
+  });
+
+  const description = await vscode.window.showInputBox({
+    prompt: "Enter description (optional)",
+    placeHolder:
+      "Deployment includes new Discord webhook debugging features...",
+  });
+
+  await discordManager.notifyDeployment(
+    context,
+    deploymentName,
+    environment,
+    status as "success" | "failure" | "pending" | "in_progress",
+    deploymentUrl,
+    description
+  );
+
+  vscode.window.showInformationMessage(
+    `Simulated deployment ${status} event sent to Discord!`
+  );
 }
