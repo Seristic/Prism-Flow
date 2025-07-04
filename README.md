@@ -1,13 +1,15 @@
 # PrismFlow
 
-**Visualize### 🆕 **Latest Updates (v1.2.8)\*\*
-
-- **📱 Discord Integration**: Complete Discord webhook support for all GitHub event types (pushes, releases, pull requests, issues, discussions, deployments)
-- **🧪 Enhanced Testing**: Comprehensive simulation commands and webhook validation tools
-- **🐛 Bug Fixes**: Resolved compilation issues and improved TypeScript compliance
-- **🔧 Code Quality**: Manual refinements and better function organizationStructure • Manage Monorepos • Automate Workflows\*\*
+**Visualize Code Structure • Manage Monorepos • Automate Workflows**
 
 Code with Clarity and Flow. Keep your repositories clean effortlessly.
+
+### 🆕 **Latest Updates (v1.2.9)**
+
+- **🤖 Automatic Git Detection**: GitWatcher now automatically detects external Git pushes (made via Copilot, CLI, etc.) and sends Discord notifications
+- **📡 Real-time Monitoring**: File system watchers monitor `.git/refs` and `.git/HEAD` for instant change detection
+- **� Background Processing**: 30-second polling ensures no Git operations are missed
+- **🏷️ Release Tag Detection**: Automatically detects version tags and sends release notifications
 
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/Seristic.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)
 [![Downloads](https://img.shields.io/visual-studio-marketplace/d/Seristic.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)
@@ -93,6 +95,8 @@ PrismFlow provides comprehensive Discord webhook integration for all GitHub even
 - **🧪 Testing Tools**: Built-in webhook testing and validation
 - **🎮 Simulation**: Test all event types with simulation commands
 - **🛡️ Error Handling**: Comprehensive error detection and reporting
+- **🤖 Automatic Detection**: GitWatcher monitors for external Git pushes (Copilot, CLI, etc.) and automatically sends Discord notifications
+- **📡 Real-time Monitoring**: File system watchers detect Git repository changes instantly
 - **📊 Multi-webhook Support**: Configure multiple webhooks for different channels
 - **🎨 Rich Embeds**: Beautiful Discord messages with colors and formatting
 

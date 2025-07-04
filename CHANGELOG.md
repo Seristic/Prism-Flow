@@ -1,5 +1,48 @@
 # Change Log
 
+## [1.2.9] - 2025-07-04
+
+### 🤖 Major Feature - Automatic Git Detection for External Pushes
+
+#### New Features
+
+- **🔍 GitWatcher Class**: Automatically monitors Git repository for external changes
+  - File system watchers for `.git/refs` and `.git/HEAD` directories
+  - Real-time detection of commits made outside the extension (Copilot, CLI, etc.)
+  - 30-second polling as fallback to ensure no changes are missed
+  - Automatic Discord notifications for external Git pushes
+
+- **📡 Comprehensive Monitoring**:
+  - Detects pushes, pulls, merges, and branch switches
+  - Automatically extracts commit information (hash, message, author)
+  - Identifies repository URL from git remote for Discord notifications
+  - Recognizes release tags (v1.2.3 pattern) and sends release notifications
+
+#### Enhanced
+
+- **🎯 Discord Integration**: Seamless integration with existing Discord webhook system
+  - Automatically triggers `notifyPush()` for detected commits
+  - Automatically triggers `notifyRelease()` for detected version tags
+  - Proper error handling and user notifications
+  - No duplicate notifications for extension-triggered commands
+
+#### Fixed
+
+- **❌ Missing External Push Notifications**: Resolved issue where Discord notifications were not sent for Git operations performed outside the extension
+  - Now detects Copilot commits, CLI commits, and other external Git operations
+  - Ensures all Git pushes generate Discord notifications when webhooks are configured
+
+#### Technical
+
+- **🔧 Extension Lifecycle**: Proper integration with VS Code extension lifecycle
+  - GitWatcher initialized in `activate()` function
+  - Proper disposal in `deactivate()` function
+  - Added test command `prismflow.testGitWatcher` for debugging
+
+#### Commands
+
+- **🧪 Test Commands**: Added `PrismFlow: Test Git Watcher` command for manual testing and validation
+
 ## [1.2.8] - 2025-07-04
 
 ### 🔧 Patch Release - Manual Discord Integration Enhancement & Bug Fixes
