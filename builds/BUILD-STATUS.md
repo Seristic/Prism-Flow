@@ -79,7 +79,7 @@ This directory contains all compiled extension packages with their release statu
 ## 📈 Release Timeline
 
 ```
-2025-07-04  v1.2.5  ✅ GitHub integration enhancement
+2025-07-04  v1.2.5  ✅ GitHub integration enhancement + Discord webhook fixes
 2025-07-04  v1.2.4  ⬆️ QA testing tools enhancement
 2025-07-03  v1.2.3  ⬆️ Security fix release
 2025-06-29  v1.2.2  ❌ PULLED - Malware-like behavior
@@ -95,23 +95,44 @@ This directory contains all compiled extension packages with their release statu
 
 ### v1.2.5 (Current) ✅
 
-**Release Type**: Patch Release - Process Enhancement  
-**Size**: ~2.87MB  
+**Release Type**: Patch Release - GitHub CLI Integration + Discord Webhook Fixes  
+**Size**: ~2.9MB  
 **Key Changes**:
 
 - ✅ Enhanced GitHub CLI integration for streamlined releases
+- ✅ **FIXED**: Discord webhook notifications now trigger automatically from GitHub Release Manager
+- ✅ **NEW**: Manual "Send Latest Release Webhook" command and dashboard button
+- ✅ **ENHANCED**: Improved webhook error handling and graceful fallbacks
+- ✅ **ADDED**: Complete wiki documentation restoration with comprehensive guides
 - ✅ Improved release automation and asset management
 - ✅ Better git tagging and version control workflows
 - ✅ Optimized deployment pipeline from development to marketplace
-- ✅ Enhanced documentation for release procedures
+
+**Discord Integration Improvements**:
+
+- Fixed missing automatic Discord notifications for GitHub releases
+- Added manual webhook trigger for backup/retry scenarios
+- Enhanced error handling prevents release process interruption
+- Smart release detection using GitHub CLI with git fallbacks
+- New dashboard button: "📢 Send Latest Release Webhook"
+- Command palette access: "PrismFlow: Send Latest Release Webhook"
+
+**Documentation Restoration**:
+
+- Complete wiki pages restored with comprehensive content
+- Detailed Discord integration guide with troubleshooting
+- Complete GitHub webhook setup and CLI configuration guide
+- Comprehensive version management and monorepo support guide
+- Detailed contributing guide with development setup instructions
+- Complete development roadmap with future vision and timeline
 
 **Process Improvements**:
 
-- Automated GitHub release creation with comprehensive notes
-- Better integration between VS Code Marketplace and GitHub
+- Automated GitHub release creation with Discord notifications
+- Better integration between VS Code Marketplace, GitHub, and Discord
 - Streamlined build and deployment workflow
 - Enhanced asset upload and management
-- Improved version management documentation
+- Repository cleanup with empty file removal (content preserved in archive)
 
 **Maintained Features**:
 
