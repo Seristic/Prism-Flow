@@ -38,22 +38,61 @@ export function generateWebhookSecret(length: number = 32): string {
 }
 
 /**
- * Load GitHub webhook configurations from storage
+ * Load GitHub webhook configurations from workspace storage
  */
 export async function loadGitHubWebhooks(
   context: vscode.ExtensionContext
 ): Promise<GitHubWebhookConfig[]> {
-  githubWebhooks = context.globalState.get("github.webhooks", []);
+  githubWebhooks = context.workspaceState.get("github.webhooks", []);
   return githubWebhooks;
 }
 
 /**
- * Save GitHub webhook configurations to storage
+ * Save GitHub webhook configurations to workspace storage
  */
 export async function saveGitHubWebhooks(
   context: vscode.ExtensionContext
 ): Promise<void> {
-  await context.globalState.update("github.webhooks", githubWebhooks);
+  await context.workspaceState.update("github.webhooks", githubWebhooks);
+}
+
+/**
+ * Migrate global GitHub webhooks to workspace state (for backwards compatibility)
+ */
+export async function migrateGlobalGitHubWebhooksToWorkspace(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  // Check if workspace already has webhooks
+  const workspaceWebhooks = context.workspaceState.get("github.webhooks", []);
+  if (workspaceWebhooks.length > 0) {
+    return; // Already migrated or workspace has its own webhooks
+  }
+
+  // Check if there are global webhooks to migrate
+  const globalWebhooks = context.globalState.get("github.webhooks", []);
+  if (globalWebhooks.length === 0) {
+    return; // No global webhooks to migrate
+  }
+
+  // Ask user if they want to migrate
+  const choice = await vscode.window.showInformationMessage(
+    `Found ${globalWebhooks.length} GitHub webhook(s) from previous versions. Would you like to use them for this workspace?`,
+    "Yes, use them",
+    "No, start fresh"
+  );
+
+  if (choice === "Yes, use them") {
+    // Migrate global webhooks to workspace
+    await context.workspaceState.update("github.webhooks", globalWebhooks);
+    githubWebhooks = globalWebhooks;
+
+    vscode.window.showInformationMessage(
+      `Migrated ${globalWebhooks.length} GitHub webhook(s) to this workspace. Webhooks are now workspace-specific.`
+    );
+  }
+
+  // Clear global webhooks after migration attempt (to avoid repeated prompts)
+  await context.globalState.update("github.webhooks", []);
 }
 
 /**

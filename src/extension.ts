@@ -283,6 +283,9 @@ export function activate(context: vscode.ExtensionContext): void {
   discordManager.migrateGlobalWebhooksToWorkspace(context);
   discordManager.registerWebhookCommands(context);
 
+  // Migrate global GitHub webhooks to workspace (for backwards compatibility)
+  githubSetupManager.migrateGlobalGitHubWebhooksToWorkspace(context);
+
   // Register version management commands
   versionManager.registerVersionCommands(context);
 

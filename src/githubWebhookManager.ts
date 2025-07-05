@@ -20,6 +20,9 @@ export class GitHubWebhookManager {
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
     this.clipboard = new Clipboard();
+    
+    // Migrate global webhooks to workspace on initialization
+    this.migrateGlobalWebhooksToWorkspace();
   }
 
   /**
@@ -401,10 +404,55 @@ Your webhook secret has been copied to your clipboard for convenience.
   }
 
   /**
+   * Migrate global GitHub webhooks to workspace state (for backwards compatibility)
+   */
+  private async migrateGlobalWebhooksToWorkspace(): Promise<void> {
+    // Check if workspace already has webhooks
+    const workspaceWebhooks = this.context.workspaceState.get<GitHubWebhookConfig[]>(
+      GitHubWebhookManager.STORAGE_KEY,
+      []
+    );
+    if (workspaceWebhooks.length > 0) {
+      return; // Already migrated or workspace has its own webhooks
+    }
+
+    // Check if there are global webhooks to migrate
+    const globalWebhooks = this.context.globalState.get<GitHubWebhookConfig[]>(
+      GitHubWebhookManager.STORAGE_KEY,
+      []
+    );
+    if (globalWebhooks.length === 0) {
+      return; // No global webhooks to migrate
+    }
+
+    // Ask user if they want to migrate
+    const choice = await vscode.window.showInformationMessage(
+      `Found ${globalWebhooks.length} GitHub webhook configuration(s) from previous versions. Would you like to use them for this workspace?`,
+      "Yes, use them",
+      "No, start fresh"
+    );
+
+    if (choice === "Yes, use them") {
+      // Migrate global webhooks to workspace
+      await this.context.workspaceState.update(
+        GitHubWebhookManager.STORAGE_KEY,
+        globalWebhooks
+      );
+
+      vscode.window.showInformationMessage(
+        `Migrated ${globalWebhooks.length} GitHub webhook configuration(s) to this workspace. GitHub webhooks are now workspace-specific.`
+      );
+    }
+
+    // Clear global webhooks after migration attempt (to avoid repeated prompts)
+    await this.context.globalState.update(GitHubWebhookManager.STORAGE_KEY, []);
+  }
+
+  /**
    * Gets all saved webhook configurations
    */
   private getWebhookConfigs(): GitHubWebhookConfig[] {
-    return this.context.globalState.get<GitHubWebhookConfig[]>(
+    return this.context.workspaceState.get<GitHubWebhookConfig[]>(
       GitHubWebhookManager.STORAGE_KEY,
       []
     );
@@ -423,7 +471,7 @@ Your webhook secret has been copied to your clipboard for convenience.
       configs.push(config);
     }
 
-    await this.context.globalState.update(
+    await this.context.workspaceState.update(
       GitHubWebhookManager.STORAGE_KEY,
       configs
     );
@@ -435,7 +483,7 @@ Your webhook secret has been copied to your clipboard for convenience.
   private async deleteWebhookConfig(name: string): Promise<void> {
     const configs = this.getWebhookConfigs();
     const updatedConfigs = configs.filter((c) => c.name !== name);
-    await this.context.globalState.update(
+    await this.context.workspaceState.update(
       GitHubWebhookManager.STORAGE_KEY,
       updatedConfigs
     );

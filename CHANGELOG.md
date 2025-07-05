@@ -1,5 +1,38 @@
 # Change Log
 
+## [1.3.4] - 2025-07-05
+
+### 🔧 Patch Release - Workspace-Specific GitHub Webhooks
+
+#### Changed
+
+- **🏗️ GitHub Webhooks Now Workspace-Specific**: Enhanced GitHub webhook management to be workspace-specific rather than global
+  - GitHub webhooks are now stored in workspace state instead of global state
+  - Each workspace can have its own independent GitHub webhook configurations
+  - Backward compatibility maintained through automatic migration system
+
+#### Added
+
+- **🔄 GitHub Webhook Migration**: Automatic migration for existing users
+  - Prompts users to migrate existing global GitHub webhooks to current workspace
+  - Option to start fresh with new workspace-specific configurations
+  - Migration process clears global webhooks to prevent repeated prompts
+
+#### Fixed
+
+- **🛠️ GitHub Webhook Management**: Fixed issues in webhook configuration management
+  - Fixed `removeGitHubWebhook` function parameter issue
+  - Both `githubSetupManager` and `githubWebhookManager` now use workspace state
+  - Improved consistency across all GitHub webhook management functions
+
+#### Technical
+
+- **🔧 Enhanced Webhook Architecture**: Improved internal webhook management
+  - Updated both GitHub webhook managers to use `workspaceState`
+  - Added migration functions to both GitHub webhook management systems
+  - Better separation of concerns between workspace and global configurations
+  - Enhanced error handling for webhook operations
+
 ## [1.3.3] - 2025-07-05
 
 ### 🔧 Patch Release - Fix Automatic Release Detection
