@@ -9,11 +9,13 @@ This patch release fixes an important oversight in Discord webhook management by
 ### 🔧 What Changed
 
 Previously, Discord webhooks were stored globally across all VS Code workspaces, which meant:
+
 - ❌ All projects shared the same Discord webhooks
 - ❌ Different repositories would send notifications to the same Discord channels
 - ❌ No isolation between different projects
 
 Now, Discord webhooks are stored per workspace, which means:
+
 - ✅ Each project/repository can have its own Discord webhooks
 - ✅ Different repositories can use different Discord channels
 - ✅ Better security and organization of webhook configurations
@@ -54,6 +56,7 @@ When you first open a workspace after updating to v1.3.2:
 ### 🔄 Backwards Compatibility
 
 This release is fully backwards compatible:
+
 - Existing webhook functionality remains unchanged
 - All webhook commands work the same way
 - Webhook setup process is identical

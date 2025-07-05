@@ -278,7 +278,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Initialize Discord webhooks
   discordManager.loadWebhooks(context); // Register Discord webhook commands
-  
+
   // Migrate global Discord webhooks to workspace (for backwards compatibility)
   discordManager.migrateGlobalWebhooksToWorkspace(context);
   discordManager.registerWebhookCommands(context);

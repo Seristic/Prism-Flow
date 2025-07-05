@@ -1,11 +1,11 @@
 # PrismFlow
 
-### 🆕 **Latest Updates (v1.3.2)**
+### 🆕 **Latest Updates (v1.3.3)**
 
-- **🏗️ Workspace-Specific Webhooks**: Discord webhooks are now stored per workspace instead of globally
-- **📦 Migration Support**: Automatic migration from global webhooks with user prompt
-- **🔒 Cross-Project Isolation**: Different repositories can use different Discord channels
-- **🛡️ Enhanced Security**: Better security by isolating webhook configurations per project
+- **�️ Fixed Release Detection**: Automatic Discord notifications now work properly when Git tags are created
+- **� Enhanced Tag Monitoring**: Real-time detection of release tags via dedicated file system watchers  
+- **� Immediate Notifications**: Discord messages sent instantly when version tags are created
+- **� Better Git Integration**: Enhanced GitWatcher with separate commit and tag tracking
 
 ### 🛡️ **Enhanced Discord Integration (v1.3.1)**
 

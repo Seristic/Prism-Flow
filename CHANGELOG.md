@@ -1,5 +1,33 @@
 # Change Log
 
+## [1.3.3] - 2025-07-05
+
+### 🔧 Patch Release - Fix Automatic Release Detection
+
+#### Fixed
+
+- **🏷️ Automatic Release Notifications**: Fixed GitWatcher to properly detect new Git tags
+  - Added dedicated tag file system watcher for `refs/tags/**`
+  - Separate `checkForNewTags()` method for tag-specific detection
+  - Enhanced fallback polling to check for both commits and tags
+  - Now properly detects release tags created after commits (e.g., `git tag v1.3.3`)
+
+#### Enhanced
+
+- **📡 Improved Git Monitoring**: Enhanced GitWatcher detection capabilities
+  - Real-time tag creation detection via file system watchers
+  - Better logging for tag detection events
+  - Immediate Discord notifications when release tags are created
+  - Fallback polling every 30 seconds for both commits and tags
+
+#### Technical
+
+- **🔧 GitWatcher Improvements**: Enhanced internal architecture
+  - Added `lastKnownTags` tracking to detect new tags
+  - Separate event handlers for tag creation and changes
+  - Better error handling for tag-related operations
+  - Proper disposal of all file system watchers
+
 ## [1.3.2] - 2025-07-05
 
 ### 🔧 Patch Release - Workspace-Specific Discord Webhooks

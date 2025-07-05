@@ -15,7 +15,9 @@ export class GitWatcher {
   private context: vscode.ExtensionContext;
   private gitWatcher: vscode.FileSystemWatcher | undefined;
   private refsWatcher: vscode.FileSystemWatcher | undefined;
+  private tagsWatcher: vscode.FileSystemWatcher | undefined;
   private lastKnownCommit: string | undefined;
+  private lastKnownTags: string[] = [];
   private workspaceFolder: vscode.WorkspaceFolder | undefined;
 
   constructor(context: vscode.ExtensionContext) {
@@ -37,10 +39,14 @@ export class GitWatcher {
       return;
     }
 
-    // Get initial commit hash
+    // Get initial commit hash and tags
     this.lastKnownCommit = await this.getCurrentCommitHash();
+    this.lastKnownTags = await this.getCurrentTags();
     console.log(
       `GitWatcher: Started watching. Current commit: ${this.lastKnownCommit}`
+    );
+    console.log(
+      `GitWatcher: Initial tags: ${this.lastKnownTags.join(", ")}`
     );
 
     // Watch for changes to Git refs (this detects pushes, pulls, etc.)
@@ -49,6 +55,20 @@ export class GitWatcher {
 
     this.refsWatcher.onDidChange(async () => {
       await this.checkForNewCommits();
+    });
+
+    // Watch specifically for tag changes
+    const tagsPattern = path.join(gitDir, "refs", "tags", "**");
+    this.tagsWatcher = vscode.workspace.createFileSystemWatcher(tagsPattern);
+
+    this.tagsWatcher.onDidCreate(async () => {
+      console.log("GitWatcher: New tag detected via file system watcher");
+      await this.checkForNewTags();
+    });
+
+    this.tagsWatcher.onDidChange(async () => {
+      console.log("GitWatcher: Tag changed via file system watcher");
+      await this.checkForNewTags();
     });
 
     // Watch for changes to HEAD (this detects checkouts, merges, etc.)
@@ -61,10 +81,14 @@ export class GitWatcher {
 
     // Register disposables
     this.context.subscriptions.push(this.refsWatcher, this.gitWatcher);
+    if (this.tagsWatcher) {
+      this.context.subscriptions.push(this.tagsWatcher);
+    }
 
-    // Check for commits every 30 seconds as a fallback
+    // Check for commits and tags every 30 seconds as a fallback
     const interval = setInterval(async () => {
       await this.checkForNewCommits();
+      await this.checkForNewTags();
     }, 30000);
 
     this.context.subscriptions.push({
@@ -219,6 +243,72 @@ export class GitWatcher {
     }
   }
 
+  private async getCurrentTags(): Promise<string[]> {
+    try {
+      const tags = await this.execGitCommand("tag --list");
+      return tags.trim() ? tags.trim().split("\n") : [];
+    } catch (error) {
+      console.error("GitWatcher: Error getting current tags:", error);
+      return [];
+    }
+  }
+
+  private async checkForNewTags(): Promise<void> {
+    try {
+      const currentTags = await this.getCurrentTags();
+      const newTags = currentTags.filter(tag => !this.lastKnownTags.includes(tag));
+
+      if (newTags.length > 0) {
+        console.log(`GitWatcher: New tags detected: ${newTags.join(", ")}`);
+
+        for (const tag of newTags) {
+          if (tag.match(/^v?\d+\.\d+\.\d+/)) {
+            // Looks like a version tag
+            console.log(`GitWatcher: Release tag detected: ${tag}`);
+
+            // Check if Discord webhooks are configured for releases
+            const webhooks = await discordManager.loadWebhooks(this.context);
+            const releaseWebhooks = webhooks.filter((hook) =>
+              hook.events.includes("releases")
+            );
+
+            if (releaseWebhooks.length > 0) {
+              // Get commit info for this tag
+              const tagCommitHash = await this.execGitCommand(`rev-list -n 1 ${tag}`);
+              const commitInfo = await this.getCommitInfo(tagCommitHash.trim());
+
+              const repoUrl = await this.getRepositoryUrl();
+              const releaseUrl = repoUrl
+                ? `${repoUrl}/releases/tag/${tag}`
+                : `https://github.com/releases/tag/${tag}`;
+
+              const description = commitInfo
+                ? `New release ${tag} has been tagged!\n\n${commitInfo.message}`
+                : `New release ${tag} has been tagged!`;
+
+              await discordManager.notifyRelease(
+                this.context,
+                tag,
+                releaseUrl,
+                description,
+                true // Single webhook only
+              );
+
+              vscode.window.showInformationMessage(
+                `🚀 Discord notification sent for release: ${tag}`
+              );
+            }
+          }
+        }
+
+        // Update known tags
+        this.lastKnownTags = currentTags;
+      }
+    } catch (error) {
+      console.error("GitWatcher: Error checking for new tags:", error);
+    }
+  }
+
   private async getRepositoryUrl(): Promise<string | undefined> {
     try {
       const remoteUrl = await this.execGitCommand("remote get-url origin");
@@ -271,6 +361,9 @@ export class GitWatcher {
     }
     if (this.refsWatcher) {
       this.refsWatcher.dispose();
+    }
+    if (this.tagsWatcher) {
+      this.tagsWatcher.dispose();
     }
   }
 }
