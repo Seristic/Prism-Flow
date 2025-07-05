@@ -1,4 +1,10 @@
-<!-- builds\| Version | File                   | Status            | Release Date | Notes                                                  |
+<!-- builds\| Ve| Version | File                   | Status            | Release Date | Notes                                                  |
+| ------- | ---------------------- | ----------------- | ------------ | ------------------------------------------------------ |
+| 1.3.5   | `prismflow-1.3.5.vsix` | ✅ **CURRENT**    | 2025-07-05   | 🛠️ Enhanced Discord webhook error handling & debugging |
+| 1.3.4   | `prismflow-1.3.4.vsix` | ⬆️ **SUPERSEDED** | 2025-07-05   | 🏗️ Workspace-specific GitHub webhooks & migration     |
+| 1.3.3   | `prismflow-1.3.3.vsix` | ⬆️ **SUPERSEDED** | 2025-07-05   | 🏷️ Fix automatic release detection & tag monitoring   |
+| 1.3.2   | `prismflow-1.3.2.vsix` | ⬆️ **SUPERSEDED** | 2025-07-05   | 🏗️ Workspace-specific Discord webhooks & migration    |
+| 1.3.1   | `prismflow-1.3.1.vsix` | ⬆️ **SUPERSEDED** | 2025-01-27   | 🛡️ Enhanced Discord error handling & retry logic      || File                   | Status            | Release Date | Notes                                                  |
 | ------- | ---------------------- | ----------------- | ------------ | ------------------------------------------------------ |
 | 1.3.3   | `prismflow-1.3.3.vsix` | ✅ **CURRENT**    | 2025-07-05   | 🏷️ Fix automatic release detection & tag monitoring   |
 | 1.3.2   | `prismflow-1.3.2.vsix` | ⬆️ **SUPERSEDED** | 2025-07-05   | 🏗️ Workspace-specific Discord webhooks & migration    |
@@ -16,10 +22,10 @@ This directory contains all compiled extension packages with their release statu
 
 | Version | File                   | Status            | Release Date | Notes                                                  |
 | ------- | ---------------------- | ----------------- | ------------ | ------------------------------------------------------ |
-| 1.3.4   | `prismflow-1.3.4.vsix` | ✅ **CURRENT**    | 2025-07-05   | 🏗️ Workspace-specific GitHub webhooks & migration     |
-| 1.3.3   | `prismflow-1.3.3.vsix` | ⬆️ **SUPERSEDED** | 2025-07-05   | 🏷️ Fix automatic release detection & tag monitoring   |
-| 1.3.2   | `prismflow-1.3.2.vsix` | ⬆️ **SUPERSEDED** | 2025-07-05   | 🏗️ Workspace-specific Discord webhooks & migration    |
-| 1.3.1   | `prismflow-1.3.1.vsix` | ⬆️ **SUPERSEDED** | 2025-01-27   | 🛡️ Enhanced Discord error handling & retry logic      |
+| 1.3.4   | `prismflow-1.3.4.vsix` | ✅ **CURRENT**    | 2025-07-05   | 🏗️ Workspace-specific GitHub webhooks & migration      |
+| 1.3.3   | `prismflow-1.3.3.vsix` | ⬆️ **SUPERSEDED** | 2025-07-05   | 🏷️ Fix automatic release detection & tag monitoring    |
+| 1.3.2   | `prismflow-1.3.2.vsix` | ⬆️ **SUPERSEDED** | 2025-07-05   | 🏗️ Workspace-specific Discord webhooks & migration     |
+| 1.3.1   | `prismflow-1.3.1.vsix` | ⬆️ **SUPERSEDED** | 2025-01-27   | 🛡️ Enhanced Discord error handling & retry logic       |
 | 1.3.0   | `prismflow-1.3.0.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | 🤖 Major GitWatcher feature - automatic Git detection  |
 | 1.2.8   | `prismflow-1.2.8.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | Manual Discord integration enhancement & bug fixes     |
 | 1.2.7   | `prismflow-1.2.7.vsix` | ⬆️ **SUPERSEDED** | 2025-07-04   | Enhanced Discord webhook debugging (replaced by 1.2.8) |

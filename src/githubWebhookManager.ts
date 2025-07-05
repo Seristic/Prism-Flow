@@ -20,7 +20,7 @@ export class GitHubWebhookManager {
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
     this.clipboard = new Clipboard();
-    
+
     // Migrate global webhooks to workspace on initialization
     this.migrateGlobalWebhooksToWorkspace();
   }
@@ -408,10 +408,9 @@ Your webhook secret has been copied to your clipboard for convenience.
    */
   private async migrateGlobalWebhooksToWorkspace(): Promise<void> {
     // Check if workspace already has webhooks
-    const workspaceWebhooks = this.context.workspaceState.get<GitHubWebhookConfig[]>(
-      GitHubWebhookManager.STORAGE_KEY,
-      []
-    );
+    const workspaceWebhooks = this.context.workspaceState.get<
+      GitHubWebhookConfig[]
+    >(GitHubWebhookManager.STORAGE_KEY, []);
     if (workspaceWebhooks.length > 0) {
       return; // Already migrated or workspace has its own webhooks
     }

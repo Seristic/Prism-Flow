@@ -313,6 +313,9 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand("prismflow.testDiscordConnectivity", () =>
       discordManager.testWebhookConnectivity(context)
     ),
+    vscode.commands.registerCommand("prismflow.testReleaseWebhook", () =>
+      discordManager.testReleaseWebhook(context)
+    ),
     vscode.commands.registerCommand("prismflow.simulatePullRequestEvent", () =>
       simulatePullRequestEvent(context)
     ),

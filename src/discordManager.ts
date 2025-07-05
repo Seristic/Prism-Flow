@@ -204,42 +204,103 @@ export async function notifyRelease(
 
   for (const hook of webhooksToUse) {
     try {
-      const webhook = new WebhookClient({ url: hook.url });
+      // Validate webhook URL before attempting to send
+      const validation = validateWebhookUrl(hook.url);
+      if (!validation.valid) {
+        vscode.window.showErrorMessage(
+          `Failed to send Discord notification to ${hook.name}: ${validation.error}`
+        );
+        continue;
+      }
 
-      const embed = createDefaultEmbed(
-        `🚀 New Release: ${releaseName}`,
-        description || "A new version has been released!",
-        0x00ff00
-      );
+      // Use retry mechanism for release notifications
+      await retryDiscordCall(async () => {
+        const webhook = new WebhookClient({ url: hook.url });
 
-      embed.addFields(
-        { name: "Release URL", value: releaseUrl },
-        { name: "Release Date", value: new Date().toLocaleString() }
-      );
+        const embed = createDefaultEmbed(
+          `🚀 New Release: ${releaseName}`,
+          description || "A new version has been released!",
+          0x00ff00
+        );
 
-      await webhook.send({
-        username: "PrismFlow Bot",
-        embeds: [embed],
+        embed.addFields(
+          { name: "Release URL", value: releaseUrl },
+          { name: "Release Date", value: new Date().toLocaleString() }
+        );
+
+        await webhook.send({
+          username: "PrismFlow Bot",
+          embeds: [embed],
+        });
       });
 
       console.log(`Successfully sent release notification to ${hook.name}`);
     } catch (error) {
       console.error(`Error notifying release to webhook ${hook.name}:`, error);
 
-      // Enhanced error reporting
+      // Enhanced error reporting with more detailed Discord API error handling
       let errorMessage = "Unknown error";
       if (error instanceof Error) {
+        console.log(`Full error object for ${hook.name}:`, {
+          message: error.message,
+          name: error.name,
+          stack: error.stack,
+          cause: (error as any).cause,
+          code: (error as any).code,
+          status: (error as any).status,
+          response: (error as any).response,
+        });
+
         errorMessage = error.message;
 
-        // Check for specific Discord API errors
-        if (error.message.includes("UNKNOWN_WEBHOOK")) {
+        // Check for specific Discord API errors with enhanced detection
+        if (
+          error.message.includes("UNKNOWN_WEBHOOK") ||
+          (error as any).code === 10015 ||
+          error.message.includes("Unknown Webhook")
+        ) {
           errorMessage = `Webhook not found or invalid. Please check the webhook URL for ${hook.name}`;
-        } else if (error.message.includes("MISSING_PERMISSIONS")) {
+        } else if (
+          error.message.includes("MISSING_PERMISSIONS") ||
+          (error as any).code === 50013
+        ) {
           errorMessage = `Bot lacks permissions to send messages to ${hook.name}`;
-        } else if (error.message.includes("CHANNEL_NOT_FOUND")) {
+        } else if (
+          error.message.includes("CHANNEL_NOT_FOUND") ||
+          (error as any).code === 10003
+        ) {
           errorMessage = `Channel not found for webhook ${hook.name}`;
-        } else if (error.message.includes("Received one or more errors")) {
-          errorMessage = `Discord API error for ${hook.name}. Webhook URL may be invalid or expired`;
+        } else if (
+          error.message.includes("Received one or more errors") ||
+          error.message.includes("Request failed") ||
+          (error as any).status >= 400
+        ) {
+          // Try to get more specific error from the response
+          const response = (error as any).response;
+          if (response && response.data) {
+            console.log(`Discord API response data:`, response.data);
+            if (response.data.message) {
+              errorMessage = `Discord API error for ${hook.name}: ${response.data.message}`;
+            } else if (response.data.errors) {
+              errorMessage = `Discord API validation error for ${
+                hook.name
+              }: ${JSON.stringify(response.data.errors)}`;
+            } else {
+              errorMessage = `Discord API error for ${hook.name}. HTTP ${response.status}: ${response.statusText}`;
+            }
+          } else {
+            errorMessage = `Discord API error for ${hook.name}. Webhook URL may be invalid or expired. Please verify the webhook is still active in Discord.`;
+          }
+        } else if (
+          error.message.includes("timeout") ||
+          error.message.includes("ECONNRESET")
+        ) {
+          errorMessage = `Network timeout when sending to ${hook.name}. Please check your internet connection and try again.`;
+        } else if (
+          error.message.includes("rate limit") ||
+          (error as any).code === 429
+        ) {
+          errorMessage = `Rate limited by Discord for ${hook.name}. Please wait a few minutes before trying again.`;
         }
       }
 
@@ -1301,4 +1362,114 @@ async function retryDiscordCall<T>(
   }
 
   throw lastError;
+}
+
+/**
+ * Test webhook with release-style payload to debug issues
+ */
+export async function testReleaseWebhook(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  const currentWebhooks = await loadWebhooks(context);
+  const releaseWebhooks = currentWebhooks.filter((hook) =>
+    hook.events.includes("releases")
+  );
+
+  if (releaseWebhooks.length === 0) {
+    vscode.window.showWarningMessage(
+      "No Discord webhooks configured for release events."
+    );
+    return;
+  }
+
+  // Use the first release webhook for testing
+  const hook = releaseWebhooks[0];
+
+  try {
+    console.log(`Testing release-style webhook payload for: ${hook.name}`);
+
+    // Validate webhook URL first
+    const validation = validateWebhookUrl(hook.url);
+    if (!validation.valid) {
+      vscode.window.showErrorMessage(
+        `Webhook URL validation failed: ${validation.error}`
+      );
+      return;
+    }
+
+    // Test with the exact same payload structure as release notifications
+    await retryDiscordCall(async () => {
+      const webhook = new WebhookClient({ url: hook.url });
+
+      const embed = createDefaultEmbed(
+        `🚀 New Release: Test Release v1.0.0`,
+        "This is a test release notification to debug webhook issues.",
+        0x00ff00
+      );
+
+      embed.addFields(
+        {
+          name: "Release URL",
+          value: "https://github.com/test/repo/releases/tag/v1.0.0",
+        },
+        { name: "Release Date", value: new Date().toLocaleString() }
+      );
+
+      await webhook.send({
+        username: "PrismFlow Bot",
+        embeds: [embed],
+      });
+    });
+
+    vscode.window.showInformationMessage(
+      `✅ Release-style webhook test successful for: ${hook.name}`
+    );
+  } catch (error) {
+    console.error(`Release webhook test failed for ${hook.name}:`, error);
+
+    // Same enhanced error handling as the main function
+    let errorMessage = "Unknown error";
+    if (error instanceof Error) {
+      console.log(`Full error object for release test:`, {
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+        cause: (error as any).cause,
+        code: (error as any).code,
+        status: (error as any).status,
+        response: (error as any).response,
+      });
+
+      errorMessage = error.message;
+
+      if (
+        error.message.includes("UNKNOWN_WEBHOOK") ||
+        (error as any).code === 10015
+      ) {
+        errorMessage = `Webhook not found or invalid. The webhook may have been deleted from Discord.`;
+      } else if (
+        error.message.includes("MISSING_PERMISSIONS") ||
+        (error as any).code === 50013
+      ) {
+        errorMessage = `Bot lacks permissions to send messages.`;
+      } else if (
+        error.message.includes("CHANNEL_NOT_FOUND") ||
+        (error as any).code === 10003
+      ) {
+        errorMessage = `Channel not found. The channel may have been deleted.`;
+      } else if (error.message.includes("Received one or more errors")) {
+        const response = (error as any).response;
+        if (response && response.data) {
+          console.log(`Discord API response data:`, response.data);
+          errorMessage = `Discord API error: ${JSON.stringify(response.data)}`;
+        } else {
+          errorMessage = `Discord API error. Webhook URL may be invalid or expired.`;
+        }
+      }
+    }
+
+    vscode.window.showErrorMessage(
+      `❌ Release webhook test failed: ${errorMessage}`
+    );
+  }
 }

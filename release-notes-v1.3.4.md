@@ -63,11 +63,13 @@ If you have GitHub webhooks configured from previous versions:
 ## 🎯 Benefits
 
 ### Project Organization
+
 - **🏢 Team Workflows**: Different teams can have different webhook configurations
 - **🔀 Multi-Project**: Work on multiple projects without webhook conflicts
 - **📁 Portable**: Webhook settings can be shared with team members via workspace settings
 
 ### Development Experience
+
 - **🔄 Consistent Behavior**: GitHub webhooks now match Discord webhook behavior
 - **🛡️ Isolation**: No accidental webhook triggering across unrelated projects
 - **⚡ Quick Setup**: Per-project webhook configuration
@@ -114,10 +116,10 @@ If you have GitHub webhooks configured from previous versions:
 
 ```typescript
 // Before: Global storage
-context.globalState.get("github-webhook-configs")
+context.globalState.get("github-webhook-configs");
 
 // After: Workspace storage
-context.workspaceState.get("github-webhook-configs")
+context.workspaceState.get("github-webhook-configs");
 ```
 
 ### Migration Function

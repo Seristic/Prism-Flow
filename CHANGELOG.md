@@ -1,5 +1,41 @@
 # Change Log
 
+## [1.3.5] - 2025-07-05
+
+### 🔧 Patch Release - Enhanced Discord Webhook Error Handling
+
+#### Fixed
+
+- **🛠️ Discord Webhook Error Debugging**: Enhanced error handling for Discord webhook failures
+  - Added detailed error object logging with full error information
+  - Enhanced Discord API error code detection (10015, 50013, 10003, etc.)
+  - Better error message specificity for common Discord API issues
+  - Improved response data parsing for Discord API validation errors
+
+#### Added
+
+- **🧪 Release Webhook Debug Command**: New testing command for debugging release webhook issues
+  - Added `PrismFlow: Test Release Webhook (Debug)` command
+  - Tests exact same payload structure as actual release notifications
+  - Enhanced error logging to identify specific Discord API issues
+  - Better troubleshooting guidance for webhook problems
+
+#### Enhanced
+
+- **⚡ Discord API Reliability**: Improved webhook sending reliability
+  - Added URL validation before sending webhooks
+  - Retry mechanism now applied to release notifications
+  - Better detection of network timeouts and rate limiting
+  - Enhanced error messages with actionable troubleshooting steps
+
+#### Technical
+
+- **🔧 Enhanced Error Detection**: Improved Discord API error handling
+  - Support for Discord error codes alongside message matching
+  - Better HTTP response parsing and error extraction
+  - Enhanced logging for debugging webhook connectivity issues
+  - Comprehensive error categorization and user guidance
+
 ## [1.3.4] - 2025-07-05
 
 ### 🔧 Patch Release - Workspace-Specific GitHub Webhooks
