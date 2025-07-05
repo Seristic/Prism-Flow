@@ -3,7 +3,7 @@
 ### 🆕 **Latest Updates (v1.3.3)**
 
 - **�️ Fixed Release Detection**: Automatic Discord notifications now work properly when Git tags are created
-- **� Enhanced Tag Monitoring**: Real-time detection of release tags via dedicated file system watchers  
+- **� Enhanced Tag Monitoring**: Real-time detection of release tags via dedicated file system watchers
 - **� Immediate Notifications**: Discord messages sent instantly when version tags are created
 - **� Better Git Integration**: Enhanced GitWatcher with separate commit and tag tracking
 

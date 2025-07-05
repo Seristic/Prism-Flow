@@ -45,9 +45,7 @@ export class GitWatcher {
     console.log(
       `GitWatcher: Started watching. Current commit: ${this.lastKnownCommit}`
     );
-    console.log(
-      `GitWatcher: Initial tags: ${this.lastKnownTags.join(", ")}`
-    );
+    console.log(`GitWatcher: Initial tags: ${this.lastKnownTags.join(", ")}`);
 
     // Watch for changes to Git refs (this detects pushes, pulls, etc.)
     const refsPattern = path.join(gitDir, "refs", "**");
@@ -256,7 +254,9 @@ export class GitWatcher {
   private async checkForNewTags(): Promise<void> {
     try {
       const currentTags = await this.getCurrentTags();
-      const newTags = currentTags.filter(tag => !this.lastKnownTags.includes(tag));
+      const newTags = currentTags.filter(
+        (tag) => !this.lastKnownTags.includes(tag)
+      );
 
       if (newTags.length > 0) {
         console.log(`GitWatcher: New tags detected: ${newTags.join(", ")}`);
@@ -274,7 +274,9 @@ export class GitWatcher {
 
             if (releaseWebhooks.length > 0) {
               // Get commit info for this tag
-              const tagCommitHash = await this.execGitCommand(`rev-list -n 1 ${tag}`);
+              const tagCommitHash = await this.execGitCommand(
+                `rev-list -n 1 ${tag}`
+              );
               const commitInfo = await this.getCommitInfo(tagCommitHash.trim());
 
               const repoUrl = await this.getRepositoryUrl();
