@@ -24,19 +24,56 @@ export const GITHUB_EVENT_TYPES = [
 // Stored webhooks
 let webhooks: WebhookConfig[] = [];
 
-// Load webhooks from global state
+// Load webhooks from workspace state
 export async function loadWebhooks(
   context: vscode.ExtensionContext
 ): Promise<WebhookConfig[]> {
-  webhooks = context.globalState.get("discord.webhooks", []);
+  webhooks = context.workspaceState.get("discord.webhooks", []);
   return webhooks;
 }
 
-// Save webhooks to global state
+// Save webhooks to workspace state
 export async function saveWebhooks(
   context: vscode.ExtensionContext
 ): Promise<void> {
-  await context.globalState.update("discord.webhooks", webhooks);
+  await context.workspaceState.update("discord.webhooks", webhooks);
+}
+
+// Migrate global webhooks to workspace state (for backwards compatibility)
+export async function migrateGlobalWebhooksToWorkspace(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  // Check if workspace already has webhooks
+  const workspaceWebhooks = context.workspaceState.get("discord.webhooks", []);
+  if (workspaceWebhooks.length > 0) {
+    return; // Already migrated or workspace has its own webhooks
+  }
+
+  // Check if there are global webhooks to migrate
+  const globalWebhooks = context.globalState.get("discord.webhooks", []);
+  if (globalWebhooks.length === 0) {
+    return; // No global webhooks to migrate
+  }
+
+  // Ask user if they want to migrate
+  const choice = await vscode.window.showInformationMessage(
+    `Found ${globalWebhooks.length} Discord webhook(s) from previous versions. Would you like to use them for this workspace?`,
+    "Yes, use them",
+    "No, start fresh"
+  );
+
+  if (choice === "Yes, use them") {
+    // Migrate global webhooks to workspace
+    await context.workspaceState.update("discord.webhooks", globalWebhooks);
+    webhooks = globalWebhooks;
+
+    vscode.window.showInformationMessage(
+      `Migrated ${globalWebhooks.length} Discord webhook(s) to this workspace. Webhooks are now workspace-specific.`
+    );
+  }
+
+  // Clear global webhooks after migration attempt (to avoid repeated prompts)
+  await context.globalState.update("discord.webhooks", []);
 }
 
 // Add or update a webhook

@@ -1,5 +1,30 @@
 # Change Log
 
+## [1.3.2] - 2025-07-05
+
+### 🔧 Patch Release - Workspace-Specific Discord Webhooks
+
+#### Changed
+
+- **🏗️ Workspace-Specific Storage**: Discord webhooks are now stored per workspace instead of globally
+  - Each project/repository can now have its own Discord webhooks
+  - Prevents webhook conflicts between different projects
+  - More secure and organized webhook management
+
+#### Enhanced
+
+- **📦 Migration Support**: Automatic migration from global webhooks to workspace-specific
+  - Seamless upgrade experience for existing users
+  - User prompt to migrate existing global webhooks to current workspace
+  - Option to start fresh or use existing webhooks
+
+#### Fixed
+
+- **🔒 Cross-Project Isolation**: Resolves issue where webhooks were shared across all projects
+  - Different repositories can now use different Discord channels
+  - Prevents accidental notifications to wrong Discord servers
+  - Better security by isolating webhook configurations
+
 ## [1.3.1] - 2025-01-27
 
 ### 🛡️ Patch Release - Enhanced Discord Integration & Error Handling

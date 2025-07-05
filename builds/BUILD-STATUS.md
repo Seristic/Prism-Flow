@@ -1,4 +1,7 @@
-<!-- builds\BUILD-STATUS.md -->
+<!-- builds\| Version | File                   | Status            | Release Date | Notes                                                  |
+| ------- | ---------------------- | ----------------- | ------------ | ------------------------------------------------------ |
+| 1.3.2   | `prismflow-1.3.2.vsix` | ✅ **CURRENT**    | 2025-07-05   | 🏗️ Workspace-specific Discord webhooks & migration    |
+| 1.3.1   | `prismflow-1.3.1.vsix` | ⬆️ **SUPERSEDED** | 2025-01-27   | 🛡️ Enhanced Discord error handling & retry logic      |LD-STATUS.md -->
 
 # PrismFlow Build History & Status
 

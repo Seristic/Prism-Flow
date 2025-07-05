@@ -1,19 +1,23 @@
 # PrismFlow
 
-###
+### 🆕 **Latest Updates (v1.3.2)**
 
-[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/Seristic.prismflow)](https://marketplace.visualstudio.com/items?itemName=Seristic.prismflow)t Updates (v1.3.1)\*\*
+- **🏗️ Workspace-Specific Webhooks**: Discord webhooks are now stored per workspace instead of globally
+- **📦 Migration Support**: Automatic migration from global webhooks with user prompt
+- **🔒 Cross-Project Isolation**: Different repositories can use different Discord channels
+- **🛡️ Enhanced Security**: Better security by isolating webhook configurations per project
 
-- **🛡️ Enhanced Discord Integration**: Robust retry logic with exponential backoff for Discord API calls
-- **� Advanced Connectivity Diagnostics**: New comprehensive webhook testing with detailed troubleshooting
+### 🛡️ **Enhanced Discord Integration (v1.3.1)**
+
+- **🔄 Retry Logic**: Robust retry mechanism with exponential backoff for Discord API calls
+- **🩺 Advanced Connectivity Diagnostics**: Comprehensive webhook testing with detailed troubleshooting
 - **📋 Improved Error Handling**: Specific error messages and troubleshooting guidance for Discord issues
-- **🔄 Automatic Retry**: Smart retry mechanism that avoids permanent failures while handling temporary issues
 - **🧪 Testing Tools**: Enhanced `Test Discord Connectivity` command with real-time validation
 
 ### 🤖 **Automatic Git Detection (v1.3.0)**
 
 - **📡 Real-time Monitoring**: Automatically detects external Git pushes (made via Copilot, CLI, etc.) and sends Discord notifications
-- **� Background Processing**: File system watchers monitor `.git/refs` and `.git/HEAD` for instant change detection
+- **🔄 Background Processing**: File system watchers monitor `.git/refs` and `.git/HEAD` for instant change detection
 - **🏷️ Release Tag Detection**: Automatically detects version tags and sends release notifications
 - **30-second polling ensures no Git operations are missed**
 

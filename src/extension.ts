@@ -278,6 +278,9 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Initialize Discord webhooks
   discordManager.loadWebhooks(context); // Register Discord webhook commands
+  
+  // Migrate global Discord webhooks to workspace (for backwards compatibility)
+  discordManager.migrateGlobalWebhooksToWorkspace(context);
   discordManager.registerWebhookCommands(context);
 
   // Register version management commands
@@ -336,7 +339,7 @@ export function activate(context: vscode.ExtensionContext): void {
           // Get the latest commit info using git command
           const cp = require("child_process");
           cp.exec(
-            "git log -1 --pretty=format:\"%H|%s|%an\"",
+            'git log -1 --pretty=format:"%H|%s|%an"',
             { cwd: workspaceFolder.uri.fsPath },
             async (error: any, stdout: string, stderr: string) => {
               if (error) {
